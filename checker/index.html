@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
+<title>Chip Grade ID Checker</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0e1a;--sf:#0d1525;--sf2:#101e30;--br:#1e3a5f;
+  --tx:#e0e8f0;--mt:#607d8b;--ac:#4fc3f7;
+  --gold:#ffd700;--green:#4ade80;--purple:#c084fc;
+  --red:#ef4444;--blue:#00b4d8;
+}
+body{font-family:'Courier New',monospace;background:var(--bg);color:var(--tx);min-height:100vh;padding:0;overflow-x:hidden}
+/* HEADER */
+.hdr{text-align:center;padding:14px 16px 10px;border-bottom:1px solid var(--br);background:#0a1220}
+.hdr h1{font-size:18px;font-weight:700;color:var(--ac);letter-spacing:3px;text-transform:uppercase}
+.hdr .sub{font-size:10px;color:var(--mt);margin-top:2px;letter-spacing:1px}
+.madeby{font-size:10px;color:var(--gold);letter-spacing:1px;margin-top:6px;padding:4px 12px;background:rgba(255,215,0,.07);border-radius:20px;display:inline-block;border:1px solid rgba(255,215,0,.18)}
+.madeby b{color:#f59e0b}
+.hdr-btns{display:flex;justify-content:center;gap:8px;margin-top:8px}
+.donate-hdr{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:20px;color:var(--blue);font-family:inherit;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+/* TABS */
+.tabs{display:flex;position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--br);overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:0 0 auto;padding:12px 10px;font-family:inherit;font-size:10px;letter-spacing:1px;text-transform:uppercase;border:none;background:transparent;color:var(--mt);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tb.on{color:var(--ac);border-bottom-color:var(--ac)}
+.tc{display:none;padding:14px}
+.tc.on{display:block}
+/* CAPTURE */
+.cbx{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.cb{padding:13px 10px;border-radius:10px;border:1px solid var(--br);background:var(--sf);color:var(--tx);font-family:inherit;font-size:12px;letter-spacing:1px;cursor:pointer;text-align:center;position:relative;overflow:hidden}
+.cb input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cb:active{transform:scale(.97)}
+.cb .ic{font-size:20px;display:block;margin-bottom:4px}
+.cb.pr{border-color:var(--ac);color:var(--ac)}
+#pw{display:none;margin-bottom:12px;position:relative}
+#pi{width:100%;max-height:200px;object-fit:contain;border-radius:10px;border:1px solid var(--br);background:#050c14;display:block}
+.pcl{position:absolute;top:8px;right:8px;background:rgba(10,14,26,.85);border:1px solid var(--br);color:var(--mt);border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* STATUS */
+.sb{padding:9px 13px;border-radius:8px;background:var(--sf);border:1px solid var(--br);font-size:12px;margin-bottom:10px;display:none;line-height:1.5;word-break:break-word}
+.sb.on{display:block}
+.sb.ok{border-color:#1a5a35;color:var(--green)}
+.sb.wn{border-color:#5a4a00;color:var(--gold)}
+.sb.er{border-color:#5a1e1e;color:var(--red)}
+/* INPUT */
+.lbl{font-size:11px;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block}
+.ci{width:100%;background:var(--sf);border:1px solid var(--br);border-radius:8px;padding:13px 14px;color:var(--ac);font-family:inherit;font-size:17px;letter-spacing:2px;text-transform:uppercase;outline:none;transition:border-color .2s;margin-bottom:6px}
+.ci:focus{border-color:var(--ac)}
+.ci::placeholder{color:#1e3a5f;font-size:13px;letter-spacing:1px}
+/* SUGGESTIONS - fixed z-index and pointer events */
+.sugs{background:var(--sf);border:1px solid var(--br);border-radius:8px;margin-bottom:10px;display:none;max-height:150px;overflow-y:auto;position:relative;z-index:50}
+.sugs.on{display:block}
+.si{padding:10px 13px;font-size:13px;cursor:pointer;letter-spacing:1px;color:#b0bec5;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--br);user-select:none}
+.si:last-child{border-bottom:none}
+.si:active,.si:hover{background:var(--sf2)}
+.sg{font-size:10px;padding:2px 7px;border-radius:4px;background:var(--sf2);pointer-events:none}
+/* BUTTONS */
+.btn{width:100%;border:none;border-radius:10px;padding:14px;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:8px;display:block}
+.btn-primary{background:var(--ac);color:#0a0e1a}
+.btn-primary:active{opacity:.85}
+.btn-outline{background:none;border:1px solid var(--br);color:var(--mt)}
+.btn-green{background:none;border:1px solid var(--green);color:var(--green)}
+.btn-purple{background:none;border:1px solid var(--purple);color:var(--purple)}
+.btn-sm{padding:9px 14px;font-size:11px;letter-spacing:1.5px;border-radius:8px}
+/* RESULT */
+.rc{display:none;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid;animation:fu .3s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.g-a5{border-color:var(--gold);background:#191408}
+.g-a4{border-color:var(--purple);background:#13091f}
+.g-a3{border-color:var(--ac);background:#091520}
+.g-a2{border-color:var(--green);background:#071509}
+.g-a1{border-color:#94a3b8;background:#0f1318}
+.g-nc{border-color:var(--red);background:#190808}
+.glab{font-size:28px;font-weight:700;letter-spacing:4px;margin-bottom:2px}
+.g-tier{font-size:12px;color:#b0bec5;margin-bottom:4px;letter-spacing:1px}
+.ctag{font-size:12px;color:#b0bec5;margin-bottom:10px;word-break:break-all}
+.nc-badge{display:inline-block;font-size:10px;padding:2px 8px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:4px;color:var(--red);letter-spacing:1px;margin-bottom:8px}
+.it{width:100%;border-collapse:collapse;margin-bottom:10px}
+.it td{padding:7px 0;font-size:12px;border-bottom:1px solid var(--br)}
+.it td:first-child{color:var(--mt);font-size:11px;letter-spacing:1px;text-transform:uppercase;width:44%}
+.it td:last-child{font-weight:600;text-align:right;word-break:break-word}
+.it tr:last-child td{border-bottom:none}
+.gt{display:flex;gap:5px;align-items:flex-end;margin:10px 0}
+.gd2{border-radius:50%;opacity:.15}
+.gd2.lit{opacity:1}
+.gtl{font-size:10px;color:var(--mt);margin-left:6px;letter-spacing:1px}
+.pb{margin-top:10px;padding:12px;border-radius:8px;background:rgba(0,0,0,.25);border:1px solid var(--br)}
+.pb-my{text-align:center;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--br)}
+.pa{font-size:24px;font-weight:700;color:var(--gold);letter-spacing:2px}
+.pl{font-size:11px;color:var(--mt);letter-spacing:1px;margin-top:3px}
+.pb-buyers-title{font-size:10px;color:var(--mt);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.bprow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(30,58,95,.5);font-size:12px}
+.bprow:last-child{border-bottom:none}
+.bprow-label{color:var(--mt)}
+.bprow-val{color:var(--gold);font-weight:700}
+/* NOT FOUND PANEL */
+.nf-panel{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:12px;display:none}
+.nf-panel.on{display:block}
+.nf-title{font-size:11px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.gb-sel{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.gb-opt{padding:8px 4px;border:1px solid var(--br);border-radius:6px;background:var(--sf2);color:#b0bec5;font-family:inherit;font-size:11px;text-align:center;cursor:pointer}
+.gb-opt.sel{border-color:var(--green);color:var(--green);background:rgba(74,222,128,.08)}
+/* HISTORY */
+.hi{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:8px;background:var(--sf);border:1px solid var(--br);margin-bottom:7px;cursor:pointer}
+.hi:active{background:var(--sf2)}
+.hc{font-size:13px;letter-spacing:.5px;min-width:0;flex:1}
+.hr2{text-align:right;flex-shrink:0;margin-left:8px}
+.hg{font-size:12px;font-weight:700}
+.hp2{font-size:11px;color:var(--mt)}
+.hnc{font-size:10px;color:var(--red)}
+.sct{font-size:11px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.lkb{font-size:11px;background:none;border:none;cursor:pointer;letter-spacing:1px;color:var(--mt);font-family:inherit}
+.emp{color:var(--mt);font-size:13px;text-align:center;padding:24px;border:1px dashed var(--br);border-radius:8px}
+/* NON-CODE DB */
+.ncdb-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:8px;background:var(--sf);border:1px solid rgba(239,68,68,.2);margin-bottom:7px}
+.ncdb-name{font-size:13px;color:var(--red)}
+.ncdb-gb{font-size:11px;color:var(--mt);margin-top:2px}
+.ncdb-del{background:none;border:none;color:var(--mt);cursor:pointer;font-size:14px;padding:4px 8px}
+/* BUYERS */
+.buyer-card{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:12px}
+.buyer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.buyer-name{font-size:14px;font-weight:700;color:var(--ac);letter-spacing:1px}
+.buyer-actions{display:flex;gap:6px}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--mt);font-size:14px;padding:4px 6px}
+.buyer-note{font-size:11px;color:var(--mt);margin-top:8px;padding-top:8px;border-top:1px solid var(--br)}
+/* FORM */
+.form-card{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:12px}
+.form-title{font-size:11px;color:var(--ac);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.fi{width:100%;background:var(--sf2);border:1px solid var(--br);border-radius:6px;padding:10px 12px;color:var(--tx);font-family:inherit;font-size:13px;outline:none;margin-bottom:8px}
+.fi:focus{border-color:var(--ac)}
+.fi::placeholder{color:#263a4e}
+.fi-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.fi-label{font-size:11px;color:var(--mt);width:100px;flex-shrink:0}
+.fi-peso{color:var(--mt);font-size:13px;flex-shrink:0}
+.fi-small{flex:1;background:var(--sf2);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--ac);font-family:inherit;font-size:13px;font-weight:700;outline:none}
+.fi-small:focus{border-color:var(--ac)}
+.fi-small::placeholder{color:#263a4e}
+.section-sep{font-size:10px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin:10px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--br)}
+.board-type-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.btype-opt{padding:5px 10px;border:1px solid var(--br);border-radius:6px;background:var(--sf2);color:var(--mt);font-family:inherit;font-size:11px;cursor:pointer}
+.btype-opt.sel{border-color:var(--ac);color:var(--ac)}
+/* MY PRICES */
+.pg{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:13px;margin-bottom:12px}
+.pgt{font-size:11px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:11px;padding-bottom:8px;border-bottom:1px solid var(--br)}
+.pr2{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.pr2:last-child{margin-bottom:0}
+.prl{font-size:12px;color:var(--tx);flex:1;min-width:0}
+.piw{display:flex;align-items:center;gap:4px;background:var(--sf2);border:1px solid var(--br);border-radius:6px;padding:0 10px;width:120px;flex-shrink:0}
+.pp{font-size:13px;color:var(--mt)}
+.pin{background:none;border:none;color:var(--ac);font-family:inherit;font-size:14px;font-weight:700;width:70px;padding:8px 0;outline:none;text-align:right}
+.tst{display:none;text-align:center;color:var(--green);font-size:12px;letter-spacing:1px;margin-top:8px;padding:8px;border-radius:6px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2)}
+.tst.on{display:block}
+/* REFERENCE */
+.ref-intro{font-size:12px;color:#b0bec5;line-height:1.8;padding:10px 12px;background:var(--sf);border:1px solid var(--br);border-radius:8px;margin-bottom:12px}
+.ref-section{margin-bottom:14px}
+.ref-heading{font-size:11px;color:var(--ac);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;padding:6px 10px;background:rgba(79,195,247,.06);border-left:3px solid var(--ac);border-radius:0 6px 6px 0;cursor:pointer;user-select:none}
+.ref-heading::after{content:' ▾';font-size:10px;color:var(--mt)}
+.ref-heading.open::after{content:' ▴'}
+.ref-body{display:none}
+.ref-body.on{display:block}
+.ref-img{width:100%;border-radius:8px;border:1px solid var(--br);display:block;margin-bottom:6px;cursor:pointer}
+.ref-caption{font-size:11px;color:var(--mt);text-align:center;margin-bottom:8px}
+.src-note{font-size:11px;color:var(--mt);background:rgba(0,0,0,.2);border-radius:6px;padding:8px 10px;margin-bottom:8px;line-height:1.7}
+/* INFO */
+.ac2{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px}
+.ac2 h3{font-size:12px;color:var(--ac);letter-spacing:1.5px;margin-bottom:9px;text-transform:uppercase}
+.ac2 p,.ac2 li{font-size:12px;color:#b0bec5;line-height:1.8}
+.ac2 ul{padding-left:16px}
+.ac2 a{color:var(--ac)}
+.gl2{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.lr2{display:flex;align-items:center;gap:10px;font-size:12px;color:#b0bec5}
+.ld2{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.ded{background:linear-gradient(135deg,#0a1a0e 0%,#0d1525 100%);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center}
+.ded .fl{font-size:28px;margin-bottom:6px}
+.ded h2{font-size:15px;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.ded p{font-size:12px;color:#b0bec5;line-height:1.9}
+.ded .au{font-size:14px;color:var(--ac);font-weight:700;letter-spacing:3px;margin-top:10px}
+.ded .fb{display:inline-block;margin-top:8px;padding:4px 14px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:20px;color:var(--green);font-size:11px;letter-spacing:2px}
+.fblink{display:inline-block;margin-top:6px;padding:4px 12px;background:rgba(79,195,247,.08);border:1px solid rgba(79,195,247,.25);border-radius:20px;color:var(--ac);font-family:inherit;font-size:10px;letter-spacing:1px;text-decoration:none;cursor:pointer}
+.donate-card{background:linear-gradient(135deg,#071830 0%,#0a1a2e 100%);border:1px solid rgba(0,180,216,.3);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center}
+.dc-title{font-size:14px;font-weight:700;color:var(--blue);letter-spacing:2px;margin-bottom:8px}
+.dc-msg{font-size:12px;color:#b0bec5;line-height:1.8;margin-bottom:12px}
+.dc-sub{font-size:11px;color:var(--mt);margin-top:8px}
+.donate-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:linear-gradient(135deg,#00b4d8,#0077b6);border:none;border-radius:24px;color:#fff;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.donate-btn:active{opacity:.85}
+.disclaimer-card{background:#0f0a08;border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px;margin-bottom:12px}
+.disclaimer-card h3{font-size:11px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.disclaimer-card p{font-size:11px;color:#9a8a80;line-height:1.8}
+.what-new{background:var(--sf);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:14px;margin-bottom:12px}
+.what-new h3{font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.what-new li{font-size:12px;color:#b0bec5;line-height:1.9;list-style:none;padding-left:0}
+.what-new li::before{content:'✓ ';color:var(--green)}
+.ft{text-align:center;padding:14px;font-size:10px;color:#1e3a5f;letter-spacing:1px;border-top:1px solid #0d1525;margin-top:4px}
+/* MODALS */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:999;align-items:center;justify-content:center}
+.modal-bg.on{display:flex}
+.modal-bg img{max-width:95vw;max-height:90vh;border-radius:8px;object-fit:contain}
+.modal-close{position:absolute;top:16px;right:16px;color:#fff;font-size:28px;cursor:pointer;background:none;border:none;line-height:1;z-index:1001}
+.donate-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.donate-modal-bg.on{display:flex}
+.donate-modal{background:#0d1a2e;border:1px solid rgba(0,180,216,.35);border-radius:16px;padding:26px 20px;max-width:340px;width:100%;text-align:center;animation:fu .25s ease}
+.dm-icon{font-size:40px;margin-bottom:6px}
+.dm-title{font-size:16px;font-weight:700;color:var(--blue);letter-spacing:2px;margin-bottom:6px}
+.dm-thanks{font-size:12px;color:#b0bec5;line-height:1.8;margin-bottom:16px}
+.dm-gcash-box{background:#091830;border:1px solid rgba(0,180,216,.4);border-radius:12px;padding:14px;margin-bottom:14px}
+.dm-gcash-label{font-size:10px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.dm-number{font-size:24px;font-weight:700;color:var(--blue);letter-spacing:4px;margin-bottom:3px}
+.dm-name{font-size:12px;color:var(--gold);letter-spacing:1px}
+.dm-copy-btn{width:100%;background:linear-gradient(135deg,#00b4d8,#0077b6);border:none;border-radius:10px;padding:12px;color:#fff;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:8px}
+.dm-copied{color:var(--green);font-size:12px;display:none;margin-bottom:8px;letter-spacing:1px}
+.dm-close{background:none;border:1px solid var(--br);border-radius:8px;padding:9px 20px;color:var(--mt);font-family:inherit;font-size:12px;letter-spacing:1px;cursor:pointer}
+.dm-heart{font-size:11px;color:var(--mt);margin-top:10px;line-height:1.7}
+
+/* ══ TALLY TAB ══════════════════════════════════════════════════ */
+.tally-wrap{padding:0}
+.tally-header{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.tally-header h2{font-size:13px;color:var(--ac);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.tally-header p{font-size:11px;color:var(--mt);line-height:1.6}
+.tally-buyer-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.tally-buyer-sel{flex:1;background:var(--sf2);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--tx);font-family:inherit;font-size:12px;outline:none}
+.tally-buyer-sel:focus{border-color:var(--ac)}
+.tally-btn-sm{padding:8px 14px;border-radius:6px;border:none;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap}
+.tally-btn-clear{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.tally-btn-save{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:var(--green)}
+.tally-btn-print{background:rgba(79,195,247,.12);border:1px solid rgba(79,195,247,.3);color:var(--ac)}
+.tally-table{width:100%;border-collapse:collapse;background:var(--sf);border-radius:10px;overflow:hidden;border:1px solid var(--br);margin-bottom:12px}
+.tally-table thead tr{background:#091520}
+.tally-table th{padding:9px 8px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mt);text-align:left;border-bottom:1px solid var(--br)}
+.tally-table th:nth-child(2),.tally-table th:nth-child(3),.tally-table th:nth-child(4){text-align:right}
+.tally-table td{padding:6px 8px;font-size:12px;border-bottom:1px solid rgba(30,58,95,.5);vertical-align:middle}
+.tally-table td:nth-child(2),.tally-table td:nth-child(4){text-align:right}
+.tally-table td:nth-child(3){text-align:right}
+.tally-table tr:last-child td{border-bottom:none}
+.tally-table tr.section-sep td{background:#091520;font-size:10px;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--br)}
+.tally-table tr.grand-row{background:#091520}
+.tally-table tr.grand-row td{font-size:13px;font-weight:700;color:var(--gold);padding:10px 8px;border-top:1px solid var(--br);border-bottom:none}
+.tally-code{font-size:12px;color:var(--tx);letter-spacing:.5px}
+.tally-price-inp{width:80px;background:var(--sf2);border:1px solid var(--br);border-radius:4px;padding:5px 6px;color:var(--ac);font-family:inherit;font-size:12px;font-weight:700;text-align:right;outline:none}
+.tally-price-inp:focus{border-color:var(--ac)}
+.tally-pcs-inp{width:56px;background:var(--sf2);border:1px solid var(--br);border-radius:4px;padding:5px 6px;color:var(--green);font-family:inherit;font-size:13px;font-weight:700;text-align:right;outline:none}
+.tally-pcs-inp:focus{border-color:var(--green)}
+.tally-total{color:var(--gold);font-weight:700;font-size:13px;min-width:60px;display:inline-block;text-align:right}
+.tally-summary{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:12px}
+.tally-summary h3{font-size:11px;color:var(--ac);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.tally-sum-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(30,58,95,.4);font-size:12px}
+.tally-sum-row:last-child{border-bottom:none}
+.tally-sum-label{color:var(--mt)}
+.tally-sum-val{color:var(--gold);font-weight:700}
+.tally-grand-box{background:linear-gradient(135deg,#0a1820,#091530);border:1px solid var(--gold);border-radius:10px;padding:14px;text-align:center;margin-bottom:12px}
+.tally-grand-label{font-size:11px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.tally-grand-val{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:2px}
+.tally-grand-pcs{font-size:11px;color:var(--mt);margin-top:4px}
+.tally-action-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tally-action-row button{flex:1;min-width:80px}
+.tally-saved-note{font-size:11px;color:var(--green);text-align:center;padding:6px;display:none;border-radius:6px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);margin-bottom:8px}
+.tally-saved-note.on{display:block}
+.tally-history-item{background:var(--sf);border:1px solid var(--br);border-radius:8px;padding:12px;margin-bottom:8px}
+.thi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.thi-date{font-size:11px;color:var(--mt)}
+.thi-total{font-size:14px;font-weight:700;color:var(--gold)}
+.thi-del{background:none;border:none;color:var(--mt);cursor:pointer;font-size:13px;padding:2px 6px}
+.thi-rows{font-size:11px;color:#b0bec5;line-height:1.8}
+
+/* ══ GUIDE TAB ═══════════════════════════════════════════════════ */
+.guide-hero{background:linear-gradient(135deg,#091830 0%,#0a1220 100%);border:1px solid var(--br);border-radius:12px;padding:18px 16px;margin-bottom:14px;text-align:center}
+.guide-hero h2{font-size:15px;color:var(--ac);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.guide-hero p{font-size:12px;color:#b0bec5;line-height:1.8}
+.guide-hero .platform{display:inline-block;margin-top:10px;padding:4px 12px;background:rgba(79,195,247,.1);border:1px solid rgba(79,195,247,.25);border-radius:20px;font-size:10px;color:var(--ac);letter-spacing:1.5px}
+
+.step-card{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px;position:relative}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:var(--ac);color:#0a0e1a;border-radius:50%;font-size:12px;font-weight:700;margin-right:8px;flex-shrink:0}
+.step-title{font-size:13px;color:var(--tx);font-weight:700;letter-spacing:.5px;display:flex;align-items:center;margin-bottom:8px}
+.step-body{font-size:12px;color:#b0bec5;line-height:1.9;padding-left:34px}
+.step-body b{color:var(--tx)}
+.step-body .tip{display:block;margin-top:8px;padding:8px 10px;background:rgba(79,195,247,.06);border-left:3px solid var(--ac);border-radius:0 6px 6px 0;font-size:11px;color:#94c5d9;line-height:1.7}
+.step-body .warn{display:block;margin-top:8px;padding:8px 10px;background:rgba(255,215,0,.05);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;font-size:11px;color:#b09850;line-height:1.7}
+.step-sub{margin-top:8px;padding-left:0}
+.step-sub li{list-style:none;padding:4px 0;font-size:12px;color:#b0bec5;line-height:1.7;padding-left:16px;position:relative}
+.step-sub li::before{content:'→';position:absolute;left:0;color:var(--ac);font-size:11px}
+
+.substep-card{background:var(--sf2);border:1px solid rgba(30,58,95,.8);border-radius:8px;padding:12px;margin-top:8px}
+.substep-label{font-size:10px;color:var(--ac);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.substep-label .dot{width:7px;height:7px;border-radius:50%;background:var(--ac);display:inline-block}
+.substep-label.green{color:var(--green)}
+.substep-label.green .dot{background:var(--green)}
+.substep-label.gold{color:var(--gold)}
+.substep-label.gold .dot{background:var(--gold)}
+.substep-body{font-size:12px;color:#b0bec5;line-height:1.8}
+
+/* CHIP VISUAL GUIDE */
+.chip-guide-title{font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--br)}
+.chip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.chip-card{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:12px;text-align:center}
+.chip-card.emmc{border-color:rgba(79,195,247,.3)}
+.chip-card.ufs{border-color:rgba(192,132,252,.3)}
+.chip-card.ram{border-color:rgba(239,68,68,.3)}
+.chip-card.cpu{border-color:rgba(255,107,0,.3)}
+.chip-card.correct{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.03)}
+.chip-card.wrong{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.03)}
+.chip-card-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.chip-card.emmc .chip-card-label{color:var(--ac)}
+.chip-card.ufs .chip-card-label{color:var(--purple)}
+.chip-card.ram .chip-card-label{color:var(--red)}
+.chip-card.cpu .chip-card-label{color:#ff6b00}
+.chip-card.correct .chip-card-label{color:var(--green)}
+.chip-card.wrong .chip-card-label{color:var(--red)}
+.chip-desc{font-size:10px;color:var(--mt);line-height:1.6;margin-top:6px}
+.chip-example{font-size:9px;color:var(--ac);margin-top:4px;letter-spacing:.5px;font-style:italic}
+.chip-card.ram .chip-example{color:var(--red)}
+.chip-card.cpu .chip-example{color:#ff6b00}
+.correct-badge{display:inline-block;padding:2px 8px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);border-radius:4px;font-size:9px;color:var(--green);letter-spacing:1px;margin-top:4px}
+.wrong-badge{display:inline-block;padding:2px 8px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:4px;font-size:9px;color:var(--red);letter-spacing:1px;margin-top:4px}
+.variant-note{background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#b09850;line-height:1.8;margin-top:8px}
+.variant-note b{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>Chip Grade ID</h1>
+  <div class="sub">eMMC / UFS · PH Market Checker · v5.0</div>
+  <div class="hdr-btns">
+    <button class="donate-hdr" onclick="openDonate()">💙 Support via GCash</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tb" onclick="tab('guide')">GUIDE</button>
+  <button class="tb on" onclick="tab('checker')">CHECK</button>
+  <button class="tb" onclick="tab('buyers')">BUYERS</button>
+  <button class="tb" onclick="tab('ncdb')">NON-CODE</button>
+  <button class="tb" onclick="tab('history')">HISTORY</button>
+  <button class="tb" onclick="tab('prices')">MY PRICES</button>
+  <button class="tb" onclick="tab('ref')">REFERENCE</button>
+  <button class="tb" onclick="tab('tally')">TALLY</button>
+  <button class="tb" onclick="tab('about')">INFO</button>
+</div>
+
+
+<!-- ══════ GUIDE ══════ -->
+<div class="tc" id="tab-guide">
+
+  <!-- Hero -->
+  <div class="guide-hero">
+    <h2>How to Use This App</h2>
+    <p>A step-by-step guide for identifying eMMC and UFS chips, checking their grade, and saving non-code chips for future reference.</p>
+    <div class="platform">🌐 Works on any web browser · Phone or Desktop</div>
+  </div>
+
+  <!-- STEP 0: Identify the right chip first -->
+  <div style="background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px">
+    <div class="chip-guide-title">⚠ Step 0 · Find the Right Chip First</div>
+    <p style="font-size:12px;color:#b0bec5;line-height:1.8;margin-bottom:12px">
+      Many technicians confuse the eMMC/UFS chip with RAM or the CPU. Here's how to tell them apart. <b style="color:var(--green)">You want the storage chip</b> — the one with the long alphanumeric code.
+    </p>
+
+    <div class="chip-grid">
+      <!-- eMMC -->
+      <div class="chip-card correct emmc">
+        <div class="chip-card-label">✓ eMMC Chip</div>
+        <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:64px">
+          <rect x="10" y="8" width="100" height="64" rx="4" fill="#0d1f0d" stroke="#4fc3f7" stroke-width="1.5"/>
+          <!-- pins bottom -->
+          <rect x="18" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="28" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="38" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="48" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="58" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="68" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="78" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="88" y="68" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <!-- pins top -->
+          <rect x="18" y="6" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="28" y="6" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="38" y="6" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <rect x="48" y="6" width="6" height="6" rx="1" fill="#4fc3f7" opacity=".7"/>
+          <!-- text lines -->
+          <text x="60" y="28" font-size="7" fill="#6b8fa8" text-anchor="middle" font-family="monospace">SEC 607</text>
+          <text x="60" y="39" font-size="8" fill="#4fc3f7" text-anchor="middle" font-family="monospace" font-weight="bold">KMR820001M</text>
+          <text x="60" y="50" font-size="7" fill="#6b8fa8" text-anchor="middle" font-family="monospace">B611</text>
+          <text x="60" y="60" font-size="6" fill="#607d8b" text-anchor="middle" font-family="monospace">GMK92990</text>
+        </svg>
+        <div class="chip-desc">Medium square chip. Has a long code on top like <b style="color:var(--ac)">KMRX1000BM</b> or <b style="color:var(--ac)">H9TQ26ADFT</b>. Usually Samsung or SK Hynix.</div>
+        <div class="chip-example">Samsung (KM*) · SK Hynix (H9*) · Toshiba (TY*)</div>
+        <div class="correct-badge">✓ THIS IS WHAT YOU WANT</div>
+      </div>
+
+      <!-- UFS -->
+      <div class="chip-card correct ufs">
+        <div class="chip-card-label">✓ UFS Chip</div>
+        <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:64px">
+          <rect x="15" y="8" width="90" height="64" rx="4" fill="#120d1f" stroke="#c084fc" stroke-width="1.5"/>
+          <!-- BGA dots pattern -->
+          <circle cx="30" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="40" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="50" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="60" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="70" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="80" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="90" cy="62" r="2" fill="#c084fc" opacity=".6"/>
+          <circle cx="30" cy="70" r="2" fill="#c084fc" opacity=".4"/>
+          <circle cx="40" cy="70" r="2" fill="#c084fc" opacity=".4"/>
+          <circle cx="50" cy="70" r="2" fill="#c084fc" opacity=".4"/>
+          <circle cx="60" cy="70" r="2" fill="#c084fc" opacity=".4"/>
+          <circle cx="70" cy="70" r="2" fill="#c084fc" opacity=".4"/>
+          <circle cx="80" cy="70" r="2" fill="#c084fc" opacity=".4"/>
+          <text x="60" y="26" font-size="7" fill="#7a6b9a" text-anchor="middle" font-family="monospace">SAMSUNG</text>
+          <text x="60" y="37" font-size="7.5" fill="#c084fc" text-anchor="middle" font-family="monospace" font-weight="bold">KM8V7001JM</text>
+          <text x="60" y="47" font-size="6.5" fill="#7a6b9a" text-anchor="middle" font-family="monospace">B810</text>
+          <text x="60" y="56" font-size="6" fill="#607d8b" text-anchor="middle" font-family="monospace">UFS 3.1</text>
+        </svg>
+        <div class="chip-desc">Slightly smaller, BGA pads on bottom (no visible pins). Code starts with <b style="color:var(--purple)">KM8</b>, <b style="color:var(--purple)">KM5</b>, <b style="color:var(--purple)">KM3</b>, or <b style="color:var(--purple)">H9HQ</b>.</div>
+        <div class="chip-example">KM8* · KM5* · KM3* · KM2* · H9HQ*</div>
+        <div class="correct-badge">✓ THIS IS WHAT YOU WANT</div>
+      </div>
+
+      <!-- RAM - WRONG -->
+      <div class="chip-card wrong ram">
+        <div class="chip-card-label">✗ RAM / LPDDR</div>
+        <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:64px">
+          <!-- RAM is usually a wide flat rectangle -->
+          <rect x="5" y="20" width="110" height="40" rx="3" fill="#1a0808" stroke="#ef4444" stroke-width="1.5"/>
+          <!-- many fine pins on sides -->
+          <rect x="3" y="24" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="3" y="30" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="3" y="36" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="3" y="42" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="3" y="48" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="113" y="24" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="113" y="30" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="113" y="36" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="113" y="42" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <rect x="113" y="48" width="4" height="3" rx="1" fill="#ef4444" opacity=".6"/>
+          <text x="60" y="34" font-size="7" fill="#9a6060" text-anchor="middle" font-family="monospace">K4EBE304EB</text>
+          <text x="60" y="44" font-size="6.5" fill="#7a5050" text-anchor="middle" font-family="monospace">LPDDR4X · 8GB</text>
+          <text x="60" y="53" font-size="6" fill="#607d8b" text-anchor="middle" font-family="monospace">Samsung</text>
+        </svg>
+        <div class="chip-desc">Usually <b style="color:var(--red)">wide and rectangular</b>. Code starts with <b style="color:var(--red)">K4E</b>, <b style="color:var(--red)">K4F</b>, or <b style="color:var(--red)">H9H</b> (SK Hynix RAM). <b>Do NOT enter this in the checker.</b></div>
+        <div class="chip-example">K4EBE304 · K4F8E304 · H9HKNNNCP</div>
+        <div class="wrong-badge">✗ NOT STORAGE — SKIP</div>
+      </div>
+
+      <!-- CPU - WRONG -->
+      <div class="chip-card wrong cpu">
+        <div class="chip-card-label">✗ CPU / SoC</div>
+        <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:64px">
+          <!-- CPU is large square with many pins -->
+          <rect x="20" y="8" width="80" height="64" rx="4" fill="#1a0e00" stroke="#ff6b00" stroke-width="1.5"/>
+          <!-- many tiny BGA dots -->
+          <g opacity=".5" fill="#ff6b00">
+          <circle cx="30" cy="70" r="1.5"/><circle cx="37" cy="70" r="1.5"/><circle cx="44" cy="70" r="1.5"/>
+          <circle cx="51" cy="70" r="1.5"/><circle cx="58" cy="70" r="1.5"/><circle cx="65" cy="70" r="1.5"/>
+          <circle cx="72" cy="70" r="1.5"/><circle cx="79" cy="70" r="1.5"/><circle cx="86" cy="70" r="1.5"/>
+          <circle cx="93" cy="70" r="1.5"/>
+          <circle cx="30" cy="63" r="1.5"/><circle cx="37" cy="63" r="1.5"/><circle cx="44" cy="63" r="1.5"/>
+          <circle cx="51" cy="63" r="1.5"/><circle cx="58" cy="63" r="1.5"/><circle cx="65" cy="63" r="1.5"/>
+          <circle cx="72" cy="63" r="1.5"/><circle cx="79" cy="63" r="1.5"/><circle cx="86" cy="63" r="1.5"/>
+          </g>
+          <!-- CPU internal die marks -->
+          <rect x="30" y="16" width="60" height="40" rx="2" fill="none" stroke="#ff6b00" stroke-width=".5" opacity=".4"/>
+          <rect x="36" y="22" width="20" height="14" rx="1" fill="#ff6b00" opacity=".12"/>
+          <rect x="62" y="22" width="22" height="14" rx="1" fill="#ff6b00" opacity=".12"/>
+          <rect x="36" y="40" width="48" height="10" rx="1" fill="#ff6b00" opacity=".08"/>
+          <text x="60" y="36" font-size="6.5" fill="#cc7040" text-anchor="middle" font-family="monospace">Snapdragon</text>
+          <text x="60" y="46" font-size="6" fill="#9a6030" text-anchor="middle" font-family="monospace">665/680/778</text>
+        </svg>
+        <div class="chip-desc"><b style="color:#ff6b00">Largest chip</b> on the board. Usually labeled Snapdragon, Helio, Kirin, or Exynos. No storage codes. <b>Do NOT enter this.</b></div>
+        <div class="chip-example">Snapdragon · Helio · Kirin · Exynos</div>
+        <div class="wrong-badge">✗ NOT STORAGE — SKIP</div>
+      </div>
+    </div>
+
+    <!-- Visual comparison tip -->
+    <div style="background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px;font-size:12px;color:#b0bec5;line-height:1.8">
+      <b style="color:var(--green)">💡 Quick identification tip:</b><br>
+      The eMMC/UFS chip you want is usually a <b style="color:var(--tx)">medium-sized square or rectangle</b> near the center of the board. It will have a multi-line code printed on it — the longest line is the model number you need to type. Look for codes starting with <b style="color:var(--ac)">KMR, KMQ, KMG, KMD, KMW, KMF, KM8, KM5, KM3, H9TQ, H9HQ, H9HP, TYD, TYE</b> or similar.
+    </div>
+
+    <!-- Location on board -->
+    <div style="margin-top:10px;background:rgba(0,0,0,.2);border-radius:8px;padding:12px">
+      <div style="font-size:10px;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Where to find it on the board</div>
+      <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:6px">
+        <!-- PCB background -->
+        <rect width="340" height="160" fill="#0a1a0a"/>
+        <!-- Board outline -->
+        <rect x="10" y="10" width="320" height="140" rx="6" fill="#0d1f0d" stroke="#1e3a1e" stroke-width="1.5"/>
+        <!-- Traces -->
+        <line x1="10" y1="40" x2="330" y2="40" stroke="#1a3a1a" stroke-width=".5"/>
+        <line x1="10" y1="80" x2="330" y2="80" stroke="#1a3a1a" stroke-width=".5"/>
+        <line x1="10" y1="120" x2="330" y2="120" stroke="#1a3a1a" stroke-width=".5"/>
+        <line x1="80" y1="10" x2="80" y2="150" stroke="#1a3a1a" stroke-width=".5"/>
+        <line x1="170" y1="10" x2="170" y2="150" stroke="#1a3a1a" stroke-width=".5"/>
+        <line x1="260" y1="10" x2="260" y2="150" stroke="#1a3a1a" stroke-width=".5"/>
+        <!-- CPU - large orange -->
+        <rect x="20" y="20" width="55" height="55" rx="3" fill="#1a0e00" stroke="#ff6b00" stroke-width="1.5"/>
+        <text x="47" y="44" font-size="7" fill="#cc7040" text-anchor="middle" font-family="monospace">CPU</text>
+        <text x="47" y="54" font-size="6" fill="#9a6030" text-anchor="middle" font-family="monospace">SoC</text>
+        <!-- RAM - red rectangle -->
+        <rect x="85" y="20" width="72" height="30" rx="2" fill="#1a0808" stroke="#ef4444" stroke-width="1.2"/>
+        <text x="121" y="36" font-size="7" fill="#cc5050" text-anchor="middle" font-family="monospace">RAM</text>
+        <!-- eMMC - highlighted green -->
+        <rect x="175" y="20" width="50" height="50" rx="3" fill="#091f09" stroke="#4ade80" stroke-width="2"/>
+        <rect x="177" y="22" width="46" height="46" rx="2" fill="none" stroke="#4ade80" stroke-width=".5" opacity=".4"/>
+        <text x="200" y="41" font-size="6.5" fill="#4fc3f7" text-anchor="middle" font-family="monospace">KMR820</text>
+        <text x="200" y="51" font-size="6" fill="#4ade80" text-anchor="middle" font-family="monospace">001M-B611</text>
+        <!-- Arrow pointing to eMMC -->
+        <line x1="200" y1="80" x2="200" y2="72" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arr)"/>
+        <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4ade80"/></marker></defs>
+        <text x="200" y="93" font-size="8" fill="#4ade80" text-anchor="middle" font-family="monospace" font-weight="bold">eMMC/UFS</text>
+        <text x="200" y="103" font-size="7" fill="#4ade80" text-anchor="middle" font-family="monospace">← CHECK THIS</text>
+        <!-- Power IC -->
+        <rect x="240" y="20" width="30" height="25" rx="2" fill="#0d1525" stroke="#607d8b" stroke-width="1"/>
+        <text x="255" y="34" font-size="6" fill="#607d8b" text-anchor="middle" font-family="monospace">PMIC</text>
+        <!-- Connector -->
+        <rect x="280" y="20" width="42" height="15" rx="2" fill="#0d1525" stroke="#607d8b" stroke-width="1"/>
+        <text x="301" y="30" font-size="6" fill="#607d8b" text-anchor="middle" font-family="monospace">Connector</text>
+        <!-- Small components -->
+        <rect x="20" y="85" width="10" height="6" rx="1" fill="#0d1525" stroke="#607d8b" stroke-width=".8"/>
+        <rect x="35" y="85" width="10" height="6" rx="1" fill="#0d1525" stroke="#607d8b" stroke-width=".8"/>
+        <rect x="50" y="85" width="10" height="6" rx="1" fill="#0d1525" stroke="#607d8b" stroke-width=".8"/>
+        <rect x="20" y="95" width="10" height="6" rx="1" fill="#0d1525" stroke="#607d8b" stroke-width=".8"/>
+        <rect x="35" y="95" width="10" height="6" rx="1" fill="#0d1525" stroke="#607d8b" stroke-width=".8"/>
+        <!-- Labels -->
+        <text x="47" y="140" font-size="7" fill="#cc7040" text-anchor="middle">CPU</text>
+        <text x="121" y="140" font-size="7" fill="#ef4444" text-anchor="middle">RAM</text>
+        <text x="200" y="140" font-size="7" fill="#4ade80" text-anchor="middle" font-weight="bold">✓ eMMC/UFS</text>
+        <text x="255" y="140" font-size="7" fill="#607d8b" text-anchor="middle">Others</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="step-title"><span class="step-num">1</span> Use Camera to Zoom In on the Chip</div>
+    <div class="step-body">
+      Tap the <b>📷 Camera</b> button to open your phone camera. <b>Do NOT use it to automatically identify the chip</b> — the camera is only for zooming in so you can read the small text printed on the chip clearly.
+      <span class="tip">💡 Tip: Use your phone camera's pinch-to-zoom or macro mode to read the chip markings clearly. Good lighting helps a lot. You can also use the Gallery button if you already have a photo.</span>
+      <span class="warn">⚠ The code you need is the longest line on the chip — usually 10–18 characters long. Example: <b>KMRX1000BM</b> or <b>H9TQ26ADFTMCU</b></span>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="step-title"><span class="step-num">2</span> Type the Chip Code in the Text Box</div>
+    <div class="step-body">
+      After reading the chip marking, type the code in the <b>Chip Model Number</b> text box. Type letter by letter — a dropdown list will appear as you type.
+      <span class="tip">💡 You only need to type the first part of the code. For example, typing <b>KMRX</b> will already show matching chips in the dropdown list.</span>
+
+      <div class="substep-card" style="margin-top:10px">
+        <div class="substep-label green"><span class="dot"></span> Case 2.1 — Chip shows in the dropdown list</div>
+        <div class="substep-body">
+          As you type, matching chip codes appear in a list below the text box. <b style="color:var(--green)">Tap any item from the list to select it</b> — the grade, storage size, type, and price will instantly appear below.<br><br>
+          <b style="color:var(--gold)">Note on variants:</b> Some chips look almost identical on the board but differ by one letter (e.g. <b>KMRX1000BM</b> vs <b>KMRX1000AM</b>). The grade is usually the same — small letter differences (A/M, B/C) are often just production batch codes for the same chip family.
+        </div>
+      </div>
+
+      <div class="substep-card" style="margin-top:8px">
+        <div class="substep-label gold"><span class="dot"></span> Case 2.2 — Chip does NOT appear in the dropdown</div>
+        <div class="substep-body">
+          If nothing shows in the dropdown, finish typing the full code then tap <b style="color:var(--ac)">🔍 CHECK GRADE</b>.<br><br>
+          A <b style="color:var(--purple)">🌐 Search Online</b> button will appear below. Tap it — it will open a new browser tab with a Google search for your chip code. Look for the storage size (8GB, 16GB, 32GB, etc.) in the search results.<br><br>
+          Once you know the GB size, <b>go back to this app tab</b>, select the correct GB size from the buttons shown (e.g. <b style="color:var(--green)">16GB</b>), then tap <b style="color:var(--green)">➕ Save as Non-Code</b>.<br><br>
+          <b style="color:var(--gold)">After saving:</b> The chip is added to your personal Non-Code database. Next time you type that code, it will appear in the dropdown list automatically with its GB size.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card">
+    <div class="step-title"><span class="step-num">3</span> Read the Grade Result</div>
+    <div class="step-body">
+      After checking, the result card shows:
+      <ul class="step-sub">
+        <li><b>Grade</b> — A1 through A5 (A5 is highest quality)</li>
+        <li><b>Storage size</b> — 16GB / 32GB / 64GB / 128GB / 256GB</li>
+        <li><b>Chip type</b> — eMMC 5.1, UFS 2.1, UFS 3.1, etc.</li>
+        <li><b>Manufacturer</b> — Samsung, SK Hynix, Toshiba, etc.</li>
+        <li><b>Your price</b> — from the My Prices tab</li>
+        <li><b>Buyer prices</b> — all your saved buyers shown below</li>
+      </ul>
+      <span class="tip">💡 Add your buyers and their prices in the <b>BUYERS</b> tab. Their prices will automatically appear every time you check a chip.</span>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card">
+    <div class="step-title"><span class="step-num">4</span> Other Useful Features</div>
+    <div class="step-body">
+      <ul class="step-sub">
+        <li><b>BUYERS tab</b> — Save each buyer with their own A1–A5 and GB prices. Shows on every result.</li>
+        <li><b>NON-CODE tab</b> — View and manage all chips you've saved as non-code.</li>
+        <li><b>TALLY tab</b> — Count chips and get a grand total. Auto-fill prices from any buyer. Save and share sessions.</li>
+        <li><b>MY PRICES tab</b> — Set your own personal reference prices for each grade and GB size.</li>
+        <li><b>REFERENCE tab</b> — View the original chip grade charts used to build this database.</li>
+        <li><b>HISTORY tab</b> — See your last 30 chip checks with grades and prices.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Variant note -->
+  <div class="variant-note">
+    <b>📌 About Code Variants</b><br>
+    Some chips on the board may have slightly different codes from what's in the database. For example, <b>KMRX1000BM-B614</b> and <b>KMRX1000AM-B614</b> are the same chip family — the difference in the middle letter (A vs B, M vs L, etc.) is usually a production revision that doesn't change the grade or storage size. If your exact code isn't found, try typing just the first 8–10 characters and see if a matching chip appears.
+  </div>
+
+  <!-- Quick start button -->
+  <div style="text-align:center;margin-top:14px;margin-bottom:4px">
+    <button onclick="tab('checker')" style="background:var(--ac);color:#0a0e1a;border:none;border-radius:10px;padding:14px 32px;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer">
+      🔍 Start Checking →
+    </button>
+  </div>
+
+</div>
+
+<!-- ══════ CHECKER ══════ -->
+<div class="tc on" id="tab-checker">
+  <div class="cbx">
+    <div class="cb pr"><input type="file" id="camIn" accept="image/*" capture="environment"><span class="ic">📷</span>Camera</div>
+    <div class="cb"><input type="file" id="galIn" accept="image/*"><span class="ic">🖼</span>Gallery</div>
+  </div>
+  <div id="pw"><img id="pi" src="" alt="Chip"><button class="pcl" onclick="clrPrev()">✕</button></div>
+  <div class="sb" id="sb"></div>
+  <label class="lbl" for="ci">Chip Model Number</label>
+  <input type="text" class="ci" id="ci" placeholder="e.g. KMRX1000BM-B614" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="characters">
+  <div class="sugs" id="sg"></div>
+  <button class="btn btn-primary" onclick="runCheck()">🔍 CHECK GRADE</button>
+
+  <div class="rc" id="rc">
+    <div class="glab" id="gl"></div>
+    <div class="g-tier" id="gtier"></div>
+    <div class="ctag" id="ct"></div>
+    <div id="nc-badge-wrap"></div>
+    <div class="gt" id="gtr"></div>
+    <table class="it" id="inf"></table>
+    <div class="pb" id="pb"></div>
+  </div>
+
+  <div class="nf-panel" id="nfPanel">
+    <div class="nf-title">⚠ Not in grade database</div>
+    <p style="font-size:12px;color:#b0bec5;margin-bottom:12px;line-height:1.7">
+      This chip was not found in the graded list. It may be a
+      <b style="color:var(--red)">non-code</b> chip.
+      Select storage size to save it, or search online.
+    </p>
+    <div class="nf-title" style="margin-bottom:6px">Select storage size:</div>
+    <div class="gb-sel" id="gbSel"></div>
+    <button class="btn btn-green btn-sm" id="addNcBtn" onclick="addToNcDB()" style="display:none">➕ Save as Non-Code to Database</button>
+    <button class="btn btn-purple btn-sm" onclick="openWebSearch()">🌐 Search Online (opens browser)</button>
+  </div>
+
+  <div style="margin-top:8px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.12);font-size:10px;color:#9a8a80;line-height:1.7">
+    ⚠ <b style="color:rgba(239,68,68,.7)">Disclaimer:</b> For reference only. Prices vary per buyer and market conditions. Do not solely base buying/selling decisions on this app. Developer is not liable for any transactions.
+  </div>
+</div>
+
+<!-- ══════ BUYERS ══════ -->
+<div class="tc" id="tab-buyers">
+  <div class="sct">Buyer Price Lists <button class="lkb" onclick="showAddBuyer()">+ ADD BUYER</button></div>
+  <div class="form-card" id="buyerForm" style="display:none">
+    <div class="form-title">New / Edit Buyer</div>
+    <input type="hidden" id="editBuyerId">
+    <input class="fi" id="bname" placeholder="Buyer Name (e.g. Armando)">
+    <div class="section-sep">Grade Prices (with code)</div>
+    <div class="fi-row"><span class="fi-label">A5 (A++++)</span><span class="fi-peso">₱</span><input class="fi-small" id="b_A5" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">A4 (A+++)</span><span class="fi-peso">₱</span><input class="fi-small" id="b_A4" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">A3 (A++)</span><span class="fi-peso">₱</span><input class="fi-small" id="b_A3" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">A2 (A+)</span><span class="fi-peso">₱</span><input class="fi-small" id="b_A2" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">A1 (A-)</span><span class="fi-peso">₱</span><input class="fi-small" id="b_A1" type="number" placeholder="0" min="0"></div>
+    <div class="section-sep">Non-Code / Capacity Prices</div>
+    <div class="fi-row"><span class="fi-label">8GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_8GB" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">16GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_16GB" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">32GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_32GB" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">64GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_64GB" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">128GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_128GB" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">256GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_256GB" type="number" placeholder="0" min="0"></div>
+    <div class="fi-row"><span class="fi-label">512GB</span><span class="fi-peso">₱</span><input class="fi-small" id="b_512GB" type="number" placeholder="0" min="0"></div>
+    <div class="section-sep">Board Types (optional)</div>
+    <div class="board-type-row" id="boardTypeRow"></div>
+    <input class="fi" id="bnotes" placeholder="Notes e.g. Call first, Pasig area">
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1;padding:11px;margin:0" onclick="saveBuyer()">💾 Save</button>
+      <button class="btn btn-outline" style="flex:1;padding:11px;margin:0" onclick="hideBuyerForm()">Cancel</button>
+    </div>
+  </div>
+  <div id="buyerList"></div>
+</div>
+
+<!-- ══════ NON-CODE DB ══════ -->
+<div class="tc" id="tab-ncdb">
+  <div class="sct">Non-Code Database <button class="lkb" onclick="clearNcDB()">CLEAR ALL</button></div>
+  <p style="font-size:12px;color:var(--mt);margin-bottom:12px;line-height:1.6">Chips saved here have no grade and are priced by storage size only.</p>
+  <div id="ncDbList"></div>
+</div>
+
+<!-- ══════ HISTORY ══════ -->
+<div class="tc" id="tab-history">
+  <div class="sct">Recent Checks <button class="lkb" onclick="clrHist()">CLEAR ALL</button></div>
+  <div id="hl"></div>
+</div>
+
+<!-- ══════ MY PRICES ══════ -->
+<div class="tc" id="tab-prices">
+  <p style="font-size:11px;color:var(--mt);margin-bottom:12px;line-height:1.6">Your personal reference prices shown on check results. Buyer prices are in the Buyers tab.</p>
+  <div class="pg"><div class="pgt">Grade Prices (with code)</div><div id="gpr"></div></div>
+  <div class="pg"><div class="pgt">Non-Code / Capacity Prices</div><div id="cpr"></div></div>
+  <button class="btn btn-primary" style="margin-bottom:8px" onclick="saveP()">💾 Save Prices</button>
+  <button class="btn btn-outline" onclick="resetP()">↺ Reset to Default</button>
+  <div class="tst" id="tst">✓ Prices saved</div>
+</div>
+
+<!-- ══════ REFERENCE ══════ -->
+<div class="tc" id="tab-ref">
+  <div class="ref-intro">
+    📚 Reference charts are the source of this chip database. A1=16GB · A2=32GB · A3=64GB · A4=128GB · A5=256GB based on the EMCP storage-grade classification. The older spec sheets (showing RAM configs) are also kept as supporting reference. Tap any image to enlarge.
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-heading open" onclick="togRef(this)">A1 (16GB) &amp; A2 (32GB) — Primary Reference</div>
+    <div class="ref-body on">
+      <div class="src-note">Source: EMCP 16GB-A+ (A1 grade) and EMCP 32GB-A2 lists. Clear chip model to storage size mapping confirmed from this chart.</div>
+      <img class="ref-img" src="ref-16gb-32gb.jpg" alt="A1 and A2 reference" onclick="openImg(this.src)">
+      <div class="ref-caption">Tap to enlarge · A1 (16GB) and A2 (32GB)</div>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-heading open" onclick="togRef(this)">A3 (64GB) · A4 (128GB) · A5 (256GB) — Primary Reference</div>
+    <div class="ref-body on">
+      <div class="src-note">Source: EMCP 64GB-A3, EMCP 128GB-A4, and EMCP 256GB-A5 lists. Includes UFS combo chips (H9HP*, KM8*, KM2/3/5*) and JZ series.</div>
+      <img class="ref-img" src="ref-64gb-256gb.jpg" alt="A3 A4 A5 reference" onclick="openImg(this.src)">
+      <div class="ref-caption">Tap to enlarge · A3 (64GB) · A4 (128GB) · A5 (256GB)</div>
+    </div>
+  </div>
+
+  <div class="ac2">
+    <h3>Grade System (A1–A5)</h3>
+    <p>Grades are based on EMCP storage capacity classification used in the PH repair market:</p>
+    <div class="gl2" style="margin-top:8px">
+      <div class="lr2"><div class="ld2" style="background:var(--gold)"></div>A5 = 256GB (A++++ / UFS 3.1)</div>
+      <div class="lr2"><div class="ld2" style="background:var(--purple)"></div>A4 = 128GB (A+++ / UFS 2.x combo)</div>
+      <div class="lr2"><div class="ld2" style="background:var(--ac)"></div>A3 = 64GB (A++ / eMMC 5.1 high-end)</div>
+      <div class="lr2"><div class="ld2" style="background:var(--green)"></div>A2 = 32GB (A+ / eMMC 5.1 standard)</div>
+      <div class="lr2"><div class="ld2" style="background:#94a3b8"></div>A1 = 16GB (A- / eMMC 5.1 entry)</div>
+      <div class="lr2"><div class="ld2" style="background:var(--red)"></div>Non-Code = No grade, priced by GB</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════ TALLY ══════ -->
+<div class="tc" id="tab-tally">
+  <div class="tally-header">
+    <h2>📊 Chip Tally Sheet</h2>
+    <p>Enter price per piece and quantity (PCS) for each grade. Totals compute automatically. Use the buyer selector to auto-fill prices.</p>
+  </div>
+
+  <!-- Buyer auto-fill selector -->
+  <div class="tally-buyer-row">
+    <select class="tally-buyer-sel" id="tallyBuyerSel" onchange="tallyFillBuyer()">
+      <option value="">— Select buyer to auto-fill prices —</option>
+    </select>
+    <button class="tally-btn-sm tally-btn-clear" onclick="tallyClear()">Clear</button>
+  </div>
+
+  <!-- Grade rows: A1–A5 -->
+  <table class="tally-table" id="tallyTable">
+    <thead>
+      <tr>
+        <th style="width:28%">CODE</th>
+        <th style="width:26%">PRICE (₱)</th>
+        <th style="width:18%">PCS</th>
+        <th style="width:28%">TOTAL (₱)</th>
+      </tr>
+    </thead>
+    <tbody id="tallyTbody"></tbody>
+  </table>
+
+  <!-- Grand total box -->
+  <div class="tally-grand-box">
+    <div class="tally-grand-label">Grand Total</div>
+    <div class="tally-grand-val" id="tallyGrandVal">₱0</div>
+    <div class="tally-grand-pcs" id="tallyGrandPcs">0 pieces total</div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="tally-action-row">
+    <button class="btn btn-primary btn-sm tally-btn-sm" style="flex:1;padding:10px;font-size:11px;letter-spacing:1px" onclick="tallySaveSession()">💾 Save Session</button>
+    <button class="btn btn-outline btn-sm tally-btn-sm" style="flex:1;padding:10px;font-size:11px;letter-spacing:1px" onclick="tallyShareText()">📤 Share as Text</button>
+    <button class="btn btn-outline btn-sm tally-btn-sm" style="flex:1;padding:10px;font-size:11px;letter-spacing:1px" onclick="tallyClear()">🗑 Clear All</button>
+  </div>
+  <div class="tally-saved-note" id="tallySavedNote">✓ Session saved!</div>
+
+  <!-- Saved tally history -->
+  <div class="sct" style="margin-top:8px">
+    Saved Sessions
+    <button class="lkb" onclick="tallyClearHistory()">CLEAR ALL</button>
+  </div>
+  <div id="tallyHistoryList"></div>
+</div>
+
+<!-- ══════ INFO ══════ -->
+<div class="tc" id="tab-about">
+
+  <div class="what-new">
+    <h3>What's New — v5.0</h3>
+    <ul>
+      <li>NEW: Tally Sheet tab — input PCS per grade/storage and get instant totals</li>
+      <li>NEW: Auto-fill tally prices from any saved Buyer with one tap</li>
+      <li>NEW: Save tally sessions with date, buyer name, and grand total</li>
+      <li>NEW: Share tally as formatted text — paste into Messenger, Viber, or Notes</li>
+      <li>NEW: Tally session history — view, browse, and delete past sessions</li>
+      <li>Bug fix: Tally row oninput used safe data-key attribute (no inline string args)</li>
+      <li>Bug fix: Suggestion tap/click works correctly on all devices (v4.0)</li>
+      <li>Database rebuilt from new EMCP reference charts — A1=16GB · A2=32GB · A3=64GB · A4=128GB · A5=256GB</li>
+      <li>New chips added: JY932/957/977/950/037/008, JZ094/006, 16EMCP08/16, JZ385/478/481/387 and more</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer-card">
+    <h3>⚠ Disclaimer</h3>
+    <p>This app is a <b style="color:#c0a090">FREE REFERENCE TOOL ONLY</b> for identifying eMMC/UFS chip grades.<br><br>
+    The developer <b style="color:#c0a090">(jhoelsoft)</b> is <b style="color:#c0a090">NOT involved in, responsible for, or liable for</b> any chip buying, selling, or trading transactions.<br><br>
+    Prices shown are <b style="color:#c0a090">approximate market references only</b>. Actual prices vary by buyer, location, chip condition, and market demand. <b style="color:#c0a090">Do not solely base any financial decision on this app.</b><br><br>
+    Always verify grades and prices directly with your buyer before transacting.</p>
+  </div>
+
+  <div class="ded">
+    <div class="fl">🇵🇭</div>
+    <h2>Para sa lahat ng Tech!</h2>
+    <p>This is a free gift to all my fellow co-technicians here in the Philippines. Use it freely, share it freely — no bayad, no strings attached.</p>
+    <div class="au">jhoelsoft</div>
+    <div class="fb">FREE FOR ALL · WALANG BAYAD</div><br>
+  </div>
+
+  <div class="donate-card">
+    <div style="font-size:30px;margin-bottom:6px">💙</div>
+    <div class="dc-title">Support This App</div>
+    <p class="dc-msg">If this tool has helped your work, a small donation keeps it free and updated for everyone. Salamat!</p>
+    <button class="donate-btn" onclick="openDonate()">💙 Donate via GCash</button>
+    <div class="dc-sub">Every peso is appreciated 🙏</div>
+  </div>
+
+  <div class="ac2">
+    <h3>How to Use</h3>
+    <ul>
+      <li>Go to <b>GUIDE tab</b> for full step-by-step instructions with chip identification visuals</li>
+      <li>Use Camera to zoom in and read the chip code, then type it in the text box</li>
+      <li>Select from dropdown list if chip appears, or tap Check Grade then Search Online</li>
+      <li>Save unknown chips as Non-Code with correct GB size for future reference</li>
+      <li>Add buyers with their own prices in the Buyers tab</li>
+      <li>Use Tally tab to count chips and calculate totals per buyer</li>
+    </ul>
+    <button onclick="tab('guide')" style="display:block;margin-top:10px;background:none;border:1px solid var(--ac);border-radius:8px;padding:9px 16px;color:var(--ac);font-family:inherit;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;width:100%">📖 Open Full Guide →</button>
+  </div>
+
+  <div class="ac2">
+    <h3>Suggest a Feature</h3>
+    <p>Want a new feature or to report a missing chip?<br>
+  </div>
+
+  <div class="ft">Made by jhoelsoft · v5.0 · Free for all · 🇵🇭</div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="modal-bg" id="lightbox" onclick="closeLightbox()">
+  <button class="modal-close" onclick="closeLightbox()">✕</button>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<!-- DONATE MODAL -->
+<div class="donate-modal-bg" id="donateModal">
+  <div class="donate-modal">
+    <div class="dm-icon">💙</div>
+    <div class="dm-title">Support jhoelsoft</div>
+    <p class="dm-thanks">Salamat sa inyong pagtangkilik! This app is free for all PH technicians. If it helped you, even a small donation means a lot. 🙏🇵🇭</p>
+    <div class="dm-gcash-box">
+      <div class="dm-gcash-label">GCash Number</div>
+      <div class="dm-number">09272930756</div>
+      <div class="dm-name">joel m</div>
+    </div>
+    <button class="dm-copy-btn" onclick="copyGcash()">📋 Copy GCash Number</button>
+    <div class="dm-copied" id="dmCopied">✓ Copied! 0915 534 0717</div>
+    <button class="dm-close" onclick="closeDonate()">Close</button>
+    <div class="dm-heart">Thank you for supporting free tools<br>for the PH repair community ❤️</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+//  DATABASE - Rebuilt from new EMCP reference charts (images 1-3)
+//  A1=16GB  A2=32GB  A3=64GB  A4=128GB  A5=256GB
+// ═══════════════════════════════════════════════════════════════
+var DB = {
+
+  // ── A1 · EMCP 16GB ─────────────────────────────────────────
+  "A1": {
+    label: "A1 (A+ / 16GB)",
+    color: "#94a3b8",
+    cls:   "g-a1",
+    chips: [
+      "H9TP18A8JDM","KMK8X000VM-B412","KMK8U000VM-B410",
+      "TYDOFM231623RL","TYDOHH251623RC",
+      "KMQ82000SM-B418","KMQ8X000SA-B414",
+      "KMF310012M-B305","KMF820012M-B305",
+      "KMFE10012M-B214","KMFE60012M-B214",
+      "KMQ31000SM-B417","KMQE6000SM-B318",
+      "TYDOHH121662RA","TYDOHH231632RC",
+      "SDAD848K-16GB",
+      "H9TQ17ABGTMCU","H9TQ18ABJTMCU",
+      "H9TQ17ABJTMCU","H9TQ17AAETACU",
+      "TYEOHH221657RA","TYEOHH231657RA","TYEOHH231659RA",
+      "JY932","JY957","JY977","JY950","JY037","JY008",
+      "JZ094","JZ011","JZ006",
+      "SDADF4AP-16GB","16EMCP08","16EMCP16",
+      "KMQE820013M-B419","KMQE10013M-B318","KMQE60013M-B318",
+      "KMQ8X0001M-B608","KMR820001M-B611"
+    ]
+  },
+
+  // ── A2 · EMCP 32GB ─────────────────────────────────────────
+  "A2": {
+    label: "A2 (A++ / 32GB)",
+    color: "#4ade80",
+    cls:   "g-a2",
+    chips: [
+      "KMQ4Z0013M-B809","KMQ4Z0013M-B803",
+      "H9TQ26ABJTMCU","TYROIH331677RB","TYROIH331667RB",
+      "KMR4Z0001A-B803",
+      "KMQX10013M-B419","KMQX6001BM-B419",
+      "KMQD60013M-B318","KMQ210013M-B615",
+      "JZ025","JZ002","JZ007","JZ012","JZ014",
+      "JZ004","JZ083","JZ050","JZ013",
+      "SDAD28P-32GB","8UA97",
+      "KMWC10017M-B812",
+      "H9TQ26ADFTBCU","H9TQ26ADFTACU","H9TQ26ADFTMCU",
+      "KMGX6001BM-B514","KMRX1000BM-B614","KMR21000BM-B809",
+      "KMGD60018M-B432","KMGD6001BM-B514",
+      "H9TQ27ADFTMC",
+      "KMRX10014M-B614","KMRX60014M-B614","KMRD60014M-B512",
+      "H9TQ26ACLTMC",
+      "KMDD60018M-B320","H9HP27ADAMAD",
+      "KMDX10018M-B420","KMDX60018M-B425","KMWX10016A-B617"
+    ]
+  },
+
+  // ── A3 · EMCP 64GB ─────────────────────────────────────────
+  "A3": {
+    label: "A3 (A++ / 64GB)",
+    color: "#4fc3f7",
+    cls:   "g-a3",
+    chips: [
+      "KMRC1000BM-B809","KMGP6001BM-B514",
+      "H9TQ52ADFTACUR","SDADA4CR-64GB","SDADA4CR-64G",
+      "KMRC10014M-B809",
+      "H9TQ52ACLTMCU","H9TQ53ACLTMCUR",
+      "KMRH60014M-B614","KMRH60014A-B614","KMRP60014M-B809",
+      "JZ409","JZ053","JZ128","JZ109","JZ049",
+      "JZ186","JZ177","JZ052","JZ266",
+      "H9AG9G5ANB",
+      "H9HP52ACPMADA","H9HP53ACPMMD","H9HP53AECMMD","H9HP63AECMMD",
+      "KMDH6001DA-B422","KMDH6001DM-B422","KMDP6001DA-B425",
+      "KM5C7001DM-B622","KMDC6001DM-B625",
+      "KM5H7001DM-B424","KM5P8001DM-B424",
+      "KM3H0001CM-B805","KM2H7001DM-B518",
+      "KM3H0001CAB515","KM3H6001CA-B515"
+    ]
+  },
+
+  // ── A4 · EMCP 128GB ────────────────────────────────────────
+  "A4": {
+    label: "A4 (A+++ / 128GB)",
+    color: "#c084fc",
+    cls:   "g-a4",
+    chips: [
+      "KMWV500117M-B812","KMRV50014M-B809",
+      "KM5V7001DM-B621","KMDV6001DM-B620",
+      "KM2V7001CM-B706","KM2V8001CM-B707","KM3V6001CM-B705",
+      "H9HQ16AECMMDAR","H9HP16AECMMDD",
+      "KM8V7001JA-B813","KM8V8001JM-B813","KM8V7001JM-B810",
+      "H9HQ16AFAMMDAR",
+      "KM8L9001JM-B624","KM5L9001JM","KM2L9001JM",
+      "H9T1GGBN6X129",
+      "JZ151","JZ100","JZ103","JZ187","JZ150",
+      "JZ386","JZ385","JZ064","JZ478","JZ481","JZ387"
+    ]
+  },
+
+  // ── A5 · EMCP 256GB ────────────────────────────────────────
+  "A5": {
+    label: "A5 (A++++ / 256GB)",
+    color: "#ffd700",
+    cls:   "g-a5",
+    chips: [
+      "KM2B8001CM-B801","H9HQ22AECMMDAR",
+      "KM8B8001JM-BC01","KM8F800JM-B813",
+      "H9HQ21AFAMADA","H9HQ22AFAMMDA",
+      "KM8F800MM-B813"
+    ]
+  }
+};
+
+// Grade ladder for quality bar
+var LDR = [
+  {g:"A1",c:"#94a3b8"},
+  {g:"A2",c:"#4ade80"},
+  {g:"A3",c:"#4fc3f7"},
+  {g:"A4",c:"#c084fc"},
+  {g:"A5",c:"#ffd700"}
+];
+
+// Chip type prefix map
+var TM = [
+  {p:"H9HQ",t:"UFS 3.1 Combo"},{p:"H9HP",t:"LPDDR4X+UFS Combo"},
+  {p:"H9TQ",t:"eMMC 5.1"},{p:"H9TP",t:"eMMC 4.5"},
+  {p:"H9T1",t:"UFS 2.1"},{p:"H9T",t:"eMMC"},
+  {p:"KM8",t:"UFS 3.1"},{p:"KM5L",t:"UFS 3.0"},{p:"KM2L",t:"UFS 3.0"},
+  {p:"KM8L",t:"UFS 3.0"},{p:"KM5",t:"UFS 2.2"},
+  {p:"KM3",t:"UFS 2.1"},{p:"KM2",t:"UFS 2.1"},
+  {p:"KMV",t:"UFS 3.0"},{p:"KMR",t:"LPDDR4+eMMC Combo"},
+  {p:"KMQ",t:"eMMC 5.1"},{p:"KMK",t:"eMMC 4.5"},
+  {p:"KMG",t:"eMMC 5.1"},{p:"KMD",t:"eMMC 5.1"},
+  {p:"KMW",t:"eMMC 5.1"},{p:"KMF",t:"eMMC 5.1"},
+  {p:"KMI",t:"eMMC 5.1"},{p:"KME",t:"eMMC 5.1"},
+  {p:"KMC",t:"eMMC 5.1"},{p:"KMP",t:"eMMC 5.1"},
+  {p:"KMN",t:"eMMC 5.1"},{p:"KMRC",t:"eMMC 5.1"},
+  {p:"SDA",t:"eMMC"},{p:"SD",t:"eMMC/SD"},
+  {p:"TYD",t:"eMMC"},{p:"TYE",t:"eMMC"},
+  {p:"A9",t:"eMMC/NAND"},{p:"08E",t:"eMMC 5.1"},
+  {p:"16E",t:"eMMC"},{p:"LTL",t:"eMMC"},
+  {p:"JZ",t:"eMMC"},{p:"JY",t:"eMMC"}
+];
+
+// Manufacturer prefix map
+var MM = [
+  {p:"H9",m:"SK Hynix"},{p:"KM",m:"Samsung"},
+  {p:"SD",m:"SanDisk/WD"},{p:"TY",m:"Toshiba/Kioxia"},
+  {p:"A9",m:"Micron/ADATA"},{p:"08E",m:"Samsung"},
+  {p:"16E",m:"Samsung"},{p:"LTL",m:"Longsys"},
+  {p:"JZ",m:"JZ Series"},{p:"JY",m:"JY Series"},
+  {p:"8U",m:"Samsung"}
+];
+
+// Default prices
+var DEFP = {
+  grades:[
+    {key:"A5",label:"A5 (A++++ / 256GB)",price:1120},
+    {key:"A4",label:"A4 (A+++ / 128GB)",price:930},
+    {key:"A3",label:"A3 (A++ / 64GB)",price:610},
+    {key:"A2",label:"A2 (A+ / 32GB)",price:350},
+    {key:"A1",label:"A1 (A- / 16GB)",price:250}
+  ],
+  caps:[
+    {key:"8GB",label:"Non-Code 8GB",price:0},
+    {key:"16GB",label:"Non-Code 16GB",price:200},
+    {key:"32GB",label:"Non-Code 32GB",price:310},
+    {key:"64GB",label:"Non-Code 64GB",price:590},
+    {key:"128GB",label:"Non-Code 128GB",price:880},
+    {key:"256GB",label:"Non-Code 256GB",price:1100},
+    {key:"512GB",label:"Non-Code 512GB",price:1200}
+  ]
+};
+
+var GB_OPTIONS    = ["8GB","16GB","32GB","64GB","128GB","256GB","512GB"];
+var BOARD_TYPES   = ["Single","Dual","POP","eMMC","UFS","LPDDR4","LPDDR5","32G","64G","128G"];
+var GRADE_KEYS    = ["A5","A4","A3","A2","A1"];
+var GRADE_LABELS  = {A5:"A5 (A++++)",A4:"A4 (A+++)",A3:"A3 (A++)",A2:"A2 (A+)",A1:"A1 (A-)"};
+var CAP_KEYS      = ["8GB","16GB","32GB","64GB","128GB","256GB","512GB"];
+
+// ── STATE ──────────────────────────────────────────────────────
+var hist        = safeLoad('cg_h',   []);
+var prices      = safeLoad('cg_p',   null) || JSON.parse(JSON.stringify(DEFP));
+var buyers      = safeLoad('cg_buyers', []);
+var ncDB        = safeLoad('cg_ncdb', []);
+var currentChip = '';
+var selectedGB  = '';
+
+function safeLoad(key, def) {
+  try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : def; }
+  catch(e) { return def; }
+}
+function safeSave(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+}
+
+// ── HELPERS ────────────────────────────────────────────────────
+function norm(s) {
+  return String(s).trim().toUpperCase().replace(/\s+/g,'');
+}
+function getType(m) {
+  var u = norm(m);
+  for (var i=0; i<TM.length; i++) {
+    if (u.indexOf(TM[i].p) === 0) return TM[i].t;
+  }
+  return 'eMMC/UFS';
+}
+function getMfr(m) {
+  var u = norm(m);
+  for (var i=0; i<MM.length; i++) {
+    if (u.indexOf(MM[i].p) === 0) return MM[i].m;
+  }
+  return 'Unknown';
+}
+function getMyPrice(grade) {
+  var row = prices.grades.filter(function(x){ return x.key === grade; })[0];
+  return row ? row.price : null;
+}
+function getNcPrice(gb) {
+  var row = prices.caps.filter(function(x){ return x.key === gb; })[0];
+  return row ? row.price : null;
+}
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+function ridx(grade) {
+  var base = grade.replace(' LOW','').replace(/\s/g,'');
+  for (var i = LDR.length-1; i >= 0; i--) {
+    if (base === LDR[i].g) return i;
+  }
+  return 0;
+}
+
+// ── FIND GRADE (safe, no JSON.stringify in HTML attributes) ────
+function findG(inp) {
+  var n = norm(inp);
+  // 1. Check non-code DB
+  for (var j=0; j<ncDB.length; j++) {
+    if (norm(ncDB[j].model) === n) {
+      return { nonCode: true, gb: ncDB[j].gb, model: ncDB[j].model };
+    }
+  }
+  // 2. Exact match in grade DB
+  var grades = Object.keys(DB);
+  for (var gi=0; gi<grades.length; gi++) {
+    var g = grades[gi];
+    var chips = DB[g].chips;
+    for (var ci=0; ci<chips.length; ci++) {
+      if (norm(chips[ci]) === n) {
+        return { grade: g, matched: chips[ci], exact: true };
+      }
+    }
+  }
+  // 3. Prefix partial match (min 6 chars)
+  if (n.length >= 6) {
+    for (var gi2=0; gi2<grades.length; gi2++) {
+      var g2 = grades[gi2];
+      var chips2 = DB[g2].chips;
+      for (var ci2=0; ci2<chips2.length; ci2++) {
+        var nc2 = norm(chips2[ci2]);
+        if (nc2.indexOf(n) === 0 || n.indexOf(nc2) === 0) {
+          return { grade: g2, matched: chips2[ci2], exact: false };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+// ── SUGGESTIONS (uses data-val attribute — no inline JS string args) ──
+function getSugs(partial) {
+  var n = norm(partial);
+  if (n.length < 3) return [];
+  var out = [];
+  var seen = {};
+  // ncDB first
+  for (var j=0; j<ncDB.length; j++) {
+    var nm = norm(ncDB[j].model);
+    if (nm.indexOf(n) === 0 && !seen[ncDB[j].model]) {
+      seen[ncDB[j].model] = 1;
+      out.push({ c: ncDB[j].model, g: 'Non-Code '+ncDB[j].gb, nc: true, color: '#ef4444' });
+      if (out.length >= 8) return out;
+    }
+  }
+  // grade DB
+  var grades = Object.keys(DB);
+  for (var gi=0; gi<grades.length; gi++) {
+    var grade = grades[gi];
+    var chips = DB[grade].chips;
+    for (var ci=0; ci<chips.length; ci++) {
+      var nc3 = norm(chips[ci]);
+      if (nc3.indexOf(n) === 0 && !seen[chips[ci]]) {
+        seen[chips[ci]] = 1;
+        out.push({ c: chips[ci], g: grade, nc: false, color: DB[grade].color });
+        if (out.length >= 8) return out;
+      }
+    }
+  }
+  return out;
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function tab(t) {
+  var tabNames = ['guide','checker','buyers','ncdb','history','prices','ref','tally','about'];
+  var btns = document.querySelectorAll('.tb');
+  var panes = document.querySelectorAll('.tc');
+  for (var i=0; i<btns.length; i++) {
+    btns[i].classList.toggle('on', tabNames[i] === t);
+  }
+  for (var j=0; j<panes.length; j++) {
+    panes[j].classList.toggle('on', panes[j].id === 'tab-'+t);
+  }
+  if (t === 'history') renderHist();
+  if (t === 'tally')   initTallyTab();
+  if (t === 'prices')  renderPrices();
+  if (t === 'ncdb')    renderNcDB();
+  if (t === 'buyers')  renderBuyers();
+}
+
+function setSB(type, msg) {
+  var el = document.getElementById('sb');
+  el.className = 'sb' + (type ? ' '+type+' on' : '');
+  el.innerHTML = msg;
+}
+
+// ── FILE / CAMERA ──────────────────────────────────────────────
+function handleFile(f) {
+  if (!f || !f.type || f.type.indexOf('image/') !== 0) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    document.getElementById('pi').src = ev.target.result;
+    document.getElementById('pw').style.display = 'block';
+    setSB('wn', '📷 Image loaded. Read the chip marking and type the model number below.');
+  };
+  reader.readAsDataURL(f);
+}
+document.getElementById('camIn').onchange = function(e) { handleFile(e.target.files[0]); };
+document.getElementById('galIn').onchange = function(e) { handleFile(e.target.files[0]); };
+function clrPrev() {
+  document.getElementById('pw').style.display = 'none';
+  document.getElementById('pi').src = '';
+  document.getElementById('camIn').value = '';
+  document.getElementById('galIn').value = '';
+  setSB('','');
+}
+
+// ── SUGGESTION INPUT HANDLER ───────────────────────────────────
+var ciEl = document.getElementById('ci');
+var sgEl = document.getElementById('sg');
+
+ciEl.addEventListener('input', function() {
+  var v = this.value.trim();
+  if (v.length < 3) { sgEl.classList.remove('on'); sgEl.innerHTML = ''; return; }
+  var sugs = getSugs(v);
+  if (sugs.length) {
+    sgEl.classList.add('on');
+    var html = '';
+    for (var i=0; i<sugs.length; i++) {
+      var s = sugs[i];
+      // FIX: use data-val attribute instead of inline onclick argument
+      // This avoids ALL quoting/escaping bugs with special chip names
+      html += '<div class="si" data-val="' + s.c.replace(/"/g,'&quot;') + '">'
+            + '<span>' + s.c + '</span>'
+            + '<span class="sg" style="color:' + s.color + '">' + s.g + '</span>'
+            + '</div>';
+    }
+    sgEl.innerHTML = html;
+  } else {
+    sgEl.classList.remove('on');
+    sgEl.innerHTML = '';
+  }
+});
+
+// Single delegated event listener on the suggestions container
+// Uses mousedown (fires before blur) to prevent input losing focus issues
+sgEl.addEventListener('mousedown', function(e) {
+  var item = e.target.closest('.si');
+  if (!item) return;
+  e.preventDefault(); // prevent input blur
+  var val = item.getAttribute('data-val');
+  if (val) {
+    ciEl.value = val;
+    sgEl.classList.remove('on');
+    sgEl.innerHTML = '';
+    runCheck();
+  }
+});
+
+// Also handle touchstart for mobile devices
+sgEl.addEventListener('touchstart', function(e) {
+  var item = e.target.closest('.si');
+  if (!item) return;
+  e.preventDefault();
+  var val = item.getAttribute('data-val');
+  if (val) {
+    ciEl.value = val;
+    sgEl.classList.remove('on');
+    sgEl.innerHTML = '';
+    runCheck();
+  }
+}, {passive: false});
+
+ciEl.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    sgEl.classList.remove('on');
+    runCheck();
+  }
+  if (e.key === 'Escape') {
+    sgEl.classList.remove('on');
+    sgEl.innerHTML = '';
+  }
+});
+
+// Hide suggestions when clicking elsewhere
+document.addEventListener('click', function(e) {
+  if (!sgEl.contains(e.target) && e.target !== ciEl) {
+    sgEl.classList.remove('on');
+  }
+});
+
+// ── CHECK ──────────────────────────────────────────────────────
+document.getElementById('ckbtn') && (document.getElementById('ckbtn').onclick = runCheck);
+
+function runCheck() {
+  var v = ciEl.value.trim();
+  if (!v) return;
+  currentChip = v.toUpperCase();
+  selectedGB = '';
+  sgEl.classList.remove('on');
+  document.getElementById('nfPanel').classList.remove('on');
+  document.getElementById('rc').style.display = 'none';
+  document.getElementById('addNcBtn').style.display = 'none';
+
+  var r = findG(v);
+  if (r && r.nonCode)  { showNonCode(v, r.gb); }
+  else if (r)          { showResult(v, r); }
+  else                 { showNotFound(v); }
+}
+
+// ── QUALITY TRACK BAR ─────────────────────────────────────────
+function trackHTML(grade) {
+  var ri = ridx(grade);
+  var html = '';
+  for (var i=0; i<LDR.length; i++) {
+    var sz = 10 + i*2;
+    html += '<div class="gd2' + (i<=ri ? ' lit' : '') + '" style="width:'+sz+'px;height:'+sz+'px;background:'+LDR[i].c+'" title="'+LDR[i].g+'"></div>';
+  }
+  return html + '<span class="gtl">Quality</span>';
+}
+
+// ── BUYER PRICE ROWS ───────────────────────────────────────────
+function buyerPriceRows(tierKey, gbKey) {
+  if (!buyers.length) return '';
+  var key = tierKey || gbKey;
+  var rows = '';
+  for (var i=0; i<buyers.length; i++) {
+    var b = buyers[i];
+    var bp = (b.prices && b.prices[key]) ? ('&#8369;' + Number(b.prices[key]).toLocaleString()) : '—';
+    rows += '<div class="bprow"><span class="bprow-label">'+b.name+'</span><span class="bprow-val">'+bp+'</span></div>';
+  }
+  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--br)">'
+       + '<div class="pb-buyers-title">Buyer Prices</div>' + rows + '</div>';
+}
+
+// ── SHOW GRADED RESULT ────────────────────────────────────────
+function showResult(inp, r) {
+  var card    = document.getElementById('rc');
+  var entry   = DB[r.grade];
+  var color   = entry.color;
+  var cls     = entry.cls;
+  var label   = entry.label;
+
+  card.style.display = 'block';
+  card.className = 'rc ' + cls;
+  document.getElementById('gl').style.color = color;
+  document.getElementById('gl').textContent  = r.grade;
+  document.getElementById('gtier').textContent = label;
+  document.getElementById('ct').textContent  = r.exact
+    ? inp.toUpperCase()
+    : '~' + inp.toUpperCase() + ' (matched: ' + r.matched + ')';
+  document.getElementById('nc-badge-wrap').innerHTML = '';
+  document.getElementById('gtr').innerHTML = trackHTML(r.grade);
+
+  var storage  = 'See ref';
+  // Derive storage from grade label
+  var labMap = {A1:'16GB',A2:'32GB',A3:'64GB',A4:'128GB',A5:'256GB'};
+  var baseGrade = r.grade.split(' ')[0]; // "A3 LOW" -> "A3"
+  storage = labMap[baseGrade] || '—';
+
+  document.getElementById('inf').innerHTML = [
+    ['Grade', '<span style="color:'+color+'">'+label+'</span>'],
+    ['Storage', storage],
+    ['Type', getType(inp)],
+    ['Maker', getMfr(inp)],
+    ['Match', r.exact ? '✓ Exact' : '~ Partial']
+  ].map(function(row){ return '<tr><td>'+row[0]+'</td><td>'+row[1]+'</td></tr>'; }).join('');
+
+  var price = getMyPrice(baseGrade);
+  var pbHTML = price
+    ? '<div class="pa">&#8369;'+price.toLocaleString()+'</div>'
+      + '<div class="pl">MY PRICE · ' + r.grade + '</div>'
+      + '<div class="pl" style="font-size:10px;margin-top:3px">Edit in My Prices tab · Prices vary</div>'
+    : '<div class="pl" style="padding:6px">No personal price set</div>';
+
+  document.getElementById('pb').innerHTML =
+    '<div class="pb-my">' + pbHTML + '</div>' + buyerPriceRows(baseGrade, null);
+
+  saveH(inp.toUpperCase(), r.grade, label, color, price, false);
+}
+
+// ── SHOW NON-CODE (from saved DB) ────────────────────────────
+function showNonCode(inp, gb) {
+  var card = document.getElementById('rc');
+  card.style.display = 'block';
+  card.className = 'rc g-nc';
+  document.getElementById('gl').style.color = '#ef4444';
+  document.getElementById('gl').textContent  = 'NON-CODE';
+  document.getElementById('gtier').textContent = 'No grade · priced by storage only';
+  document.getElementById('ct').textContent  = inp.toUpperCase();
+  document.getElementById('nc-badge-wrap').innerHTML = '<div class="nc-badge">SAVED IN NON-CODE DB</div>';
+  document.getElementById('gtr').innerHTML = '';
+  document.getElementById('inf').innerHTML = [
+    ['Type','Non-Code (no grade)'],['Storage',gb],
+    ['Maker',getMfr(inp)],['Source','Non-Code Database']
+  ].map(function(row){ return '<tr><td>'+row[0]+'</td><td>'+row[1]+'</td></tr>'; }).join('');
+
+  var price = getNcPrice(gb);
+  var pbHTML = price
+    ? '<div class="pa">&#8369;'+price.toLocaleString()+'</div>'
+      + '<div class="pl">MY PRICE · Non-Code '+gb+'</div>'
+      + '<div class="pl" style="font-size:10px;margin-top:3px">Edit in My Prices tab · Prices vary</div>'
+    : '<div class="pl" style="padding:6px">No price set for '+gb+'</div>';
+
+  document.getElementById('pb').innerHTML =
+    '<div class="pb-my">' + pbHTML + '</div>' + buyerPriceRows(null, gb);
+
+  saveH(inp.toUpperCase(), 'Non-Code '+gb, 'Non-Code '+gb, '#ef4444', price, true);
+}
+
+// ── SHOW NOT FOUND ────────────────────────────────────────────
+function showNotFound(inp) {
+  document.getElementById('rc').style.display = 'none';
+  document.getElementById('nfPanel').classList.add('on');
+  setSB('er', '✗ "' + inp.toUpperCase() + '" — not found in database or non-code list.');
+  var gbSel = document.getElementById('gbSel');
+  var html = '';
+  for (var i=0; i<GB_OPTIONS.length; i++) {
+    html += '<div class="gb-opt" data-gb="'+GB_OPTIONS[i]+'" onclick="selGB(this,\''+GB_OPTIONS[i]+'\')">'
+          + GB_OPTIONS[i] + '</div>';
+  }
+  gbSel.innerHTML = html;
+  document.getElementById('addNcBtn').style.display = 'none';
+}
+
+function selGB(el, gb) {
+  var opts = document.querySelectorAll('.gb-opt');
+  for (var i=0; i<opts.length; i++) opts[i].classList.remove('sel');
+  el.classList.add('sel');
+  selectedGB = gb;
+  document.getElementById('addNcBtn').style.display = 'block';
+}
+
+function addToNcDB() {
+  if (!currentChip || !selectedGB) { alert('Please select a storage size first.'); return; }
+  for (var i=0; i<ncDB.length; i++) {
+    if (norm(ncDB[i].model) === norm(currentChip)) {
+      alert(currentChip + ' is already in the Non-Code database.');
+      return;
+    }
+  }
+  ncDB.push({ id: uid(), model: currentChip, gb: selectedGB, added: Date.now() });
+  safeSave('cg_ncdb', ncDB);
+  document.getElementById('nfPanel').classList.remove('on');
+  setSB('ok', '✓ ' + currentChip + ' saved as Non-Code ' + selectedGB + '.');
+  showNonCode(currentChip, selectedGB);
+}
+
+function openWebSearch() {
+  if (!currentChip) { alert('Enter a chip model first.'); return; }
+  openLink('https://www.google.com/search?q=' + encodeURIComponent(currentChip + ' eMMC UFS chip grade datasheet'));
+}
+
+// ── HISTORY ───────────────────────────────────────────────────
+function saveH(chip, grade, gradeLabel, color, price, isNC) {
+  var e = { chip:chip, grade:grade, gradeLabel:gradeLabel, color:color, price:price, isNC:isNC, t:Date.now() };
+  var filtered = [];
+  for (var i=0; i<hist.length; i++) {
+    if (hist[i].chip !== chip) filtered.push(hist[i]);
+  }
+  hist = [e].concat(filtered).slice(0, 30);
+  safeSave('cg_h', hist);
+}
+function renderHist() {
+  var el = document.getElementById('hl');
+  if (!hist.length) { el.innerHTML = '<div class="emp">No checks yet</div>'; return; }
+  var html = '';
+  for (var i=0; i<hist.length; i++) {
+    var h = hist[i];
+    var priceStr = h.price ? '<div class="hp2">&#8369;'+h.price.toLocaleString()+'</div>' : '';
+    var ncStr    = h.isNC  ? '<div class="hnc">non-code</div>' : '';
+    // safe data attribute for chip value
+    html += '<div class="hi" data-chip="' + h.chip.replace(/"/g,'&quot;') + '">'
+          + '<span class="hc">' + h.chip + '</span>'
+          + '<div class="hr2"><div class="hg" style="color:'+h.color+'">'
+          + h.grade + '</div>' + priceStr + ncStr + '</div></div>';
+  }
+  el.innerHTML = html;
+}
+// Delegate click on history list
+document.getElementById('hl').addEventListener('click', function(e) {
+  var item = e.target.closest('.hi');
+  if (!item) return;
+  var chip = item.getAttribute('data-chip');
+  if (chip) { ciEl.value = chip; tab('checker'); runCheck(); }
+});
+function clrHist() {
+  if (!confirm('Clear all history?')) return;
+  hist = [];
+  safeSave('cg_h', hist);
+  renderHist();
+}
+
+// ── NON-CODE DB ───────────────────────────────────────────────
+function renderNcDB() {
+  var el = document.getElementById('ncDbList');
+  if (!ncDB.length) {
+    el.innerHTML = '<div class="emp">No non-code chips saved yet.<br>Check a chip → not found → select GB → save.</div>';
+    return;
+  }
+  var html = '';
+  for (var i=0; i<ncDB.length; i++) {
+    var e = ncDB[i];
+    var d = new Date(e.added);
+    var dateStr = d.getMonth()+1 + '/' + d.getDate() + '/' + d.getFullYear();
+    html += '<div class="ncdb-item">'
+          + '<div><div class="ncdb-name">' + e.model + '</div>'
+          + '<div class="ncdb-gb">Non-Code · ' + e.gb + ' · ' + dateStr + '</div></div>'
+          + '<button class="ncdb-del" data-id="' + e.id + '" onclick="delNc(this)">🗑</button>'
+          + '</div>';
+  }
+  el.innerHTML = html;
+}
+function delNc(btn) {
+  var id = btn.getAttribute('data-id');
+  var newDB = [];
+  for (var i=0; i<ncDB.length; i++) { if (ncDB[i].id !== id) newDB.push(ncDB[i]); }
+  ncDB = newDB;
+  safeSave('cg_ncdb', ncDB);
+  renderNcDB();
+}
+function clearNcDB() {
+  if (!confirm('Clear all non-code chips?')) return;
+  ncDB = [];
+  safeSave('cg_ncdb', ncDB);
+  renderNcDB();
+}
+
+// ── BUYERS ────────────────────────────────────────────────────
+function renderBuyers() {
+  var el = document.getElementById('buyerList');
+  if (!buyers.length) { el.innerHTML = '<div class="emp">No buyers yet. Tap + ADD BUYER.</div>'; return; }
+  var html = '';
+  for (var i=0; i<buyers.length; i++) {
+    var b = buyers[i];
+    var gRows = '';
+    for (var gi=0; gi<GRADE_KEYS.length; gi++) {
+      var k = GRADE_KEYS[gi];
+      if (b.prices && b.prices[k]) {
+        gRows += '<div class="bprow"><span class="bprow-label">'+GRADE_LABELS[k]+'</span><span class="bprow-val">&#8369;'+Number(b.prices[k]).toLocaleString()+'</span></div>';
+      }
+    }
+    var cRows = '';
+    for (var ci=0; ci<CAP_KEYS.length; ci++) {
+      var ck = CAP_KEYS[ci];
+      if (b.prices && b.prices[ck]) {
+        cRows += '<div class="bprow"><span class="bprow-label">NC '+ck+'</span><span class="bprow-val">&#8369;'+Number(b.prices[ck]).toLocaleString()+'</span></div>';
+      }
+    }
+    var btype = (b.boardTypes && b.boardTypes.length) ? '<div style="font-size:11px;color:var(--mt);margin-top:6px">Boards: '+b.boardTypes.join(', ')+'</div>' : '';
+    var notes = b.notes ? '<div class="buyer-note">'+b.notes+'</div>' : '';
+    html += '<div class="buyer-card">'
+          + '<div class="buyer-header">'
+          + '<div class="buyer-name">'+b.name+'</div>'
+          + '<div class="buyer-actions">'
+          + '<button class="icon-btn" data-id="'+b.id+'" onclick="editBuyer(this)">✏️</button>'
+          + '<button class="icon-btn" data-id="'+b.id+'" onclick="delBuyer(this)">🗑</button>'
+          + '</div></div>'
+          + (gRows ? '<div style="margin-bottom:6px">'+gRows+'</div>' : '')
+          + (cRows ? '<div>'+cRows+'</div>' : '')
+          + btype + notes + '</div>';
+  }
+  el.innerHTML = html;
+}
+function showAddBuyer() {
+  document.getElementById('buyerForm').style.display = 'block';
+  document.getElementById('editBuyerId').value = '';
+  document.getElementById('bname').value = '';
+  document.getElementById('bnotes').value = '';
+  var allKeys = GRADE_KEYS.concat(CAP_KEYS);
+  for (var i=0; i<allKeys.length; i++) {
+    var e = document.getElementById('b_'+allKeys[i]);
+    if (e) e.value = '';
+  }
+  renderBoardTypeRow([]);
+  document.getElementById('buyerForm').scrollIntoView({behavior:'smooth'});
+}
+function hideBuyerForm() { document.getElementById('buyerForm').style.display = 'none'; }
+function renderBoardTypeRow(sel) {
+  var html = '';
+  for (var i=0; i<BOARD_TYPES.length; i++) {
+    var bt = BOARD_TYPES[i];
+    var isSel = sel.indexOf(bt) >= 0;
+    html += '<div class="btype-opt' + (isSel?' sel':'') + '" onclick="this.classList.toggle(\'sel\')">'+bt+'</div>';
+  }
+  document.getElementById('boardTypeRow').innerHTML = html;
+}
+function saveBuyer() {
+  var name = document.getElementById('bname').value.trim();
+  if (!name) { alert('Enter buyer name.'); return; }
+  var editId = document.getElementById('editBuyerId').value;
+  var p2 = {};
+  var allKeys = GRADE_KEYS.concat(CAP_KEYS);
+  for (var i=0; i<allKeys.length; i++) {
+    var k = allKeys[i];
+    var el = document.getElementById('b_'+k);
+    if (el && el.value && parseInt(el.value) > 0) p2[k] = parseInt(el.value);
+  }
+  var btOpts = document.querySelectorAll('.btype-opt.sel');
+  var boardTypes = [];
+  for (var j=0; j<btOpts.length; j++) boardTypes.push(btOpts[j].textContent);
+  var notes = document.getElementById('bnotes').value.trim();
+  if (editId) {
+    for (var bi=0; bi<buyers.length; bi++) {
+      if (buyers[bi].id === editId) {
+        buyers[bi] = {id:editId, name:name, prices:p2, boardTypes:boardTypes, notes:notes, added:buyers[bi].added};
+        break;
+      }
+    }
+  } else {
+    buyers.push({ id:uid(), name:name, prices:p2, boardTypes:boardTypes, notes:notes, added:Date.now() });
+  }
+  safeSave('cg_buyers', buyers);
+  hideBuyerForm();
+  renderBuyers();
+}
+function editBuyer(btn) {
+  var id = btn.getAttribute('data-id');
+  var b = null;
+  for (var i=0; i<buyers.length; i++) { if (buyers[i].id === id) { b = buyers[i]; break; } }
+  if (!b) return;
+  document.getElementById('buyerForm').style.display = 'block';
+  document.getElementById('editBuyerId').value = id;
+  document.getElementById('bname').value = b.name;
+  document.getElementById('bnotes').value = b.notes || '';
+  var allKeys = GRADE_KEYS.concat(CAP_KEYS);
+  for (var i=0; i<allKeys.length; i++) {
+    var k = allKeys[i];
+    var el = document.getElementById('b_'+k);
+    if (el) el.value = (b.prices && b.prices[k]) ? b.prices[k] : '';
+  }
+  renderBoardTypeRow(b.boardTypes || []);
+  document.getElementById('buyerForm').scrollIntoView({behavior:'smooth'});
+}
+function delBuyer(btn) {
+  if (!confirm('Remove buyer?')) return;
+  var id = btn.getAttribute('data-id');
+  var newB = [];
+  for (var i=0; i<buyers.length; i++) { if (buyers[i].id !== id) newB.push(buyers[i]); }
+  buyers = newB;
+  safeSave('cg_buyers', buyers);
+  renderBuyers();
+}
+
+// ── MY PRICES ─────────────────────────────────────────────────
+function renderPrices() {
+  var gHtml = '';
+  for (var i=0; i<prices.grades.length; i++) {
+    var g = prices.grades[i];
+    gHtml += '<div class="pr2"><span class="prl">'+g.label+'</span>'
+           + '<div class="piw"><span class="pp">&#8369;</span>'
+           + '<input class="pin" type="number" id="mp_'+g.key+'" value="'+g.price+'" min="0" step="1"></div></div>';
+  }
+  document.getElementById('gpr').innerHTML = gHtml;
+  var cHtml = '';
+  for (var j=0; j<prices.caps.length; j++) {
+    var c = prices.caps[j];
+    cHtml += '<div class="pr2"><span class="prl">'+c.label+'</span>'
+           + '<div class="piw"><span class="pp">&#8369;</span>'
+           + '<input class="pin" type="number" id="mp_'+c.key+'" value="'+c.price+'" min="0" step="1"></div></div>';
+  }
+  document.getElementById('cpr').innerHTML = cHtml;
+}
+function saveP() {
+  for (var i=0; i<prices.grades.length; i++) {
+    var el = document.getElementById('mp_'+prices.grades[i].key);
+    if (el) prices.grades[i].price = parseInt(el.value) || 0;
+  }
+  for (var j=0; j<prices.caps.length; j++) {
+    var el2 = document.getElementById('mp_'+prices.caps[j].key);
+    if (el2) prices.caps[j].price = parseInt(el2.value) || 0;
+  }
+  safeSave('cg_p', prices);
+  var t = document.getElementById('tst');
+  t.classList.add('on');
+  setTimeout(function(){ t.classList.remove('on'); }, 2500);
+}
+function resetP() {
+  if (!confirm('Reset to default prices?')) return;
+  prices = JSON.parse(JSON.stringify(DEFP));
+  localStorage.removeItem('cg_p');
+  renderPrices();
+}
+
+// ── REFERENCE / LIGHTBOX ──────────────────────────────────────
+function togRef(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('on');
+}
+function openImg(src) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lightbox').classList.add('on');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('on');
+}
+
+// ── DONATE ────────────────────────────────────────────────────
+function openDonate()  { document.getElementById('donateModal').classList.add('on'); }
+function closeDonate() { document.getElementById('donateModal').classList.remove('on'); }
+function copyGcash() {
+  var num = '09155340717';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(num).then(showCopied).catch(function(){ fallbackCopy(num); });
+  } else {
+    fallbackCopy(num);
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showCopied(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function showCopied() {
+  var el = document.getElementById('dmCopied');
+  el.style.display = 'block';
+  setTimeout(function(){ el.style.display = 'none'; }, 3000);
+}
+document.getElementById('donateModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDonate();
+});
+
+// ── OPEN LINK (safe wrapper) ───────────────────────────────────
+function openLink(url) {
+  window.open(url, '_blank');
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  TALLY SHEET
+// ════════════════════════════════════════════════════════════════
+
+// Row definitions: grade rows then non-code rows
+var TALLY_ROWS = [
+  { key:'A1', label:'A1', sub:'(A- / 16GB)', section:'grade', priceKey:'A1' },
+  { key:'A2', label:'A2', sub:'(A+ / 32GB)', section:'grade', priceKey:'A2' },
+  { key:'A3', label:'A3', sub:'(A++ / 64GB)', section:'grade', priceKey:'A3' },
+  { key:'A4', label:'A4', sub:'(A+++ / 128GB)', section:'grade', priceKey:'A4' },
+  { key:'A5', label:'A5', sub:'(A++++ / 256GB)', section:'grade', priceKey:'A5' },
+  { key:'nc16',  label:'16GB',  sub:'Non-Code', section:'nc', priceKey:'16GB' },
+  { key:'nc32',  label:'32GB',  sub:'Non-Code', section:'nc', priceKey:'32GB' },
+  { key:'nc64',  label:'64GB',  sub:'Non-Code', section:'nc', priceKey:'64GB' },
+  { key:'nc128', label:'128GB', sub:'Non-Code', section:'nc', priceKey:'128GB' },
+  { key:'nc256', label:'256GB', sub:'Non-Code', section:'nc', priceKey:'256GB' },
+  { key:'nc512', label:'512GB', sub:'Non-Code', section:'nc', priceKey:'512GB' }
+];
+
+var tallyHistory = safeLoad('cg_tally_hist', []);
+
+// Build the tally table rows
+function tallyBuild() {
+  var tbody = document.getElementById('tallyTbody');
+  if (!tbody) return;
+  var html = '';
+  var lastSection = '';
+  for (var i = 0; i < TALLY_ROWS.length; i++) {
+    var r = TALLY_ROWS[i];
+    // Section separator
+    if (r.section !== lastSection) {
+      var sepLabel = r.section === 'grade' ? 'WITH CODE — GRADED' : 'NON-CODE — BY STORAGE';
+      html += '<tr class="section-sep"><td colspan="4">' + sepLabel + '</td></tr>';
+      lastSection = r.section;
+    }
+    // Get default price from my prices
+    var defPrice = 0;
+    if (r.section === 'grade') {
+      var pg = prices.grades.filter(function(x){ return x.key === r.priceKey; })[0];
+      defPrice = pg ? pg.price : 0;
+    } else {
+      var pc = prices.caps.filter(function(x){ return x.key === r.priceKey; })[0];
+      defPrice = pc ? pc.price : 0;
+    }
+    var dk = r.key;
+    html += '<tr id="trow-' + dk + '">'
+          + '<td><div class="tally-code"><b>' + r.label + '</b><br><span style="font-size:10px;color:var(--mt)">' + r.sub + '</span></div></td>'
+          + '<td><input class="tally-price-inp" type="number" id="tp-' + dk + '" value="' + defPrice + '" min="0" step="1" oninput="tallyCalcRow(this)" data-key="' + dk + '" onfocus="this.select()"></td>'
+          + '<td><input class="tally-pcs-inp" type="number" id="tc-' + dk + '" value="0" min="0" step="1" oninput="tallyCalcRow(this)" data-key="' + dk + '" onfocus="this.select()"></td>'
+          + '<td><span class="tally-total" id="tt-' + dk + '">0</span></td>'
+          + '</tr>';
+  }
+  // Grand total row
+  html += '<tr class="grand-row">'
+        + '<td colspan="2" style="color:var(--gold);font-size:11px;letter-spacing:1px">GRAND TOTAL</td>'
+        + '<td id="tGrandPcsCell" style="text-align:right;color:var(--gold)">0</td>'
+        + '<td id="tGrandTotalCell" style="text-align:right;color:var(--gold);font-size:14px">0</td>'
+        + '</tr>';
+  tbody.innerHTML = html;
+  tallyCalcAll();
+}
+
+// Recalculate one row — accepts a key string or an input element (via data-key)
+function tallyCalcRow(keyOrEl) {
+  var key = (typeof keyOrEl === 'string') ? keyOrEl : (keyOrEl ? keyOrEl.getAttribute('data-key') : '');
+  if (!key) return;
+  var priceEl = document.getElementById('tp-' + key);
+  var pcsEl   = document.getElementById('tc-' + key);
+  var totEl   = document.getElementById('tt-' + key);
+  if (!priceEl || !pcsEl || !totEl) return;
+  var p = parseInt(priceEl.value) || 0;
+  var c = parseInt(pcsEl.value) || 0;
+  var t = p * c;
+  totEl.textContent = t > 0 ? t.toLocaleString() : '0';
+  // Highlight rows with entries
+  var row = document.getElementById('trow-' + key);
+  if (row) {
+    row.style.background = c > 0 ? 'rgba(74,222,128,.04)' : '';
+  }
+  tallyCalcAll();
+}
+
+// Recalculate grand totals
+function tallyCalcAll() {
+  var grandTotal = 0;
+  var grandPcs   = 0;
+  for (var i = 0; i < TALLY_ROWS.length; i++) {
+    var key = TALLY_ROWS[i].key;
+    var p = parseInt((document.getElementById('tp-' + key) || {}).value) || 0;
+    var c = parseInt((document.getElementById('tc-' + key) || {}).value) || 0;
+    grandTotal += p * c;
+    grandPcs   += c;
+  }
+  // Update inline grand row
+  var gc = document.getElementById('tGrandPcsCell');
+  var gt = document.getElementById('tGrandTotalCell');
+  if (gc) gc.textContent = grandPcs;
+  if (gt) gt.textContent = grandTotal > 0 ? grandTotal.toLocaleString() : '0';
+  // Update grand total box
+  var gv = document.getElementById('tallyGrandVal');
+  var gp = document.getElementById('tallyGrandPcs');
+  if (gv) gv.textContent = '₱' + (grandTotal > 0 ? grandTotal.toLocaleString() : '0');
+  if (gp) gp.textContent = grandPcs + ' piece' + (grandPcs !== 1 ? 's' : '') + ' total';
+}
+
+// Fill prices from selected buyer
+function tallyFillBuyer() {
+  var sel = document.getElementById('tallyBuyerSel');
+  if (!sel || !sel.value) return;
+  var bName = sel.value;
+  var buyer = null;
+  for (var i = 0; i < buyers.length; i++) {
+    if (buyers[i].name === bName) { buyer = buyers[i]; break; }
+  }
+  if (!buyer || !buyer.prices) return;
+  for (var j = 0; j < TALLY_ROWS.length; j++) {
+    var r = TALLY_ROWS[j];
+    var el = document.getElementById('tp-' + r.key);
+    if (!el) continue;
+    var bprice = buyer.prices[r.priceKey];
+    if (bprice && parseInt(bprice) > 0) {
+      el.value = parseInt(bprice);
+    }
+    tallyCalcRow(r.key);
+  }
+}
+
+// Populate buyer dropdown
+function tallyPopulateBuyerSel() {
+  var sel = document.getElementById('tallyBuyerSel');
+  if (!sel) return;
+  var current = sel.value;
+  sel.innerHTML = '<option value="">— Select buyer to auto-fill prices —</option>';
+  for (var i = 0; i < buyers.length; i++) {
+    var opt = document.createElement('option');
+    opt.value = buyers[i].name;
+    opt.textContent = buyers[i].name;
+    if (buyers[i].name === current) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+// Clear all PCS inputs (keep prices)
+function tallyClear() {
+  if (!confirm('Clear all quantities? Prices will be kept.')) return;
+  for (var i = 0; i < TALLY_ROWS.length; i++) {
+    var el = document.getElementById('tc-' + TALLY_ROWS[i].key);
+    if (el) el.value = '0';
+    var row = document.getElementById('trow-' + TALLY_ROWS[i].key);
+    if (row) row.style.background = '';
+    var totEl = document.getElementById('tt-' + TALLY_ROWS[i].key);
+    if (totEl) totEl.textContent = '0';
+  }
+  tallyCalcAll();
+}
+
+// Save current session to history
+function tallySaveSession() {
+  var rows = [];
+  var grandTotal = 0;
+  var grandPcs = 0;
+  for (var i = 0; i < TALLY_ROWS.length; i++) {
+    var r = TALLY_ROWS[i];
+    var p = parseInt((document.getElementById('tp-' + r.key) || {}).value) || 0;
+    var c = parseInt((document.getElementById('tc-' + r.key) || {}).value) || 0;
+    if (c > 0) {
+      rows.push({ label: r.label, sub: r.sub, price: p, pcs: c, total: p * c });
+      grandTotal += p * c;
+      grandPcs += c;
+    }
+  }
+  if (!rows.length) { alert('No quantities entered yet.'); return; }
+  var session = {
+    id: uid(),
+    date: new Date().toLocaleString('en-PH'),
+    rows: rows,
+    grandTotal: grandTotal,
+    grandPcs: grandPcs,
+    buyer: (document.getElementById('tallyBuyerSel') || {}).value || ''
+  };
+  tallyHistory = [session].concat(tallyHistory).slice(0, 20);
+  safeSave('cg_tally_hist', tallyHistory);
+  var note = document.getElementById('tallySavedNote');
+  if (note) { note.classList.add('on'); setTimeout(function(){ note.classList.remove('on'); }, 2500); }
+  renderTallyHistory();
+}
+
+// Share as text (copy to clipboard)
+function tallyShareText() {
+  var lines = ['=== CHIP TALLY SHEET ==='];
+  lines.push(new Date().toLocaleString('en-PH'));
+  var buyerSel = document.getElementById('tallyBuyerSel');
+  if (buyerSel && buyerSel.value) lines.push('Buyer: ' + buyerSel.value);
+  lines.push('');
+  lines.push('--- WITH CODE ---');
+  var grandTotal = 0;
+  var grandPcs = 0;
+  for (var i = 0; i < TALLY_ROWS.length; i++) {
+    var r = TALLY_ROWS[i];
+    var p = parseInt((document.getElementById('tp-' + r.key) || {}).value) || 0;
+    var c = parseInt((document.getElementById('tc-' + r.key) || {}).value) || 0;
+    if (r.section === 'nc' && i === 5) lines.push('');  // add separator before NC
+    if (r.section === 'nc' && i === 5) lines.push('--- NON-CODE ---');
+    if (c > 0) {
+      lines.push(r.label + ' ' + r.sub + ' x' + c + ' @ ₱' + p + ' = ₱' + (p*c).toLocaleString());
+      grandTotal += p * c;
+      grandPcs += c;
+    }
+  }
+  lines.push('');
+  lines.push('Total Pieces: ' + grandPcs);
+  lines.push('GRAND TOTAL: ₱' + grandTotal.toLocaleString());
+  lines.push('');
+  lines.push('Generated by Chip Grade ID (jhoelsoft)');
+  var text = lines.join('\n');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){
+      alert('Tally text copied! Paste it in Messenger, Notes, etc.');
+    }).catch(function(){ fallbackCopy(text); alert('Copied to clipboard!'); });
+  } else {
+    fallbackCopy(text);
+    alert('Tally text copied! Paste it in Messenger, Notes, etc.');
+  }
+}
+
+// Render saved session history
+function renderTallyHistory() {
+  var el = document.getElementById('tallyHistoryList');
+  if (!el) return;
+  if (!tallyHistory.length) {
+    el.innerHTML = '<div class="emp">No saved sessions yet.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < tallyHistory.length; i++) {
+    var s = tallyHistory[i];
+    var rowLines = '';
+    for (var j = 0; j < s.rows.length; j++) {
+      var rw = s.rows[j];
+      rowLines += rw.label + ' x' + rw.pcs + ' @ ₱' + rw.price + ' = ₱' + rw.total.toLocaleString() + '  ';
+    }
+    var buyerStr = s.buyer ? ' · ' + s.buyer : '';
+    html += '<div class="tally-history-item">'
+          + '<div class="thi-header">'
+          + '<div><div class="thi-date">' + s.date + buyerStr + '</div>'
+          + '<div style="font-size:11px;color:var(--mt);margin-top:2px">' + s.grandPcs + ' pcs</div></div>'
+          + '<div style="display:flex;align-items:center;gap:8px">'
+          + '<div class="thi-total">₱' + s.grandTotal.toLocaleString() + '</div>'
+          + '<button class="thi-del" data-tid="' + s.id + '" onclick="tallyDelHist(this)">🗑</button>'
+          + '</div></div>'
+          + '<div class="thi-rows">' + rowLines + '</div>'
+          + '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function tallyDelHist(btn) {
+  var id = btn.getAttribute('data-tid');
+  tallyHistory = tallyHistory.filter(function(x){ return x.id !== id; });
+  safeSave('cg_tally_hist', tallyHistory);
+  renderTallyHistory();
+}
+
+function tallyClearHistory() {
+  if (!confirm('Clear all saved tally sessions?')) return;
+  tallyHistory = [];
+  safeSave('cg_tally_hist', tallyHistory);
+  renderTallyHistory();
+}
+
+// Called when tally tab is opened
+function initTallyTab() {
+  tallyPopulateBuyerSel();
+  // Only build table if empty (first time)
+  var tbody = document.getElementById('tallyTbody');
+  if (!tbody || !tbody.innerHTML.trim()) {
+    tallyBuild();
+  }
+  renderTallyHistory();
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+renderHist();
+renderBuyers();
+renderTallyHistory();
+
+// ════════════════════════════════════════════════════════════════
+//  ANALYTICS TRACKING — feeds the admin dashboard
+//  All data stored locally + sent to GoatCounter if configured
+// ════════════════════════════════════════════════════════════════
+var MAX_EVENTS = 500;
+
+function getDevice() {
+  var ua = navigator.userAgent || '';
+  var dev = /Mobile|Android|iPhone|iPad/.test(ua) ? 'Mobile' : 'Desktop';
+  var browser = 'Unknown';
+  if (/Chrome\//.test(ua) && !/Edge|Edg|OPR/.test(ua)) browser = 'Chrome';
+  else if (/Firefox\//.test(ua)) browser = 'Firefox';
+  else if (/Safari\//.test(ua) && !/Chrome/.test(ua)) browser = 'Safari';
+  else if (/Edg\//.test(ua)) browser = 'Edge';
+  else if (/OPR\//.test(ua)) browser = 'Opera';
+  var os = 'Unknown';
+  if (/Android/.test(ua)) os = 'Android';
+  else if (/iPhone|iPad/.test(ua)) os = 'iOS';
+  else if (/Windows/.test(ua)) os = 'Windows';
+  else if (/Mac/.test(ua)) os = 'macOS';
+  else if (/Linux/.test(ua)) os = 'Linux';
+  return dev + ' · ' + browser + ' · ' + os;
+}
+
+function trackEvent(type, label, extra) {
+  try {
+    var events = JSON.parse(localStorage.getItem('cg_admin_events') || '[]');
+    var ev = {
+      type:   type,
+      label:  label || type,
+      device: getDevice(),
+      ts:     new Date().toISOString()
+    };
+    if (extra) {
+      for (var k in extra) ev[k] = extra[k];
+    }
+    events.unshift(ev);
+    if (events.length > MAX_EVENTS) events = events.slice(0, MAX_EVENTS);
+    localStorage.setItem('cg_admin_events', JSON.stringify(events));
+  } catch(e) {}
+
+  // Also send to GoatCounter if configured
+  try {
+    var cfg = JSON.parse(localStorage.getItem('cg_admin_cfg') || '{}');
+    if (cfg.siteCode && cfg.token) {
+      var path = '/' + type + (label ? '/' + label.replace(/\s+/g, '-').toLowerCase() : '');
+      fetch('https://' + cfg.siteCode + '.goatcounter.com/api/v0/count', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + cfg.token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ hits: [{ path: path }] })
+      }).catch(function(){});
+    }
+  } catch(e) {}
+}
+
+// Track app open
+trackEvent('open', 'App Opened');
+
+// Wrap the tab() function to also track tab switches
+var _origTab = tab;
+tab = function(t) {
+  _origTab(t);
+  trackEvent('tab', 'Tab: ' + t);
+};
+
+// Wrap runCheck to track chip checks
+var _origRunCheck = runCheck;
+runCheck = function() {
+  var chip = (document.getElementById('ci') || {}).value || '';
+  _origRunCheck();
+  if (chip.trim()) {
+    trackEvent('check', 'Check: ' + chip.trim().toUpperCase(), { chip: chip.trim().toUpperCase() });
+  }
+};
+
+// Wrap addToNcDB to track non-code saves
+var _origAddToNcDB = addToNcDB;
+addToNcDB = function() {
+  _origAddToNcDB();
+  trackEvent('nc-save', 'Non-Code Saved: ' + currentChip);
+};
+
+// Wrap saveBuyer to track buyer adds
+var _origSaveBuyer = saveBuyer;
+saveBuyer = function() {
+  _origSaveBuyer();
+  trackEvent('buyer', 'Buyer Saved');
+};
+
+// Wrap tallySaveSession to track tally saves
+var _origTallySave = tallySaveSession;
+tallySaveSession = function() {
+  _origTallySave();
+  trackEvent('tally', 'Tally Session Saved');
+};
+
+
+</script>
+</body>
+</html>
