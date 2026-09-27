@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ESP8266 Flasher</title>
+<style>
+:root{
+  --bg:#070d17;--panel:#101a2a;--panel2:#0a121e;--border:#26364d;
+  --text:#edf2f7;--muted:#8b9ab0;--blue:#4285f4;--green:#20d16e;--red:#ef5b65;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;color:var(--text);font-family:Arial,Helvetica,sans-serif;
+ background:radial-gradient(circle at 20% -10%,#244b7a35,transparent 32%),#070d17;
+}
+.wrap{width:min(1000px,calc(100% - 22px));margin:22px auto}
+.top{
+ display:flex;justify-content:space-between;align-items:center;gap:15px;
+ margin-bottom:14px
+}
+.eyebrow{font:700 10px Consolas,monospace;letter-spacing:2px;color:#6f85a3}
+h1{margin:6px 0 3px;font-size:30px;letter-spacing:-.7px}
+.sub{font-size:12px;color:var(--muted)}
+.badge{
+ border:1px solid var(--border);border-radius:20px;padding:8px 11px;
+ font:700 10px Consolas,monospace;color:#a9b6c9
+}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;margin-right:5px}
+.card{
+ background:linear-gradient(145deg,#111b2b,#0c1522);
+ border:1px solid var(--border);border-radius:16px;padding:18px;margin:12px 0;
+ box-shadow:0 15px 38px #0005
+}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}
+h2{margin:0;font-size:16px}.muted{font-size:12px;color:var(--muted);margin-top:4px}
+.status{padding:7px 10px;border-radius:8px;font:700 10px Consolas,monospace;white-space:nowrap}
+.idle{background:#1a2638;color:#9aabc1}.busy{background:#40350e;color:#ffd66d}
+.ok{background:#103a28;color:#58e994}.errstatus{background:#431d23;color:#ff858c}
+
+.form-grid{
+ display:grid;grid-template-columns:145px minmax(0,1fr) auto;gap:10px 12px;align-items:center
+}
+.label{font-size:12px;color:#b8c5d5}
+.control{min-width:0}
+select,input[type=text]{
+ width:100%;height:38px;border:1px solid #293a53;border-radius:8px;
+ background:#09121e;color:#dce6f3;padding:0 10px;outline:none;font:12px Consolas,monospace
+}
+select:focus,input[type=text]:focus{border-color:#4d8eea;box-shadow:0 0 0 3px #4285f41a}
+button{
+ height:36px;border:0;border-radius:8px;padding:0 17px;color:#fff;
+ font-weight:800;font-size:11px;cursor:pointer
+}
+button:disabled{opacity:.35;cursor:not-allowed}
+button:hover:not(:disabled){filter:brightness(1.1)}
+.blue{background:#4285f4}.green{background:#16ba60}.gray{background:#26364d}.red{background:#c84953}
+.radios{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.radio{display:flex;align-items:center;gap:6px;color:#b9c5d5;font-size:12px;white-space:nowrap}
+.radio input{accent-color:#4285f4;margin:0}
+.info{
+ display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;
+ background:#e35b66;color:#fff;font:700 10px Arial;margin-left:3px;cursor:help
+}
+.file-row{display:flex;gap:8px}.file-row input{flex:1}
+.summary{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:17px
+}
+.summary-box{
+ background:#09121e;border:1px solid #1f2e43;border-radius:9px;padding:9px 11px
+}
+.summary-box small{display:block;color:#71829b;font:700 9px Consolas,monospace;margin-bottom:4px}
+.summary-box b{font:600 12px Consolas,monospace;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-bg{height:10px;border-radius:20px;background:#172337;overflow:hidden;border:1px solid #24364f;margin-top:15px}
+.progress{height:100%;width:0;background:linear-gradient(90deg,#17c867,#28db76);transition:width .12s}
+.progress-line{display:flex;justify-content:space-between;margin-top:5px;font:10px Consolas,monospace;color:#9aaac0}
+.console{
+ height:265px;overflow:auto;background:#03080e;border:1px solid #253247;border-radius:9px;
+ padding:11px;font:11px/1.55 Consolas,monospace;color:#c7d2df
+}
+.log{white-space:pre-wrap;overflow-wrap:anywhere}.log.err{color:#ff7f88}
+.log.warn{color:#e5bb63}.log.good{color:#5be994}
+.console::-webkit-scrollbar{width:10px}.console::-webkit-scrollbar-thumb{background:#33445c;border-radius:10px;border:2px solid #03080e}
+.actionbar{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+.drop{
+ margin-top:14px;border:1px dashed #3b4f6b;border-radius:10px;padding:11px;
+ background:#08111c;color:#8fa0b5;font-size:11px;cursor:pointer
+}
+.drop:hover,.drop.drag{border-color:#4d8eea;background:#0d1c30}
+footer{display:flex;justify-content:space-between;color:#586a82;font:10px Consolas,monospace;padding:10px 2px 24px}
+@media(max-width:700px){
+ .form-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}
+ .top{align-items:flex-start;flex-direction:column}.actionbar{justify-content:stretch}
+ .actionbar button{flex:1}.file-row{flex-direction:column}
+}
+.flash-size-select{
+ margin-top:8px;width:100%;height:34px;padding:0 9px;
+ border:1px solid #31435d;border-radius:6px;background:#0d1725;color:#dbe8f7;
+ font:12px Consolas,monospace;outline:none;
+}
+.flash-size-select:focus{border-color:#38a6ff;box-shadow:0 0 0 2px rgba(56,166,255,.12)}
+.flash-size-select option{background:#0d1725;color:#dbe8f7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+ <div>
+  <div class="eyebrow">WEB SERIAL • ESP8266</div>
+  <h1>ESP8266 Flasher</h1>
+  <div class="sub">NodeMCU-style flashing controls with the dark theme from your reference.</div>
+ </div>
+ <div class="badge"><span class="dot"></span> LOCAL TOOL</div>
+</header>
+
+<section class="card">
+ <div class="head">
+  <div>
+   <h2>Flash Settings</h2>
+   <div class="muted">Select the serial port and firmware, then configure the ESP8266 flashing options.</div>
+  </div>
+  <div id="status" class="status idle">DISCONNECTED</div>
+ </div>
+
+ <div class="form-grid">
+  <div class="label">Serial port</div>
+  <div class="control">
+   <select id="port"><option value="">No COM port selected — click CONNECT</option></select>
+  </div>
+  <button id="reload" class="gray">RELOAD</button>
+
+  <div class="label">NodeMCU firmware</div>
+  <div class="control file-row">
+   <input id="firmwarePath" type="text" readonly placeholder="No firmware selected">
+  </div>
+  <button id="browse" class="gray">BROWSE</button>
+
+  <div class="label">Baud rate</div>
+  <div class="control">
+   <div class="radios">
+    <label class="radio"><input name="baud" type="radio" value="9600">9600</label>
+    <label class="radio"><input name="baud" type="radio" value="57600">57600</label>
+    <label class="radio"><input name="baud" type="radio" value="74880">74880</label>
+    <label class="radio"><input name="baud" type="radio" value="115200" checked>115200</label>
+    <label class="radio"><input name="baud" type="radio" value="230400">230400</label>
+    <label class="radio"><input name="baud" type="radio" value="460800">460800</label>
+    <label class="radio"><input name="baud" type="radio" value="921600">921600</label>
+   </div>
+  </div>
+  <div></div>
+
+  <div class="label">Flash mode <span class="info" title="ESP8266 SPI flash mode">i</span></div>
+  <div class="control">
+   <div class="radios">
+    <label class="radio"><input name="mode" type="radio" value="qio">Quad I/O (QIO)</label>
+    <label class="radio"><input name="mode" type="radio" value="dio" checked>Dual I/O (DIO)</label>
+    <label class="radio"><input name="mode" type="radio" value="dout">Dual Output (DOUT)</label>
+   </div>
+  </div>
+  <div></div>
+
+  <div class="label">Erase flash</div>
+  <div class="control">
+   <div class="radios">
+    <label class="radio"><input name="erase" type="radio" value="no">no</label>
+    <label class="radio"><input name="erase" type="radio" value="yes" checked>yes, wipes all data</label>
+   </div>
+  </div>
+  <div></div>
+ </div>
+
+ <input id="file" type="file" accept=".bin,application/octet-stream" hidden>
+
+ <div id="drop" class="drop">
+  Drag & drop a .BIN firmware here, or click BROWSE.
+ </div>
+ <div id="portHint" style="margin-top:8px;color:#71829b;font:10px Consolas,monospace">
+  Browser note: Chrome/Edge hides the Windows COM number. Click CONNECT to open the Windows COM-port chooser.
+ </div>
+
+ <div class="summary">
+  <div class="summary-box"><small>CHIP</small><b id="chip">—</b></div>
+  <div class="summary-box"><small>DEVICE HWID</small><b id="hwid">—</b></div>
+  <div class="summary-box">
+   <small>FLASH SIZE</small>
+   <b id="flashSize">DETECTING…</b>
+   <select id="flashSizeSelect" class="flash-size-select" style="display:none">
+    <option value="">Select flash size…</option>
+    <option value="256KB">256KB</option>
+    <option value="512KB">512KB</option>
+    <option value="1MB">1MB</option>
+    <option value="2MB">2MB</option>
+    <option value="4MB">4MB</option>
+    <option value="8MB">8MB</option>
+    <option value="16MB">16MB</option>
+    <option value="32MB">32MB</option>
+   </select>
+  </div>
+ </div>
+
+ <div class="progress-bg"><div id="progress" class="progress"></div></div>
+ <div class="progress-line"><span id="stage">READY</span><span id="pct">0%</span></div>
+
+ <div class="actionbar">
+  <button id="connect" class="blue">CONNECT</button>
+  <button id="disconnect" class="gray" disabled>DISCONNECT</button>
+  <button id="flash" class="green" disabled>FLASH</button>
+  <button id="eraseBtn" class="red" disabled>ERASE</button>
+ </div>
+</section>
+
+<section class="card">
+ <div class="head">
+  <div><h2>Console</h2><div class="muted">Live esptool-js output</div></div>
+  <button id="clear" class="gray" style="height:32px;padding:0 12px">CLEAR</button>
+ </div>
+ <div id="console" class="console"></div>
+</section>
+
+<footer>
+ <span>ESP8266 Flasher</span>
+ <span>Powered by Espressif esptool-js</span>
+</footer>
+</div>
+
+<script type="module">
+import { ESPLoader, Transport } from "https://cdn.jsdelivr.net/npm/esptool-js@0.7.0/+esm";
+
+const $=id=>document.getElementById(id);
+let ports=[],selectedPort=null,transport=null,loader=null,connected=false,busy=false,firmware=null,detectedFlashSize="";
+
+function log(msg,cls=""){
+ const e=document.createElement("div");e.className="log "+cls;e.textContent=msg;
+ $("console").appendChild(e);$("console").scrollTop=$("console").scrollHeight;
+}
+function setStatus(t,c="idle"){$("status").textContent=t;$("status").className="status "+c}
+function setProgress(n,label){
+ n=Math.max(0,Math.min(100,n));$("progress").style.width=n+"%";
+ $("pct").textContent=(label||n.toFixed(0)+"%")
+}
+function controls(){
+ $("connect").disabled=busy||!selectedPort;
+ $("disconnect").disabled=busy||!connected;
+ $("flash").disabled=busy||!connected||!firmware||(!detectedFlashSize && !$("flashSizeSelect").value);
+ $("eraseBtn").disabled=busy||!connected;
+ $("reload").disabled=busy;
+ $("browse").disabled=busy;
+}
+function human(n){
+ if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";
+ return (n/1048576).toFixed(2)+" MB";
+}
+function terminal(){
+ return {
+  clean(){},writeLine:d=>{if(String(d).trim())log(String(d))},
+  write:d=>{if(String(d).trim())log(String(d))}
+ };
+}
+function selectedRadio(name){
+ return document.querySelector('input[name="'+name+'"]:checked')?.value;
+}
+function currentFlashSize(){
+ return detectedFlashSize || $("flashSizeSelect").value || "";
+}
+function showFlashSizeChoice(show){
+ $("flashSizeSelect").style.display=show?"block":"none";
+ if(!show)$("flashSizeSelect").value="";
+ controls();
+}
+function addressFromImage(data){
+ // Detect common ESP8266 image format. Most NodeMCU images use 0x00000.
+ return 0x00000;
+}
+async function reloadPorts(){
+ if(!("serial" in navigator)){
+  log("Web Serial is not supported. Use Chrome or Edge on desktop.","err");
+  return;
+ }
+ try{
+  const available=await navigator.serial.getPorts();
+  ports=available;
+  const sel=$("port");
+  const old=sel.value;
+  sel.innerHTML="";
+  if(!available.length){
+   const opt=document.createElement("option");
+   opt.value="";
+   opt.textContent="No COM port selected — click CONNECT";
+   sel.appendChild(opt);
+   selectedPort=null;
+  }else{
+   available.forEach((p,i)=>{
+    const info=p.getInfo?.()||{};
+    let name="Authorized COM/Serial device "+(i+1);
+    if(info.usbVendorId){
+      name+=" • VID "+info.usbVendorId.toString(16).toUpperCase().padStart(4,"0");
+    }
+    if(info.usbProductId){
+      name+=" • PID "+info.usbProductId.toString(16).toUpperCase().padStart(4,"0");
+    }
+    const opt=document.createElement("option");
+    opt.value=String(i);
+    opt.textContent=name;
+    sel.appendChild(opt);
+   });
+   if(old && ports[Number(old)]){
+    sel.value=old;selectedPort=ports[Number(old)];
+   }else{
+    sel.value="0";selectedPort=ports[0];
+   }
+   $("portHint").textContent=
+     "COM port detected/authorized. The browser may hide the Windows COM number; the selected device is used directly for flashing.";
+   log("Found "+available.length+" authorized serial port(s).");
+  }
+ }catch(e){
+  log("[ERROR] "+e.message,"err");
+ }
+ controls();
+}
+async function choosePort(){
+ if(!("serial" in navigator)){
+  log("Web Serial is not supported. Use Chrome or Edge on desktop.","err");
+  return;
+ }
+ try{
+  const p=await navigator.serial.requestPort();
+  selectedPort=p;
+
+  // Add the selected port to the dropdown. Web Serial deliberately does
+  // not expose the Windows COM number to webpage JavaScript.
+  const info=p.getInfo?.()||{};
+  let label="Selected COM / Serial port";
+  if(info.usbVendorId){
+   label+=" • VID "+info.usbVendorId.toString(16).toUpperCase().padStart(4,"0");
+  }
+  if(info.usbProductId){
+   label+=" • PID "+info.usbProductId.toString(16).toUpperCase().padStart(4,"0");
+  }
+
+  $("port").innerHTML="";
+  const opt=document.createElement("option");
+  opt.value="selected";
+  opt.textContent=label;
+  $("port").appendChild(opt);
+  $("port").value="selected";
+
+  $("portHint").textContent=
+   "✓ COM/serial port selected. Chrome/Edge intentionally does not reveal the Windows COM number (for example COM40).";
+  log("[+] COM/serial port selected from the browser dialog.","good");
+  controls();
+ }catch(e){
+  log("[ERROR] No serial port selected.","warn");
+ }
+}
+async function connect(){
+ if(!selectedPort){await choosePort();if(!selectedPort)return}
+ try{
+  busy=true;controls();setStatus("CONNECTING…","busy");$("stage").textContent="CONNECTING";
+  log("Connecting to ESP8266 bootloader…");
+  transport=new Transport(selectedPort,true);
+  loader=new ESPLoader({
+   transport,baudrate:Number(selectedRadio("baud")||115200),romBaudrate:115200,
+   terminal:terminal(),debugLogging:false
+  });
+  const chip=await loader.main();
+  let hwid="—";try{hwid=String(await loader.chip.readMac(loader)).replace(/[^0-9a-f]/gi,"").match(/.{1,2}/g)?.join(":").toUpperCase()||"—"}catch{}
+  // Read the SPI flash ID directly. This is more reliable for ESP8266
+  // than relying only on a mapped detectFlashSize() result.
+  let fs="—", flashId=null;
+  try{
+   fs=await loader.detectFlashSize() || "—";
+  }catch(e){
+   log("[WARN] Automatic flash-size mapping failed; reading SPI flash ID directly.","warn");
+  }
+
+  try{
+   if((!fs || fs==="—") && typeof loader.readFlashId==="function"){
+    flashId=await loader.readFlashId();
+    const sizeId=(flashId >>> 16) & 0xFF;
+    const flashSizes={
+      0x12:"256KB",0x13:"512KB",0x14:"1MB",0x15:"2MB",
+      0x16:"4MB",0x17:"8MB",0x18:"16MB",0x19:"32MB",
+      0x1A:"64MB",0x1B:"128MB",0x1C:"256MB"
+    };
+    fs=flashSizes[sizeId] || "Unknown ("+sizeId.toString(16).toUpperCase().padStart(2,"0")+")";
+    log("[+] SPI Flash ID: 0x"+flashId.toString(16).toUpperCase().padStart(6,"0"),"good");
+    log("[+] Flash Size ID: 0x"+sizeId.toString(16).toUpperCase().padStart(2,"0"),"good");
+   }
+  }catch(e){
+   log("[WARN] Could not read SPI flash ID: "+(e?.message||e),"warn");
+  }
+
+  $("chip").textContent=chip||"ESP8266";
+  $("hwid").textContent=hwid;
+
+  const isUnknown=!fs || fs==="—" || String(fs).startsWith("Unknown");
+  detectedFlashSize=isUnknown?"":String(fs);
+  if(isUnknown){
+   $("flashSize").textContent="UNKNOWN";
+   showFlashSizeChoice(true);
+   log("[!] Flash size could not be detected. Please select the correct size before flashing.","warn");
+  }else{
+   $("flashSize").textContent=fs;
+   $("flashSizeSelect").value=String(fs);
+   showFlashSizeChoice(false);
+  }
+
+  connected=true;setStatus("CONNECTED","ok");$("stage").textContent="READY";
+  log("[+] Connected: "+chip,"good");
+  log("[+] Device HWID: "+hwid,"good");
+  log("[+] Flash size: "+fs,"good");
+ }catch(e){
+  connected=false;setStatus("CONNECTION ERROR","errstatus");$("stage").textContent="ERROR";
+  log("[ERROR] "+(e?.message||e),"err");
+  try{await transport?.disconnect()}catch{};transport=null;loader=null;
+ }finally{busy=false;controls()}
+}
+async function disconnect(){
+ try{await transport?.disconnect()}catch(e){log("[WARN] "+e.message,"warn")}
+ connected=false;transport=null;loader=null;detectedFlashSize="";
+ $("chip").textContent=$("hwid").textContent=$("flashSize").textContent="—";
+ $("flashSizeSelect").value="";showFlashSizeChoice(false);
+ setStatus("DISCONNECTED");$("stage").textContent="READY";controls();
+}
+async function flash(){
+ if(!loader||!firmware)return;
+ try{
+  busy=true;controls();setStatus("FLASHING…","busy");$("stage").textContent="WRITING";
+  setProgress(0,"0%");
+  const data=new Uint8Array(await firmware.arrayBuffer());
+  const options={
+   fileArray:[{address:addressFromImage(data),data}],
+   flashMode:selectedRadio("mode")||"dio",
+   flashFreq:"keep",flashSize:currentFlashSize()||"detect",
+   eraseAll:selectedRadio("erase")==="yes",
+   compress:false,
+   reportProgress:(_i,w,total)=>setProgress(total?(w/total)*100:"0")
+  };
+  log("=== FLASH START ===");
+  log("Firmware: "+firmware.name);log("Size: "+human(firmware.size));
+  log("Baud rate: "+selectedRadio("baud"));
+  log("Flash mode: "+selectedRadio("mode").toUpperCase());
+  log("Erase flash: "+selectedRadio("erase"));
+  log("Flash size: "+(currentFlashSize()||"detect"));
+  log("Writing at 0x00000…");
+  await loader.writeFlash(options);
+  setProgress(100,"100%");$("stage").textContent="DONE";
+  log("[+] Flash complete! Wrote "+human(data.length)+".","good");
+  log("[+] Resetting device…");
+  await loader.after("hard_reset");
+  log("[✓] DONE. ESP8266 reset complete.","good");setStatus("DONE","ok");
+ }catch(e){
+  $("stage").textContent="ERROR";setStatus("FLASH ERROR","errstatus");
+  log("[ERROR] "+(e?.message||e),"err");
+  log("Tip: Hold FLASH/BOOT while connecting if your board does not enter bootloader automatically.","warn");
+ }finally{busy=false;controls()}
+}
+async function eraseFlash(){
+ if(!loader||busy)return;
+ if(!confirm("Erase the entire ESP8266 flash? This removes all data."))return;
+ try{
+  busy=true;controls();setStatus("ERASING…","busy");$("stage").textContent="ERASING";setProgress(10,"ERASING");
+  await loader.eraseFlash();setProgress(100,"100%");$("stage").textContent="DONE";
+  log("[+] Full flash erase complete.","good");setStatus("ERASE DONE","ok");
+ }catch(e){setStatus("ERASE ERROR","errstatus");$("stage").textContent="ERROR";log("[ERROR] "+e.message,"err")}
+ finally{busy=false;controls()}
+}
+function chooseFile(f){
+ if(!f)return;
+ if(!f.name.toLowerCase().endsWith(".bin")){log("[ERROR] Please select a .BIN firmware file.","err");return}
+ firmware=f;$("firmwarePath").value=f.name+" ("+human(f.size)+")";
+ log("[+] Firmware selected: "+f.name,"good");controls();
+}
+$("port").onchange=async e=>{
+ const i=Number(e.target.value);
+ if(Number.isInteger(i)&&ports[i])selectedPort=ports[i];else selectedPort=null;
+ controls();
+};
+$("reload").onclick=reloadPorts;
+$("connect").onclick=connect;
+$("disconnect").onclick=disconnect;
+$("flash").onclick=flash;
+$("eraseBtn").onclick=eraseFlash;
+$("flashSizeSelect").onchange=()=>{
+ const v=$("flashSizeSelect").value;
+ if(v){
+  $("flashSize").textContent=v;
+  log("[+] Manual flash size selected: "+v,"good");
+ }else if(!detectedFlashSize){
+  $("flashSize").textContent="UNKNOWN";
+ }
+ controls();
+};
+$("browse").onclick=()=>{$("file").click()};
+$("file").onchange=e=>chooseFile(e.target.files[0]);
+$("drop").onclick=()=>{$("file").click()};
+$("drop").ondragover=e=>{e.preventDefault();$("drop").classList.add("drag")};
+$("drop").ondragleave=()=>$("drop").classList.remove("drag");
+$("drop").ondrop=e=>{e.preventDefault();$("drop").classList.remove("drag");chooseFile(e.dataTransfer.files[0])};
+$("clear").onclick=()=>$("console").innerHTML="";
+if("serial" in navigator){
+ navigator.serial.addEventListener("connect",()=>reloadPorts());
+ navigator.serial.addEventListener("disconnect",e=>{
+  if(connected&&!busy){log("[WARN] Serial device disconnected.","warn");disconnect()}
+  reloadPorts();
+ });
+}
+log("Ready. Select a serial port or click CONNECT to choose one.");
+reloadPorts();
+controls();
+</script>
+</body>
+</html>
