@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code / Non-Code Price Calculator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-serif}
+.container{max-width:950px;margin:auto}
+.top-buttons{display:flex;gap:10px;margin-bottom:15px}
+.top-buttons button{flex:1;padding:12px;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+.edit-btn{background:#d6a900;color:#111}.clear-btn{background:#b52a2a;color:#fff}
+.price-lists{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px}
+.price-box{border:2px solid #b58a24;border-radius:8px;overflow:hidden;background:#171717}
+.price-title{background:#050505;color:#ffd21c;padding:12px;text-align:center;font-weight:bold;border-bottom:2px solid #b58a24;letter-spacing:1px}
+.price-row{display:grid;grid-template-columns:1fr 1fr 85px;align-items:center;min-height:44px;border-bottom:1px solid #555}
+.price-row:last-child{border-bottom:0}
+.price-name{text-align:center;font-weight:bold}
+.price-value{text-align:center;color:#ffd21c;font-weight:bold}
+.add-item{margin:5px;padding:7px 8px;background:#d6a900;color:#111;border:0;border-radius:4px;cursor:pointer;font-weight:bold}
+.add-item:hover{background:#ffd21c}
+.cart{background:#fff;color:#111;border-radius:6px;overflow-x:auto}
+.cart-header,.cart-row{display:grid;grid-template-columns:1fr 1.2fr 1fr 60px 55px 55px 1.1fr;min-width:760px;align-items:center}
+.cart-header{background:#e7e7e7;font-weight:bold}
+.cart-header div,.cart-row div{min-height:40px;padding:8px;display:flex;align-items:center;border-right:1px solid #ccc}
+.cart-header div:last-child,.cart-row div:last-child{border-right:0}
+.cart-row{border-top:1px solid #ddd}
+.price,.total{justify-content:flex-end}.qty,.action{justify-content:center}
+.total{color:green;font-weight:bold}.qty-btn{width:30px;height:30px;border:1px solid #999;background:#eee;border-radius:4px;cursor:pointer;font-size:18px;font-weight:bold}
+.empty{min-width:760px;padding:20px;text-align:center;color:#777}
+.grand-total{margin-top:15px;padding:15px;border:2px solid #b58a24;border-radius:6px;background:#191919;display:flex;justify-content:space-between;font-size:20px;font-weight:bold}
+.grand-total-value{color:#ffd21c}
+.modal{display:none;position:fixed;z-index:1000;inset:0;background:rgba(0,0,0,.78);padding:15px}
+.modal.show{display:flex;align-items:center;justify-content:center}
+.modal-box{width:100%;max-width:700px;max-height:92vh;overflow-y:auto;background:#202020;border:2px solid #b58a24;border-radius:8px;padding:20px}
+.modal-title{text-align:center;color:#ffd21c;font-size:22px;font-weight:bold;margin-bottom:18px}
+.section-title{margin-top:15px;background:#111;border-left:4px solid #d6a900;padding:10px;font-weight:bold}
+.manage-row{display:grid;grid-template-columns:1fr 130px 75px 75px;gap:7px;align-items:center;padding:7px 0;border-bottom:1px solid #444}
+.manage-row input{width:100%;padding:8px;border-radius:4px;border:1px solid #777}
+.manage-row button,.add-new,.modal-buttons button{border:0;border-radius:4px;padding:9px;cursor:pointer;font-weight:bold}
+.save-item{background:#1c9c48;color:#fff}.delete-item{background:#a52b2b;color:#fff}
+.add-new{width:100%;margin-top:8px;background:#d6a900;color:#111}
+.modal-buttons{display:flex;gap:8px;margin-top:18px}
+.modal-buttons button{flex:1;padding:12px}.save-all{background:#1c9c48;color:#fff}.reset-btn{background:#a52b2b;color:#fff}.cancel-btn{background:#555;color:#fff}
+@media(max-width:650px){body{padding:10px}.price-lists{grid-template-columns:1fr}.top-buttons{flex-direction:column}.manage-row{grid-template-columns:1fr 100px 65px 65px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-buttons">
+    <button class="edit-btn" onclick="openEditor()">⚙ EDIT PRICE LIST</button>
+    <button class="clear-btn" onclick="clearCart()">🗑 CLEAR ITEMS</button>
+  </div>
+
+  <div class="price-lists">
+    <div class="price-box">
+      <div class="price-title">CODE</div>
+      <div id="codeList"></div>
+    </div>
+    <div class="price-box">
+      <div class="price-title">NON-CODE</div>
+      <div id="nonCodeList"></div>
+    </div>
+  </div>
+
+  <div class="cart">
+    <div class="cart-header">
+      <div>category</div><div>item</div><div>price</div><div>qty</div><div>[+]</div><div>[-]</div><div>total</div>
+    </div>
+    <div id="cartBody"><div class="empty">Click ADD ITEM to add a product</div></div>
+  </div>
+
+  <div class="grand-total">
+    <span>GRAND TOTAL</span>
+    <span class="grand-total-value" id="grandTotal">₱0</span>
+  </div>
+</div>
+
+<div class="modal" id="priceModal">
+  <div class="modal-box">
+    <div class="modal-title">⚙ EDIT PRICE LIST</div>
+
+    <div class="section-title">CODE</div>
+    <div id="codeEditor"></div>
+    <button class="add-new" onclick="addNewItem('code')">＋ ADD CODE ITEM</button>
+
+    <div class="section-title">NON-CODE</div>
+    <div id="nonCodeEditor"></div>
+    <button class="add-new" onclick="addNewItem('nonCode')">＋ ADD NON-CODE ITEM</button>
+
+    <div class="modal-buttons">
+      <button class="save-all" onclick="saveAllPrices()">💾 SAVE ALL</button>
+      <button class="reset-btn" onclick="resetPrices()">↻ RESET DEFAULT</button>
+      <button class="cancel-btn" onclick="closeEditor()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const defaults={
+  code:[
+    {name:"A5",price:1350},{name:"A4",price:1020},{name:"A3",price:740},
+    {name:"A2",price:320},{name:"A1",price:120},{name:"A",price:50}
+  ],
+  nonCode:[
+    {name:"512",price:1350},{name:"256",price:950},{name:"128",price:730},
+    {name:"64",price:530},{name:"32",price:260},{name:"16",price:80},{name:"8",price:50}
+  ]
+};
+
+let prices=JSON.parse(localStorage.getItem("jhoelsoftPriceList")||"null")||structuredClone(defaults);
+let cart={};
+
+function money(n){return "₱"+Number(n).toLocaleString("en-PH");}
+function key(category,name){return category+"::"+name;}
+
+function renderLists(){
+  renderCategory("code","codeList");
+  renderCategory("nonCode","nonCodeList");
+}
+function renderCategory(category,id){
+  const el=document.getElementById(id); el.innerHTML="";
+  prices[category].forEach(item=>{
+    const row=document.createElement("div");
+    row.className="price-row";
+    row.innerHTML=`<div class="price-name">${escapeHtml(item.name)}</div>
+      <div class="price-value">${money(item.price)}</div>
+      <button class="add-item">ADD</button>`;
+    row.querySelector("button").onclick=()=>addItem(category,item.name,item.price);
+    el.appendChild(row);
+  });
+}
+
+function addItem(category,name,price){
+  const k=key(category,name);
+  if(cart[k]) cart[k].qty++;
+  else cart[k]={category,name,price,qty:1};
+  renderCart();
+}
+function increase(k){if(cart[k]){cart[k].qty++;renderCart()}}
+function decrease(k){
+  if(!cart[k])return;
+  cart[k].qty--;
+  if(cart[k].qty<=0)delete cart[k];
+  renderCart();
+}
+function renderCart(){
+  const body=document.getElementById("cartBody"); body.innerHTML="";
+  let grand=0;
+  const items=Object.entries(cart);
+  if(!items.length){
+    body.innerHTML='<div class="empty">Click ADD ITEM to add a product</div>';
+    document.getElementById("grandTotal").textContent="₱0"; return;
+  }
+  items.forEach(([k,item])=>{
+    const total=item.price*item.qty; grand+=total;
+    const row=document.createElement("div"); row.className="cart-row";
+    row.innerHTML=`<div>${escapeHtml(item.category==="code"?"CODE":"NON-CODE")}</div>
+      <div>${escapeHtml(item.name)}</div>
+      <div class="price">${money(item.price)}</div>
+      <div class="qty">${item.qty}</div>
+      <div class="action"><button class="qty-btn">+</button></div>
+      <div class="action"><button class="qty-btn">−</button></div>
+      <div class="total">${money(total)}</div>`;
+    row.children[4].firstElementChild.onclick=()=>increase(k);
+    row.children[5].firstElementChild.onclick=()=>decrease(k);
+    body.appendChild(row);
+  });
+  document.getElementById("grandTotal").textContent=money(grand);
+}
+
+function clearCart(){cart={};renderCart();}
+
+function openEditor(){
+  renderEditor("code","codeEditor");
+  renderEditor("nonCode","nonCodeEditor");
+  document.getElementById("priceModal").classList.add("show");
+}
+function renderEditor(category,id){
+  const el=document.getElementById(id); el.innerHTML="";
+  prices[category].forEach((item,i)=>{
+    const row=document.createElement("div"); row.className="manage-row";
+    row.innerHTML=`<input class="edit-name" value="${escapeAttr(item.name)}">
+      <input class="edit-price" type="number" min="0" value="${item.price}">
+      <button class="save-item">SAVE</button>
+      <button class="delete-item">DELETE</button>`;
+    row.querySelector(".save-item").onclick=()=>{
+      const name=row.querySelector(".edit-name").value.trim();
+      const price=Math.max(0,Number(row.querySelector(".edit-price").value)||0);
+      if(!name){alert("Item name is required.");return}
+      const oldName=prices[category][i].name;
+      prices[category][i]={name,price};
+      const oldKey=key(category,oldName), newKey=key(category,name);
+      if(cart[oldKey]){
+        cart[oldKey].name=name; cart[oldKey].price=price;
+        if(oldKey!==newKey){cart[newKey]=cart[oldKey];delete cart[oldKey]}
+      }
+      saveToStorage(); renderLists(); renderCart(); openEditor();
+    };
+    row.querySelector(".delete-item").onclick=()=>{
+      if(confirm("Delete "+item.name+"?")){
+        prices[category].splice(i,1);
+        delete cart[key(category,item.name)];
+        saveToStorage(); renderLists(); renderCart(); openEditor();
+      }
+    };
+    el.appendChild(row);
+  });
+}
+function addNewItem(category){
+  const name=prompt("Enter item name:");
+  if(name===null)return;
+  const clean=name.trim(); if(!clean){alert("Item name is required.");return}
+  const value=prompt("Enter price:");
+  if(value===null)return;
+  const price=Math.max(0,Number(value)||0);
+  prices[category].push({name:clean,price});
+  saveToStorage(); renderLists(); openEditor();
+}
+function saveAllPrices(){
+  document.querySelectorAll("#codeEditor .manage-row").forEach((row,i)=>{
+    const name=row.querySelector(".edit-name").value.trim();
+    const price=Math.max(0,Number(row.querySelector(".edit-price").value)||0);
+    if(name) prices.code[i]={name,price};
+  });
+  document.querySelectorAll("#nonCodeEditor .manage-row").forEach((row,i)=>{
+    const name=row.querySelector(".edit-name").value.trim();
+    const price=Math.max(0,Number(row.querySelector(".edit-price").value)||0);
+    if(name) prices.nonCode[i]={name,price};
+  });
+  saveToStorage(); renderLists(); renderCart(); closeEditor();
+  alert("Price list saved successfully.");
+}
+function saveToStorage(){localStorage.setItem("jhoelsoftPriceList",JSON.stringify(prices));}
+function resetPrices(){
+  if(!confirm("Reset CODE and NON-CODE to default prices?"))return;
+  prices=structuredClone(defaults); saveToStorage(); cart={};
+  renderLists(); renderCart(); openEditor();
+}
+function closeEditor(){document.getElementById("priceModal").classList.remove("show");}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function escapeAttr(s){return escapeHtml(s);}
+renderLists(); renderCart();
+</script>
+</body>
+</html>
