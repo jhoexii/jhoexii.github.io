@@ -8,10 +8,15 @@
 *{box-sizing:border-box}
 body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-serif}
 .container{max-width:950px;margin:auto}
-.top-buttons{display:flex;gap:10px;margin-bottom:15px}
-.top-buttons button{flex:1;padding:12px;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+.top-buttons{display:none}
+.bottom-actions{display:flex;gap:10px;position:sticky;bottom:0;z-index:20;background:#111;padding:12px 0 2px;margin-top:12px}
+.bottom-actions button{flex:1;padding:13px 10px;border:0;border-radius:6px;font-weight:bold;cursor:pointer;font-size:14px}
+.bottom-edit{background:#d6a900;color:#111}.bottom-checkout{background:#1c9c48;color:#fff}.bottom-clear{background:#b52a2a;color:#fff}
+.bottom-actions button:hover{filter:brightness(1.08)}
 .edit-btn{background:#d6a900;color:#111}.clear-btn{background:#b52a2a;color:#fff}
-.price-lists{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px}
+.checkout-btn{background:#1c9c48;color:#fff}.checkout-btn:hover{background:#25bd5b}
+.payment-summary{background:#111;border:1px solid #555;border-radius:6px;padding:15px;margin-bottom:15px}.payment-line{display:flex;justify-content:space-between;padding:6px 0}.payment-total{font-size:24px;font-weight:bold;color:#ffd21c;border-top:1px solid #555;margin-top:8px;padding-top:12px}.cash-label{display:block;font-weight:bold;margin-bottom:7px}.cash-input{width:100%;padding:12px;font-size:22px;border-radius:5px;border:1px solid #777}.change-box{margin-top:12px;background:#172417;border:1px solid #398a45;border-radius:6px;padding:12px;display:flex;justify-content:space-between;font-size:20px;font-weight:bold}.insufficient{background:#351717;border-color:#9a3d3d;color:#ff8585}.receipt-actions{display:flex;gap:8px;margin-top:12px}.receipt-actions button{flex:1;padding:11px;border:0;border-radius:5px;font-weight:bold;cursor:pointer}.download-receipt{background:#d6a900;color:#111}.print-receipt{background:#555;color:#fff}
+.price-lists{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0 8px}
 .price-box{border:2px solid #b58a24;border-radius:8px;overflow:hidden;background:#171717}
 .price-title{background:#050505;color:#ffd21c;padding:12px;text-align:center;font-weight:bold;border-bottom:2px solid #b58a24;letter-spacing:1px}
 .price-row{display:grid;grid-template-columns:1fr 1fr 85px;align-items:center;min-height:44px;border-bottom:1px solid #555}
@@ -20,7 +25,11 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 .price-value{text-align:center;color:#ffd21c;font-weight:bold}
 .add-item{margin:5px;padding:7px 8px;background:#d6a900;color:#111;border:0;border-radius:4px;cursor:pointer;font-weight:bold}
 .add-item:hover{background:#ffd21c}
-.cart{background:#fff;color:#111;border-radius:6px;overflow-x:auto}
+.cart{background:#fff;color:#111;border-radius:6px;overflow:hidden}
+.cart-body-scroll{max-height:300px;overflow-y:auto;overflow-x:auto}
+.cart-body-scroll::-webkit-scrollbar{width:8px;height:8px}
+.cart-body-scroll::-webkit-scrollbar-thumb{background:#999;border-radius:8px}
+.cart-header{position:sticky;top:0;z-index:5}
 .cart-header,.cart-row{display:grid;grid-template-columns:1fr 1.2fr 1fr 60px 55px 55px 1.1fr;min-width:760px;align-items:center}
 .cart-header{background:#e7e7e7;font-weight:bold}
 .cart-header div,.cart-row div{min-height:40px;padding:8px;display:flex;align-items:center;border-right:1px solid #ccc}
@@ -29,7 +38,7 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 .price,.total{justify-content:flex-end}.qty,.action{justify-content:center}
 .total{color:green;font-weight:bold}.qty-btn{width:30px;height:30px;border:1px solid #999;background:#eee;border-radius:4px;cursor:pointer;font-size:18px;font-weight:bold}
 .empty{min-width:760px;padding:20px;text-align:center;color:#777}
-.grand-total{margin-top:15px;padding:15px;border:2px solid #b58a24;border-radius:6px;background:#191919;display:flex;justify-content:space-between;font-size:20px;font-weight:bold}
+.grand-total{margin-top:10px;padding:15px;border:2px solid #b58a24;border-radius:6px;background:#191919;display:flex;justify-content:space-between;font-size:20px;font-weight:bold}
 .grand-total-value{color:#ffd21c}
 .modal{display:none;position:fixed;z-index:1000;inset:0;background:rgba(0,0,0,.78);padding:15px}
 .modal.show{display:flex;align-items:center;justify-content:center}
@@ -43,16 +52,27 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 .add-new{width:100%;margin-top:8px;background:#d6a900;color:#111}
 .modal-buttons{display:flex;gap:8px;margin-top:18px}
 .modal-buttons button{flex:1;padding:12px}.save-all{background:#1c9c48;color:#fff}.reset-btn{background:#a52b2b;color:#fff}.cancel-btn{background:#555;color:#fff}
-@media(max-width:650px){body{padding:10px}.price-lists{grid-template-columns:1fr}.top-buttons{flex-direction:column}.manage-row{grid-template-columns:1fr 100px 65px 65px}}
+@media(max-width:650px){body{padding:10px}.price-lists{grid-template-columns:1fr}.bottom-actions{gap:6px}.bottom-actions button{font-size:12px;padding:12px 5px}.manage-row{grid-template-columns:1fr 100px 65px 65px}.cart-body-scroll{max-height:280px}}
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="top-buttons">
-    <button class="edit-btn" onclick="openEditor()">⚙ EDIT PRICE LIST</button>
-    <button class="clear-btn" onclick="clearCart()">🗑 CLEAR ITEMS</button>
+  <!-- CATEGORY / CART PANEL: TOP -->
+  <div class="cart">
+    <div class="cart-header">
+      <div>category</div><div>item</div><div>price</div><div>qty</div><div>[+]</div><div>[-]</div><div>total</div>
+    </div>
+    <div class="cart-body-scroll">
+      <div id="cartBody"><div class="empty">Click ADD ITEM to add a product</div></div>
+    </div>
   </div>
 
+  <div class="grand-total">
+    <span>GRAND TOTAL</span>
+    <span class="grand-total-value" id="grandTotal">₱0</span>
+  </div>
+
+  <!-- CODE / NON-CODE ITEM LIST -->
   <div class="price-lists">
     <div class="price-box">
       <div class="price-title">CODE</div>
@@ -64,16 +84,13 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
     </div>
   </div>
 
-  <div class="cart">
-    <div class="cart-header">
-      <div>category</div><div>item</div><div>price</div><div>qty</div><div>[+]</div><div>[-]</div><div>total</div>
-    </div>
-    <div id="cartBody"><div class="empty">Click ADD ITEM to add a product</div></div>
   </div>
 
-  <div class="grand-total">
-    <span>GRAND TOTAL</span>
-    <span class="grand-total-value" id="grandTotal">₱0</span>
+  <!-- BOTTOM ACTION BUTTONS -->
+  <div class="bottom-actions">
+    <button class="bottom-edit" onclick="openEditor()">⚙ EDIT PRICE</button>
+    <button class="bottom-checkout" onclick="openCheckout()">💳 CHECKOUT</button>
+    <button class="bottom-clear" onclick="clearCart()">🗑 CLEAR ITEMS</button>
   </div>
 </div>
 
@@ -93,6 +110,27 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
       <button class="save-all" onclick="saveAllPrices()">💾 SAVE ALL</button>
       <button class="reset-btn" onclick="resetPrices()">↻ RESET DEFAULT</button>
       <button class="cancel-btn" onclick="closeEditor()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="checkoutModal">
+  <div class="modal-box" style="max-width:520px">
+    <div class="modal-title">💳 CHECKOUT</div>
+    <div class="payment-summary">
+      <div class="payment-line"><span>Items</span><span id="checkoutItemCount">0</span></div>
+      <div class="payment-line payment-total"><span>TOTAL</span><span id="checkoutTotal">₱0</span></div>
+    </div>
+    <label class="cash-label" for="cashReceived">Customer gives:</label>
+    <input id="cashReceived" class="cash-input" type="number" min="0" step="0.01" placeholder="₱ 0.00">
+    <div class="change-box" id="changeBox"><span>CHANGE</span><span id="changeAmount">₱0</span></div>
+    <div class="modal-buttons">
+      <button class="save-all" onclick="completeCheckout()">✅ COMPLETE PAYMENT</button>
+      <button class="cancel-btn" onclick="closeCheckout()">CANCEL</button>
+    </div>
+    <div id="receiptActions" class="receipt-actions" style="display:none">
+      <button class="download-receipt" onclick="downloadReceipt()">⬇ DOWNLOAD RECEIPT</button>
+      <button class="print-receipt" onclick="printReceipt()">🖨 PRINT / SAVE PDF</button>
     </div>
   </div>
 </div>
@@ -241,6 +279,18 @@ function resetPrices(){
 function closeEditor(){document.getElementById("priceModal").classList.remove("show");}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 function escapeAttr(s){return escapeHtml(s);}
+let currentReceipt=null;
+function getCartTotal(){return Object.values(cart).reduce((sum,item)=>sum+item.price*item.qty,0)}
+function getCartItemCount(){return Object.values(cart).reduce((sum,item)=>sum+item.qty,0)}
+function openCheckout(){const total=getCartTotal();if(total<=0){alert("Please add at least one item before checkout.");return}document.getElementById("checkoutTotal").textContent=money(total);document.getElementById("checkoutItemCount").textContent=getCartItemCount();document.getElementById("cashReceived").value="";document.getElementById("changeAmount").textContent="₱0";document.getElementById("changeBox").classList.remove("insufficient");document.getElementById("receiptActions").style.display="none";currentReceipt=null;document.getElementById("checkoutModal").classList.add("show");setTimeout(()=>document.getElementById("cashReceived").focus(),100)}
+function closeCheckout(){document.getElementById("checkoutModal").classList.remove("show")}
+function calculateChange(){const total=getCartTotal(),cash=Number(document.getElementById("cashReceived").value)||0,box=document.getElementById("changeBox"),out=document.getElementById("changeAmount");if(cash<total){out.textContent="Need "+money(total-cash)+" more";box.classList.add("insufficient")}else{out.textContent=money(cash-total);box.classList.remove("insufficient")}}
+function completeCheckout(){const total=getCartTotal(),cash=Number(document.getElementById("cashReceived").value)||0;if(total<=0){alert("No items in the cart.");return}if(cash<total){alert("Customer payment is not enough.\n\nTotal: "+money(total)+"\nCustomer gives: "+money(cash));return}const now=new Date(),receiptNo="RCPT-"+now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0")+"-"+String(now.getHours()).padStart(2,"0")+String(now.getMinutes()).padStart(2,"0")+String(now.getSeconds()).padStart(2,"0");currentReceipt={receiptNo,date:now.toLocaleString("en-PH"),items:Object.values(cart).map(item=>({category:item.category==="code"?"CODE":"NON-CODE",name:item.name,price:item.price,qty:item.qty,total:item.price*item.qty})),total,cash,change:cash-total};document.getElementById("changeAmount").textContent=money(currentReceipt.change);document.getElementById("receiptActions").style.display="flex";cart={};renderCart()}
+function receiptHTML(){if(!currentReceipt)return "";const rows=currentReceipt.items.map(item=>`<tr><td>${escapeHtml(item.category)}</td><td>${escapeHtml(item.name)}</td><td class="qty-cell">${item.qty}</td><td class="money-cell">${money(item.price)}</td><td class="money-cell">${money(item.total)}</td></tr>`).join("");return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${currentReceipt.receiptNo}</title><style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;width:min(760px,calc(100% - 40px));margin:30px auto;padding:20px;color:#111}h1{text-align:center;margin:0 0 4px;font-size:32px}.receipt-no{text-align:center;color:#666;line-height:1.25;margin-bottom:26px}table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:16px}col.category{width:31%}col.item{width:18%}col.qty{width:10%}col.price{width:20.5%}col.total{width:20.5%}th,td{padding:9px 7px;border-bottom:1px solid #ddd;vertical-align:middle}th{background:#f1f1f1;font-weight:bold;text-align:left}th:nth-child(3),td:nth-child(3){text-align:center}th:nth-child(4),th:nth-child(5),td:nth-child(4),td:nth-child(5){text-align:right}.summary{width:320px;max-width:100%;margin:20px 0 0 auto}.line{display:grid;grid-template-columns:1fr auto;column-gap:25px;align-items:center;padding:6px 0}.line span:last-child{text-align:right;white-space:nowrap}.total{font-size:20px;font-weight:bold;border-top:2px solid #111;margin-top:2px;padding-top:10px}.change{font-size:20px;font-weight:bold}.footer{text-align:center;margin-top:38px;color:#666}@media(max-width:600px){body{width:calc(100% - 20px);margin:10px auto;padding:10px}h1{font-size:26px}table{font-size:13px}th,td{padding:7px 4px}.summary{width:290px}}@media print{body{width:100%;margin:0;padding:12mm}table{font-size:12pt}.footer{margin-top:25px}}</style></head><body><h1>SALES RECEIPT</h1><div class="receipt-no">${currentReceipt.receiptNo}<br>${currentReceipt.date}</div><table><colgroup><col class="category"><col class="item"><col class="qty"><col class="price"><col class="total"></colgroup><thead><tr><th>Category</th><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table><div class="summary"><div class="line total"><span>TOTAL</span><span>${money(currentReceipt.total)}</span></div><div class="line"><span>Customer Gives</span><span>${money(currentReceipt.cash)}</span></div><div class="line change"><span>CHANGE</span><span>${money(currentReceipt.change)}</span></div></div><div class="footer">Thank you!</div></body></html>`}
+function downloadReceipt(){if(!currentReceipt){alert("Please complete the payment first.");return}const blob=new Blob([receiptHTML()],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=currentReceipt.receiptNo+".html";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function printReceipt(){if(!currentReceipt){alert("Please complete the payment first.");return}const win=window.open("","_blank","width=800,height=900");if(!win){alert("Please allow pop-ups to print the receipt.");return}win.document.open();win.document.write(receiptHTML());win.document.close();win.focus();setTimeout(()=>win.print(),300)}
+document.addEventListener("input",e=>{if(e.target.id==="cashReceived")calculateChange()});
+
 renderLists(); renderCart();
 </script>
 </body>
