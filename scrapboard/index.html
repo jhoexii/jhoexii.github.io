@@ -30,7 +30,27 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 .cart-body-scroll::-webkit-scrollbar{width:8px;height:8px}
 .cart-body-scroll::-webkit-scrollbar-thumb{background:#999;border-radius:8px}
 .cart-header{box-shadow:0 1px 0 #bbb}
-.cart-header,.cart-row{display:grid;grid-template-columns:1fr 1.2fr 1fr 60px 55px 55px 1.1fr;min-width:760px;align-items:center}
+.cart-header,
+.cart-row {
+    display: grid;
+
+    grid-template-columns:
+        85px    /* category */
+        75px    /* item */
+        90px    /* price */
+        45px    /* qty */
+        45px    /* + */
+        45px    /* - */
+        100px;  /* total */
+
+    width: max-content;
+    min-width: 100%;
+}
+
+.cart-header div,
+.cart-row div {
+    padding: 8px;
+}
 .cart-header{background:#e7e7e7;font-weight:bold}
 .cart-header div,.cart-row div{min-height:40px;padding:8px;display:flex;align-items:center;border-right:1px solid #ccc}
 .cart-header div:last-child,.cart-row div:last-child{border-right:0}
@@ -63,7 +83,7 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
     <div class="cart-header">
       <div>category</div><div>item</div><div>price</div><div>qty</div><div>[+]</div><div>[-]</div><div>total</div>
     </div>
-    <div class="cart-body-scroll">
+    <div class="cart-body">
       <div id="cartBody"><div class="empty">Click ADD ITEM to add a product</div></div>
     </div>
   </div>
