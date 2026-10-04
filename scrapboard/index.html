@@ -16,9 +16,13 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 .edit-btn{background:#d6a900;color:#111}.clear-btn{background:#b52a2a;color:#fff}
 .checkout-btn{background:#1c9c48;color:#fff}.checkout-btn:hover{background:#25bd5b}
 .payment-summary{background:#111;border:1px solid #555;border-radius:6px;padding:15px;margin-bottom:15px}.payment-line{display:flex;justify-content:space-between;padding:6px 0}.payment-total{font-size:24px;font-weight:bold;color:#ffd21c;border-top:1px solid #555;margin-top:8px;padding-top:12px}.cash-label{display:block;font-weight:bold;margin-bottom:7px}.cash-input{width:100%;padding:12px;font-size:22px;border-radius:5px;border:1px solid #777}.change-box{margin-top:12px;background:#172417;border:1px solid #398a45;border-radius:6px;padding:12px;display:flex;justify-content:space-between;font-size:20px;font-weight:bold}.insufficient{background:#351717;border-color:#9a3d3d;color:#ff8585}.receipt-actions{display:flex;gap:8px;margin-top:12px;position:relative;z-index:2001}.receipt-actions button{flex:1;padding:13px;border:0;border-radius:5px;font-weight:bold;cursor:pointer;pointer-events:auto;touch-action:manipulation}.download-receipt{background:#d6a900;color:#111}.print-receipt{background:#555;color:#fff}.receipt-actions button:active{transform:scale(.98)}
-.order-title{background:#050505;color:#ffd21c;border:2px solid #b58a24;border-radius:8px 8px 0 0;padding:12px;text-align:center;font-weight:bold;letter-spacing:1px;margin-top:15px}.order-subtitle{display:block;color:#aaa;font-size:12px;margin-top:3px;font-weight:normal}.price-lists{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0 8px}
-.price-box{border:2px solid #b58a24;border-radius:8px;overflow:hidden;background:#171717;max-height:245px;overflow-y:auto}.price-box::-webkit-scrollbar{width:7px}.price-box::-webkit-scrollbar-thumb{background:#777;border-radius:8px}
-.price-title{position:sticky;top:0;z-index:4;background:#050505;color:#ffd21c;padding:12px;text-align:center;font-weight:bold;border-bottom:2px solid #b58a24;letter-spacing:1px}
+.order-title{background:#050505;color:#ffd21c;border:2px solid #b58a24;border-radius:8px 8px 0 0;padding:12px;text-align:center;font-weight:bold;letter-spacing:1px;margin-top:15px}.order-subtitle{display:block;color:#aaa;font-size:12px;margin-top:3px;font-weight:normal}.price-lists{margin:15px 0 8px}
+.board-panel{border:2px solid #b58a24;border-radius:8px;background:#171717;height:330px;max-height:330px;overflow-y:auto;overflow-x:hidden}
+.board-panel::-webkit-scrollbar{width:8px}
+.board-panel::-webkit-scrollbar-thumb{background:#777;border-radius:8px}
+.board-panel::-webkit-scrollbar-track{background:#111}
+.price-box{background:#171717;border:0;border-radius:0;overflow:visible}
+.price-title{position:sticky;top:0;z-index:4;background:#050505;color:#ffd21c;padding:10px;text-align:center;font-weight:bold;border-bottom:2px solid #b58a24;letter-spacing:1px}
 .price-row{display:grid;grid-template-columns:1fr 1fr 85px;align-items:center;min-height:44px;border-bottom:1px solid #555}
 .price-row:last-child{border-bottom:0}
 .price-name{text-align:center;font-weight:bold}
@@ -72,7 +76,7 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 .add-new{width:100%;margin-top:8px;background:#d6a900;color:#111}
 .modal-buttons{display:flex;gap:8px;margin-top:18px}
 .modal-buttons button{flex:1;padding:12px}.save-all{background:#1c9c48;color:#fff}.reset-btn{background:#a52b2b;color:#fff}.cancel-btn{background:#555;color:#fff}
-@media(max-width:650px){body{padding:10px}.price-lists{grid-template-columns:1fr}.bottom-actions{gap:6px}.bottom-actions button{font-size:12px;padding:12px 5px}.manage-row{grid-template-columns:1fr 100px 65px 65px}.cart-body-scroll{max-height:280px}}
+@media(max-width:650px){body{padding:10px}.board-panel{height:330px;max-height:330px}.bottom-actions{gap:6px}.bottom-actions button{font-size:12px;padding:12px 5px}.manage-row{grid-template-columns:1fr 100px 65px 65px}.cart-body-scroll{max-height:280px}}
 </style>
 </head>
 <body>
@@ -95,13 +99,16 @@ body{margin:0;padding:20px;background:#111;color:#fff;font-family:Arial,sans-ser
 
   <!-- CODE / NON-CODE ITEM LIST -->
   <div class="price-lists">
-    <div class="price-box">
-      <div class="price-title">CODE</div>
-      <div id="codeList"></div>
-    </div>
-    <div class="price-box">
-      <div class="price-title">NON-CODE</div>
-      <div id="nonCodeList"></div>
+    <div class="board-panel">
+      <div class="price-box">
+        <div class="price-title">CODE</div>
+        <div id="codeList"></div>
+      </div>
+
+      <div class="price-box">
+        <div class="price-title">NON-CODE</div>
+        <div id="nonCodeList"></div>
+      </div>
     </div>
   </div>
 
