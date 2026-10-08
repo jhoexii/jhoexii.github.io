@@ -2,28 +2,1948 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="jhoelsoft-loader-version" content="v10-https-final-anti-rightclick">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta http-equiv="Permissions-Policy" content="usb=(self)">
 <title>JHOELSOFT v7 — Pop-up Ads Cleaner</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#08111f;color:#eef5ff}
-.wrap{max-width:760px;margin:auto;padding:18px}.card{background:#101c2d;border:1px solid #263a55;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 8px 30px #0005}
-h1{font-size:24px;margin:0 0 6px}.sub{color:#9eb1c9;font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap}
-button{border:0;border-radius:12px;padding:12px 14px;background:#1d6cff;color:white;font-weight:700;font-size:14px}
-button.secondary{background:#26374e}button.danger{background:#b8324b}button:disabled{opacity:.45}
-.status{padding:12px;border-radius:12px;background:#0a1422;color:#bcd0e8;font-size:13px;white-space:pre-wrap}
-.badge{display:inline-block;padding:4px 8px;border-radius:99px;background:#223750;font-size:11px;margin:2px}
-input{width:100%;padding:12px;border-radius:10px;border:1px solid #304661;background:#0a1422;color:white}
-.app{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #203148}
-.app .name{font-weight:700}.pkg{font-size:11px;color:#8fa5bf;word-break:break-all}.risk{margin-left:auto}
-pre{background:#070d16;border-radius:12px;padding:12px;overflow:auto;max-height:330px;font-size:12px}
-.small{font-size:12px;color:#91a5bc;line-height:1.5}
-.ok{color:#73e2a4}.warn{color:#ffd27a}.bad{color:#ff8796}
-</style>
+ <style>
+   html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+body{
+  min-width:0;
+}
+.wrap{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:20px;
+}
+.card{
+  width:100%;
+  min-width:0;
+}
+.connection-actions{
+  min-width:0;
+}
+.app-manager{
+  width:100%;
+  min-width:0;
+}
+.app-toolbar,.selection-row,.app-sections{
+  min-width:0;
+}
+.pills{
+  min-width:0;
+}
+.toolbar-row{
+  min-width:0;
+}
+.toolbar-row input{
+  min-width:0;
+}
+.category{
+  min-width:0;
+}
+.app-list{
+  width:100%;
+  min-width:0;
+}
+.approw{
+  min-width:0;
+}
+.meta{
+  overflow:hidden;
+}
+.manager-bottom{
+  width:min(1040px,calc(100vw - 40px));
+  padding:10px 14px;
+  justify-content:flex-end;
+}
+@media (min-width:681px){
+  .wrap{
+    padding:24px;
+  }
+  .card{
+    margin:14px 0;
+  }
+  .card:first-child{
+    margin-top:0;
+  }
+  .app-toolbar{
+    padding:18px 18px 14px;
+  }
+  .selection-row{
+    padding:11px 18px;
+  }
+  .app-sections{
+    padding-left:18px;
+    padding-right:18px;
+  }
+  .manager-bottom{
+    border-radius:16px 16px 0 0;
+  }
+}
+@media (max-width:680px){
+  html,body{
+    overflow-x:hidden;
+  }
+  .wrap{
+    width:100%;
+    max-width:none;
+    margin:0;
+    padding:8px;
+  }
+  .card{
+    width:100%;
+    margin:8px 0;
+    border-radius:16px!important;
+    padding:12px;
+  }
+  .card:first-child{
+    padding:12px 13px;
+  }
+  h1{
+    font-size:20px;
+    line-height:1.15;
+  }
+  .sub{
+    font-size:11px;
+    line-height:1.35;
+  }
+  .card:nth-of-type(2) .row{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    width:100%;
+  }
+  .card:nth-of-type(2) .row button, .card:nth-of-type(2) .row .license-status{
+    width:100%;
+    min-width:0;
+    margin:0;
+  }
+  .card:nth-of-type(2) .row button:first-child{
+    grid-column:1/-1;
+  }
+  .card:nth-of-type(2) .row .license-status{
+    display:flex;
+    justify-content:center;
+    min-height:40px;
+  }
+  .card:nth-of-type(2) .status{
+    margin-top:9px!important;
+    font-size:11px;
+    line-height:1.35;
+  }
+  .card:nth-of-type(3){
+    padding:11px 13px;
+  }
+  .app-toolbar{
+    padding:11px 10px 10px;
+  }
+  .pills{
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 7px;
+    margin:0 -2px 8px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .pills::-webkit-scrollbar{
+    display:none;
+  }
+  .pill{
+    flex:0 0 auto;
+    padding:7px 10px;
+    font-size:10px;
+  }
+  .toolbar-row{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+  .toolbar-row input,.category{
+    width:100%;
+    height:40px;
+    min-width:0;
+  }
+  .selection-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    padding:9px 10px;
+  }
+  .select-link,.select-page-control{
+    width:100%;
+    min-width:0;
+    justify-content:center;
+  }
+  .select-page-control{
+    padding:7px 9px;
+  }
+  .selected-count-wrap{
+    grid-column:1/-1;
+  }
+  .selection-count{
+    width:100%;
+    text-align:center;
+  }
+  .help-link{
+    display:none;
+  }
+  .app-sections{
+    padding:0 10px 112px;
+  }
+  .section-title{
+    margin:12px 0 7px;
+  }
+  .section-title h3{
+    font-size:12px;
+  }
+  .section-title .count{
+    font-size:10px;
+    padding:3px 7px;
+  }
+  .app-list{
+    border-radius:11px;
+  }
+  .approw{
+    gap:7px;
+    padding:9px 8px!important;
+    min-height:60px;
+  }
+  .approw>input{
+    width:17px!important;
+    height:17px;
+    flex:0 0 17px;
+  }
+  .app-lock{
+    width:15px;
+    min-width:15px;
+    font-size:12px;
+  }
+  .appicon{
+    width:32px;
+    height:32px;
+    min-width:32px;
+    border-radius:8px;
+  }
+  .appicon-fallback,.appicon.icon-failed::after{
+    font-size:16px;
+  }
+  .meta .name{
+    font-size:12px;
+  }
+  .meta .pkg{
+    font-size:8px;
+    line-height:1.15;
+  }
+  .tag{
+    font-size:8px;
+    padding:3px 5px;
+  }
+  .manager-bottom{
+    left:0;
+    right:0;
+    bottom:0;
+    transform:none;
+    width:100%;
+    max-width:none;
+    border-radius:14px 14px 0 0;
+    padding:7px;
+    display:grid;
+    grid-template-columns:repeat(1,minmax(0,1fr));
+    gap:6px;
+    justify-content:stretch;
+  }
+  .manager-bottom button{
+    width:100%;
+    min-width:0;
+    min-height:38px;
+    padding:7px 4px;
+    font-size:9px;
+    line-height:1.05;
+    white-space:nowrap;
+  }
+  .smart-dialog{
+    width:calc(100vw - 18px);
+    max-width:none;
+    padding:14px;
+  }
+  .smart-report-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .storage-dialog{
+    width:calc(100vw - 16px);
+    max-width:none;
+  }
+  .storage-toolbar{
+    padding:9px 10px;
+  }
+  .storage-list{
+    margin-left:10px;
+    margin-right:10px;
+  }
+  .storage-foot{
+    padding:10px;
+  }
+  .badge{
+    font-size:9px;
+  }
+  .status{
+    overflow-wrap:anywhere;
+  }
+}
+@media (max-width:380px){
+  .wrap{
+    padding:6px;
+  }
+  .card{
+    padding:10px;
+  }
+  .card:nth-of-type(2) .row{
+    gap:5px;
+  }
+  .card:nth-of-type(2) .row button,.card:nth-of-type(2) .row .license-status{
+    font-size:10px;
+    padding:9px 6px;
+  }
+  .pill{
+    font-size:9px;
+    padding:6px 8px;
+  }
+  .approw{
+    gap:5px;
+    padding:8px 6px!important;
+  }
+  .manager-bottom{
+    gap:4px;
+    padding:6px;
+  }
+  .manager-bottom button{
+    font-size:8px;
+  }
+}
+.manager-bottom{
+  display:grid!important;
+  grid-template-columns:repeat(3, 1fr)!important;
+  gap:6px!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:8px!important;
+  box-sizing:border-box!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  transform:none!important;
+}
+.manager-bottom button{
+  width:100%!important;
+  min-width:0!important;
+  height:40px!important;
+  margin:0!important;
+  padding:6px 2px!important;
+  font-size:10px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+*{
+  box-sizing:border-box;
+}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:#08111f;
+  color:#eef5ff;
+}
+.wrap{
+  max-width:760px;
+  margin:auto;
+  padding:18px;
+}
+.card{
+  background:#101c2d;
+  border:1px solid #263a55;
+  border-radius:18px;
+  padding:16px;
+  margin:12px 0;
+  box-shadow:0 8px 30px #0005;
+}
+h1{
+  font-size:24px;
+  margin:0 0 6px;
+}
+.sub{
+  color:#9eb1c9;
+  font-size:13px;
+}
+.row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+button{
+  border:0;
+  border-radius:12px;
+  padding:12px 14px;
+  background:#1d6cff;
+  color:white;
+  font-weight:700;
+  font-size:14px;
+}
+button.secondary{
+  background:#26374e;
+}
+button.danger{
+  background:#b8324b;
+}
+button:disabled{
+  opacity:.45;
+}
+.status{
+  padding:12px;
+  border-radius:12px;
+  background:#0a1422;
+  color:#bcd0e8;
+  font-size:13px;
+  white-space:pre-wrap;
+}
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:99px;
+  background:#223750;
+  font-size:11px;
+  margin:2px;
+}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #304661;
+  background:#0a1422;
+  color:white;
+}
+.app{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  background:#0d1929;
+  border:1px solid #203148;
+  border-radius:14px;
+  margin:8px 0;
+  transition:.18s ease;
+}
+.app:hover{
+  border-color:#355277;
+  transform:translateY(-1px);
+}
+.app-icon{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:#172942;
+  border:1px solid #304866;
+  font-size:25px;
+  box-shadow:inset 0 1px 0 #ffffff12;
+}
+.app-main{
+  min-width:0;
+  flex:1;
+}
+.app .name{
+  font-weight:800;
+  font-size:15px;
+  line-height:1.2;
+}
+.pkg{
+  font-size:10px;
+  color:#7f96b1;
+  word-break:break-all;
+  margin-top:3px;
+}
+.risk{
+  font-size:11px;
+  margin-left:auto;
+  white-space:nowrap;
+}
+.app-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.app-actions button{
+  padding:8px 10px;
+  border-radius:9px;
+  font-size:11px;
+}
+.btn-disable{
+  background:#9b6a19;
+}
+.btn-uninstall{
+  background:#b8324b;
+}
+.state{
+  font-size:10px;
+  padding:3px 7px;
+  border-radius:99px;
+  background:#1e344d;
+  color:#a9c1dc;
+}
+.state.system{
+  background:#293b52;
+}
+.state.user{
+  background:#173b31;
+  color:#8ee8ba;
+}
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:16px 0 8px;
+}
+.section-title:first-child{
+  margin-top:4px;
+}
+.section-title h3{
+  font-size:15px;
+  margin:0;
+}
+.section-title .count{
+  font-size:11px;
+  color:#91a5bc;
+  background:#16283d;
+  padding:4px 8px;
+  border-radius:99px;
+}
+.empty{
+  padding:18px;
+  text-align:center;
+  border:1px dashed #2b405b;
+  border-radius:12px;
+  color:#7f96b1;
+  font-size:12px;
+}
+pre{
+  background:#070d16;
+  border-radius:12px;
+  padding:12px;
+  overflow:auto;
+  max-height:330px;
+  font-size:12px;
+}
+.small{
+  font-size:12px;
+  color:#91a5bc;
+  line-height:1.5;
+}
+.ok{
+  color:#73e2a4;
+}
+.warn{
+  color:#ffd27a;
+}
+.bad{
+  color:#ff8796;
+}
+.select-page-control{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:40px;
+  padding:7px 12px;
+  border:1px solid #d2d5d9;
+  border-radius:12px;
+  background:#fff;
+  color:#626870;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:3px 3px 8px rgba(0,0,0,.08),-2px -2px 5px rgba(255,255,255,.95);
+  user-select:none;
+}
+.select-page-control input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.page-check{
+  width:18px;
+  height:18px;
+  flex:0 0 18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1.5px solid #aeb4bb;
+  border-radius:5px;
+  background:#fff;
+  box-shadow:inset 1px 1px 3px rgba(0,0,0,.08);
+  transition:all .16s ease;
+}
+.select-page-control input:checked + .page-check{
+  background:#2f3439;
+  border-color:#2f3439;
+  box-shadow:none;
+}
+.select-page-control input:checked + .page-check::after{
+  content:"✓";
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+}
+.select-page-control:hover{
+  border-color:#b8bdc3;
+  background:#fafafa;
+}
+.select-page-control input:disabled + .page-check{
+  opacity:.45;
+}
+.app-manager{
+  padding:0!important;
+  overflow:hidden;
+  background:#0b1424;
+}
+.app-toolbar{
+  padding:16px 16px 12px;
+  border-bottom:1px solid #20334d;
+  background:#111d31;
+}
+.pills{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid #263b58;
+  background:#0d1829;
+  color:#9fb4ce;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:11px;
+  white-space:nowrap;
+  cursor:pointer;
+  font:inherit;
+}
+.pill:hover{
+  border-color:#3d6799;
+  background:#112039;
+}
+.pill.active{
+  border-color:#2e75ff;
+  background:#14284a;
+  color:#d9e8ff;
+}
+.pill:focus-visible{
+  outline:2px solid #4c91ff;
+  outline-offset:2px;
+}
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  display:inline-block;
+}
+.dot.green{
+  background:#10c84a;
+}
+.dot.orange{
+  background:#ff6b00;
+}
+.dot.blue{
+  background:#0aa6d8;
+}
+.dot.red{
+  background:#ff173d;
+}
+.dot.gray{
+  background:#68778a;
+}
+.toolbar-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.toolbar-row input{
+  flex:1;
+  min-width:160px;
+  height:38px;
+}
+.category{
+  height:38px;
+  min-width:155px;
+  border:1px solid #304661;
+  background:#0a1422;
+  color:#dce8f5;
+  border-radius:10px;
+  padding:0 10px;
+  font-weight:600;
+}
+.selection-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 16px;
+  color:#9fb4ce;
+  font-size:12px;
+  border-bottom:1px solid #1d3049;
+}
+.selection-count{
+  font-size:11px;
+  color:#d9e8ff;
+  background:#14284a;
+  border:1px solid #2d5e9e;
+  padding:5px 9px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+  user-select:none;
+  transition:.15s ease;
+}
+.selection-count:hover{
+  background:#1b3a66;
+  border-color:#4b86d8;
+}
+.selection-count.active{
+  background:#245a9d;
+  border-color:#69a5ff;
+  color:#fff;
+  box-shadow:0 0 0 2px #245a9d55;
+}
+.cache-note{
+  font-size:10px;
+  color:#8fa5bd;
+  margin-top:5px;
+}
+.select-link{
+  border:1px solid #273c59;
+  background:#122039;
+  color:#dbe9fa;
+  border-radius:8px;
+  padding:7px 10px;
+  font-weight:700;
+  cursor:pointer;
+}
+.help-link{
+  margin-left:auto;
+  color:#89a9cc;
+  text-decoration:underline;
+  cursor:pointer;
+}
+.app-sections{
+  padding:0 16px 82px;
+  min-height:80px;
+}
+.section-title{
+  margin:16px 0 8px;
+}
+.section-title h3{
+  font-size:13px;
+  text-transform:none;
+}
+.section-title .count{
+  background:#14253b;
+  color:#8ea8c4;
+}
+.app-list{
+  border:1px solid #1d314b;
+  border-radius:12px;
+  overflow:hidden;
+  background:#0b1525;
+}
+.approw{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0!important;
+  border:0!important;
+  border-bottom:1px solid #1d314b!important;
+  border-radius:0!important;
+  padding:11px 14px!important;
+  background:#0d1727!important;
+  min-height:70px;
+  transition:background .15s ease;
+}
+.approw:last-child{
+  border-bottom:0!important;
+}
+.approw:hover{
+  background:#101d31!important;
+}
+.approw.selected{
+  background:#14233a!important;
+}
+.approw>input{
+  width:18px!important;
+  height:18px!important;
+  flex:0 0 18px;
+  accent-color:#3c83ff;
+}
+.app-lock{
+  width:18px;
+  height:18px;
+  min-width:18px;
+  display:grid;
+  place-items:center;
+  font-size:14px;
+  opacity:.9;
+  cursor:default;
+}
+.app-lock.empty{
+  visibility:hidden;
+}
+.approw>input:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+  accent-color:#64748b;
+}
+.appicon{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border-radius:9px;
+  font-size:0;
+  background:#18263a;
+  border:1px solid #263d5b;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+.appicon.sys{
+  background:#17263a;
+}
+.appicon img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:8px;
+  display:block;
+}
+.appicon-fallback{
+  font-size:18px;
+  line-height:1;
+}
+.appicon.icon-failed::after{
+  content:attr(data-emoji);
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:18px;
+}
+.meta{
+  min-width:0;
+  flex:1;
+}
+.meta .name{
+  font-size:13px;
+  font-weight:800;
+  line-height:1.2;
+  color:#eef5ff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.meta .pkg{
+  font-size:9px;
+  color:#667d99;
+  margin-top:1px;
+  word-break:break-all;
+}
+.tags{
+  margin-top:4px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:3px;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  font-size:9px;
+  font-weight:800;
+  padding:3px 6px;
+  border-radius:5px;
+  background:#19324d;
+  color:#9bb2cb;
+  line-height:1;
+}
+.tag.system{
+  background:#1c2e49;
+  color:#7fa5cf;
+}
+.tag.removed{
+  background:#432334;
+  color:#ff8a9e;
+}
+.tag.bloat{
+  background:#12443b;
+  color:#55e5ae;
+}
+.tag.protected{
+  background:#472033;
+  color:#ff8199;
+}
+.tag.disabled{
+  background:#463719;
+  color:#ffc95e;
+}
+.app-main .name{
+  font-size:13px;
+}
+.state{
+  font-size:9px;
+  padding:3px 6px;
+}
+.risk{
+  font-size:9px;
+}
+.app-actions{
+  display:none;
+}
+.manager-bottom{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:0;
+  width:min(724px,calc(100vw - 20px));
+  z-index:1000;
+  display:flex;
+  justify-content:flex-end;
+  gap:7px;
+  padding:10px 12px;
+  border-top:1px solid #263a55;
+  background:#0d1627;
+  box-shadow:0 -8px 20px #0007;
+}
+.manager-bottom button{
+  padding:9px 11px;
+  border-radius:9px;
+  font-size:11px;
+}
+.btn-recover{
+  background:#167a43;
+}
+.btn-enable{
+  background:#243b59;
+}
+.btn-block{
+  background:#223149;
+}
+.btn-uninstall{
+  background:#ef3d49;
+}
+.btn-disable{
+  background:#e69b1d;
+  color:#171008;
+}
+.manager-bottom button:disabled{
+  opacity:.38;
+}
+.manager-bottom.hidden-actions{
+  display:none!important;
+}
+.manager-bottom button[hidden]{
+  display:none!important;
+}
+.manager-summary{
+  font-size:10px;
+  color:#7890aa;
+  margin:8px 0 0;
+}
+.section-separator{
+  height:1px;
+  background:#1d314b;
+  margin:3px 0 0;
+}
+.hidden{
+  display:none!important;
+}
+.smart-scan-card{
+  background:#0d1829;
+  border:1px solid #263b58;
+}
+.smart-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.smart-title{
+  font-size:18px;
+  font-weight:900;
+}
+.smart-dashboard{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+.smart-tile{
+  background:#101d31;
+  border:1px solid #263b55;
+  border-radius:12px;
+  padding:11px;
+  min-height:78px;
+}
+.smart-tile.good{
+  border-left:3px solid #10c84a;
+}
+.smart-tile.warn{
+  border-left:3px solid #ffb000;
+}
+.smart-tile.bad{
+  border-left:3px solid #ff4256;
+}
+.smart-tile .k{
+  font-size:9px;
+  color:#8da2bb;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.smart-tile .v{
+  font-size:16px;
+  font-weight:900;
+  margin-top:2px;
+}
+.smart-tile .d{
+  font-size:10px;
+  color:#7f96b1;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.smart-score{
+  grid-column:1/-1;
+  background:#151c35;
+  border:1px solid #3b3574;
+  border-radius:15px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.smart-score-ring{
+  width:68px;
+  height:68px;
+  min-width:68px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:4px solid #19cf61;
+  box-shadow:0 0 18px #19cf6130;
+}
+.smart-score-ring b{
+  font-size:25px;
+}
+.smart-score-ring span{
+  font-size:8px;
+  color:#9bb0c9;
+  display:block;
+  text-align:center;
+  margin-top:-5px;
+}
+.smart-score-info{
+  min-width:0;
+}
+.smart-score-info b{
+  font-size:16px;
+}
+.smart-score-info div{
+  font-size:10px;
+  color:#8ea2ba;
+  margin-top:2px;
+}
+.smart-dialog{
+  width:min(660px,calc(100vw - 28px));
+  border:1px solid #3c4f72;
+  border-radius:18px;
+  background:#0c1627;
+  color:#eef5ff;
+  padding:18px;
+  box-shadow:0 24px 80px #000b;
+}
+.smart-dialog::backdrop{
+  background:#020711aa;
+  backdrop-filter:blur(3px);
+}
+.smart-loading{
+  text-align:center;
+  padding:22px 10px;
+}
+.smart-spinner{
+  width:42px;
+  height:42px;
+  margin:0 auto 12px;
+  border:4px solid #263852;
+  border-top-color:#3d87ff;
+  border-radius:50%;
+  animation:smartspin .8s linear infinite;
+}
+.smart-dialog-title{
+  font-size:18px;
+  font-weight:900;
+}
+.smart-progress{
+  height:6px;
+  background:#18263b;
+  border-radius:99px;
+  margin:14px 0 4px;
+  overflow:hidden;
+}
+.smart-progress span{
+  display:block;
+  width:0;
+  height:100%;
+  background:#3d87ff;
+  border-radius:99px;
+  transition:width .2s;
+}
+.smart-report-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+.smart-report-head button{
+  padding:6px 10px;
+}
+.smart-report-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:14px;
+}
+.smart-report-tile{
+  background:#101d31;
+  border:1px solid #263b55;
+  border-radius:11px;
+  padding:10px;
+  cursor:pointer;
+  transition:transform .12s,border-color .12s,background .12s;
+}
+.smart-report-tile:hover{
+  transform:translateY(-1px);
+  border-color:#3d87ff;
+  background:#13233a;
+}
+.smart-report-tile:active{
+  transform:translateY(0);
+}
+.smart-report-tile .r-label{
+  font-size:9px;
+  color:#91a5bd;
+  text-transform:uppercase;
+}
+.smart-report-tile .r-value{
+  font-size:17px;
+  font-weight:900;
+  margin-top:2px;
+}
+.smart-report-tile .r-note{
+  font-size:10px;
+  color:#7f96b1;
+  margin-top:2px;
+}
+.smart-report-actions{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+.smart-report-actions button{
+  flex:1;
+}
+.smart-good{
+  background:#12b957!important;
+}
+.smart-list{
+  margin-top:12px;
+  padding:10px;
+  border-radius:11px;
+  background:#0a1422;
+  border:1px solid #223650;
+}
+.smart-list-title{
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+.smart-list-item{
+  font-size:10px;
+  color:#9db0c7;
+  padding:3px 0;
+}
+.smart-list-item b{
+  color:#eaf3ff;
+}
+@keyframes smartspin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+@media (max-width:680px){
+  .manager-bottom{
+    width:calc(100vw - 12px);
+    bottom:0;
+    border-radius:12px 12px 0 0;
+  }
+  .toolbar-row{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .category{
+    width:100%;
+  }
+  .manager-bottom{
+    justify-content:stretch;
+  }
+  .manager-bottom button{
+    flex:1;
+    padding:8px 6px;
+    font-size:10px;
+  }
+  .app{
+    gap:8px!important;
+    padding:10px 8px!important;
+  }
+  .app-icon{
+    width:32px;
+    height:32px;
+    min-width:32px;
+  }
+  .selection-row{
+    gap:7px;
+  }
+  .help-link{
+    display:none;
+  }
+}
+.storage-dialog{
+  width:min(720px,calc(100vw - 24px));
+  max-height:min(82vh,760px);
+  padding:0;
+  border:1px solid #2b415e;
+  border-radius:20px;
+  background:#0d1828;
+  color:#eef5ff;
+  box-shadow:0 24px 80px #0009;
+}
+.storage-dialog::backdrop{
+  background:#020812b8;
+  backdrop-filter:blur(3px);
+}
+.storage-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 18px;
+  border-bottom:1px solid #243750;
+}
+.storage-head b{
+  font-size:17px;
+}
+.storage-toolbar{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  padding:10px 14px;
+  border-bottom:1px solid #1e3048;
+}
+.storage-toolbar button{
+  padding:9px 11px;
+  font-size:12px;
+}
+.storage-toolbar .small{
+  margin-left:auto;
+}
+.storage-note{
+  margin:10px 14px;
+  padding:9px 11px;
+  border-radius:10px;
+  background:#12243a;
+  color:#9fb4cd;
+  font-size:11px;
+  line-height:1.45;
+}
+.storage-list{
+  margin:0 14px 10px;
+  border:1px solid #223750;
+  border-radius:13px;
+  overflow:auto;
+  max-height:52vh;
+  background:#091321;
+}
+.storage-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 11px;
+  border-bottom:1px solid #182a40;
+}
+.storage-item:last-child{
+  border-bottom:0;
+}
+.storage-item input{
+  width:17px;
+  height:17px;
+  flex:0 0 auto;
+}
+.storage-open{
+  flex:1;
+  min-width:0;
+  background:transparent;
+  padding:5px 4px;
+  text-align:left;
+  color:#eef5ff;
+  border-radius:8px;
+}
+.storage-open:hover{
+  background:#14253b;
+}
+.storage-icon{
+  font-size:22px;
+  width:28px;
+  text-align:center;
+}
+.storage-name{
+  font-weight:650;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.storage-meta{
+  font-size:10px;
+  color:#8398b1;
+  margin-top:2px;
+}
+.storage-empty{
+  padding:28px 15px;
+  text-align:center;
+  color:#8095ad;
+}
+.storage-foot{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+  border-top:1px solid #243750;
+}
+.storage-foot .small{
+  flex:1;
+}
+.storage-foot button{
+  padding:10px 12px;
+  font-size:12px;
+}
+.storage-dialog button:disabled{
+  opacity:.45;
+}
+@media (max-width:560px){
+  .storage-dialog{
+    width:calc(100vw - 12px);
+  }
+  .storage-list{
+    max-height:48vh;
+  }
+  .storage-toolbar .small{
+    width:100%;
+    margin-left:0;
+  }
+  .storage-foot{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  .storage-foot button{
+    width:100%;
+  }
+}
+.license-status{
+  display:none!important;
+  align-items:center;
+  align-items:center;
+  gap:7px;
+  padding:8px 12px;
+  border-radius:12px;
+  font-size:11px;
+  font-weight:800;
+  background:linear-gradient(145deg,#ffffff,#d9dce1);
+  color:#20242a;
+  border:1px solid #c5c8cd;
+  box-shadow:6px 6px 12px #0002,-5px -5px 10px #fff;
+}
+.license-status.active{
+  background:linear-gradient(145deg,#f5f5f5,#d2d4d8);
+  color:#111;
+}
+
+.header-license-dot{
+  position:absolute;
+  top:18px;
+  right:20px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#c9cdd2;
+  border:3px solid #fff;
+  box-shadow:0 0 0 1px #b8bcc2, 0 4px 10px #0002;
+  cursor:default;
+  transition:all .2s ease;
+}
+.header-license-dot.checking{
+  background:#f0ad3d;
+  box-shadow:0 0 0 1px #d79a2e, 0 0 12px #f0ad3d88;
+}
+.header-license-dot.active{
+  background:#31a85b;
+  box-shadow:0 0 0 1px #278a49, 0 0 12px #31a85b88;
+}
+.header-license-dot.error{
+  background:#e05b64;
+  box-shadow:0 0 0 1px #bd4149, 0 0 12px #e05b6488;
+}
+.license-overlay{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(20,22,26,.42);
+  backdrop-filter:blur(8px);
+}
+.license-overlay.show{
+  display:flex;
+}
+.license-card{
+  width:min(440px,94vw);
+  background:linear-gradient(145deg,#fdfdfd,#e6e7e9);
+  color:#17191d;
+  border:1px solid #c7c9cd;
+  border-radius:24px;
+  padding:22px;
+  box-shadow:18px 18px 42px #0003,-10px -10px 28px #fff;
+}
+.license-card h2{
+  margin:0 0 6px;
+  font-size:21px;
+}
+.license-card p{
+  margin:7px 0;
+  color:#555b64;
+  font-size:12px;
+  line-height:1.5;
+}
+.license-device{
+  margin:14px 0;
+  padding:12px 14px;
+  border-radius:15px;
+  background:#eef0f2;
+  border:1px solid #d1d4d8;
+  box-shadow:inset 2px 2px 5px #0001,inset -2px -2px 5px #fff;
+}
+.license-device b{
+  font-family:ui-monospace,monospace;
+  font-size:12px;
+  word-break:break-all;
+}
+.license-input{
+  width:100%;
+  box-sizing:border-box;
+  padding:13px 14px;
+  border-radius:14px;
+  border:1px solid #c3c6cb;
+  background:#f8f8f9;
+  color:#17191d;
+  outline:none;
+  box-shadow:inset 3px 3px 7px #0001,inset -3px -3px 7px #fff;
+  font-family:ui-monospace,monospace;
+  font-size:12px;
+}
+.license-input:focus{
+  border-color:#777;
+}
+.license-actions{
+  display:flex;
+  gap:9px;
+  margin-top:13px;
+}
+.license-actions button{
+  flex:1;
+  padding:11px 13px;
+  border-radius:13px;
+  border:1px solid #bfc2c7;
+  background:linear-gradient(145deg,#fff,#d9dbe0);
+  color:#181a1e;
+  font-weight:900;
+  box-shadow:6px 6px 12px #0002,-5px -5px 10px #fff;
+  cursor:pointer;
+}
+.license-actions button:active{
+  box-shadow:inset 4px 4px 8px #0002,inset -3px -3px 7px #fff;
+  transform:translateY(1px);
+}
+.license-actions .primary{
+  background:linear-gradient(145deg,#34373d,#111317);
+  color:#fff;
+  border-color:#111;
+}
+.license-error{
+  min-height:17px;
+  margin-top:9px;
+  color:#b3263e;
+  font-size:11px;
+  font-weight:800;
+}
+.license-note{
+  font-size:10px!important;
+  color:#73777e!important;
+}
+:root{
+  --bg:#f3f4f6;
+  --surface:#ffffff;
+  --surface2:#f8f8f8;
+  --line:#d5d7db;
+  --line2:#b9bcc2;
+  --text:#111318;
+  --muted:#666b73;
+  --soft:#eceef1;
+  --black:#17191d;
+  --gray:#777c84;
+  --shadow-dark:rgba(0,0,0,.16);
+  --shadow-light:rgba(255,255,255,.95);
+}
+html,body{
+  background:var(--bg)!important;
+  color:var(--text)!important;
+}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  min-height:100vh;
+}
+.wrap{
+  max-width:980px;
+  padding:22px;
+}
+.card{
+  background:linear-gradient(145deg,#fff,#f1f2f4)!important;
+  border:1px solid #d2d4d8!important;
+  border-radius:22px!important;
+  box-shadow:10px 10px 24px var(--shadow-dark),-7px -7px 18px var(--shadow-light)!important;
+}
+h1{
+  color:#111;
+  font-weight:900;
+  letter-spacing:-.03em;
+}
+.sub,.small{
+  color:#666d76!important;
+}
+button{
+  color:#fff!important;
+  background:linear-gradient(145deg,#30343a,#111317)!important;
+  border:1px solid #0c0d0f!important;
+  border-radius:13px!important;
+  box-shadow:4px 4px 8px rgba(0,0,0,.22),-2px -2px 6px rgba(255,255,255,.8),inset 0 1px 0 rgba(255,255,255,.15)!important;
+  transition:transform .14s ease,box-shadow .14s ease,filter .14s ease!important;
+}
+button:hover:not(:disabled){
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+  box-shadow:5px 6px 11px rgba(0,0,0,.24),-2px -2px 7px #fff,inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+button:active:not(:disabled){
+  transform:translateY(1px);
+  box-shadow:inset 3px 3px 7px rgba(0,0,0,.38),inset -2px -2px 5px rgba(255,255,255,.12)!important;
+}
+button.secondary{
+  background:linear-gradient(145deg,#f7f7f8,#dfe1e5)!important;
+  color:#17191d!important;
+  border-color:#c5c7cb!important;
+  box-shadow:4px 4px 8px rgba(0,0,0,.16),-3px -3px 7px #fff,inset 0 1px 0 #fff!important;
+}
+button.disc{
+  background:linear-gradient(145deg, #ff0000, #fe0000) !important;
+  color:#17191d!important;
+  border-color:#c5c7cb!important;
+  box-shadow:4px 4px 8px rgba(0,0,0,.16),-3px -3px 7px #fff,inset 0 1px 0 #fff!important;
+}
+button.danger,.btn-uninstall{
+  background:linear-gradient(145deg,#3a3d43,#17191d)!important;
+  color:#fff!important;
+}
+button:disabled{
+  opacity:.42!important;
+  filter:none!important;
+  transform:none!important;
+}
+input,.category{
+  background:#fff!important;
+  color:#17191d!important;
+  border:1px solid #c9ccd1!important;
+  box-shadow:inset 3px 3px 7px rgba(0,0,0,.09),inset -2px -2px 5px #fff!important;
+}
+.status{
+  background:#f0f1f3!important;
+  color:#555b64!important;
+  border:1px solid #d1d3d7;
+  box-shadow:inset 2px 2px 5px rgba(0,0,0,.08),inset -2px -2px 5px #fff;
+}
+.app-manager{
+  background:#f6f7f8!important;
+  border:1px solid #d0d3d7!important;
+}
+.app-toolbar{
+  background:linear-gradient(145deg,#fff,#eceef1)!important;
+  border-bottom:1px solid #d2d4d8!important;
+}
+.pills{
+  gap:9px;
+}
+.pill{
+  background:linear-gradient(145deg,#fff,#e9eaed)!important;
+  color:#4f555d!important;
+  border:1px solid #cfd2d7!important;
+  box-shadow:3px 3px 7px rgba(0,0,0,.12),-2px -2px 5px #fff!important;
+}
+.pill:hover{
+  background:#fff!important;
+  border-color:#9da2a9!important;
+}
+.pill.active{
+  background:linear-gradient(145deg,#2c3035,#121418)!important;
+  color:#fff!important;
+  border-color:#111!important;
+  box-shadow:inset 2px 2px 5px rgba(0,0,0,.35),3px 3px 8px rgba(0,0,0,.2)!important;
+}
+.dot{
+  box-shadow:0 1px 2px rgba(0,0,0,.25);
+}
+.selection-row{
+  background:#f7f7f8!important;
+  color:#666d76!important;
+  border-bottom:1px solid #d7d9dc!important;
+}
+.selection-count{
+  background:linear-gradient(145deg,#fff,#e8e9ec)!important;
+  color:#24272c!important;
+  border-color:#c8cbd0!important;
+  box-shadow:3px 3px 7px rgba(0,0,0,.13),-2px -2px 5px #fff!important;
+}
+.selection-count.active{
+  background:#202328!important;
+  color:#fff!important;
+  border-color:#111!important;
+}
+.select-link{
+  background:linear-gradient(145deg,#30343a,#111317)!important;
+  color:#fff!important;
+  border-color:#0d0e10!important;
+  box-shadow:4px 4px 8px rgba(0,0,0,.22),-2px -2px 5px #fff!important;
+}
+.help-link{
+  color:#555b63!important;
+}
+.app-sections{
+  background:#f6f7f8;
+}
+.section-title h3{
+  color:#22262b;
+}
+.section-title .count{
+  background:#e7e9ec!important;
+  color:#4f555d!important;
+  border:1px solid #d0d2d6;
+}
+.app-list{
+  background:#fff!important;
+  border-color:#d3d5d9!important;
+  box-shadow:5px 5px 13px rgba(0,0,0,.10),-3px -3px 8px #fff;
+}
+.approw{
+  background:linear-gradient(145deg,#fff,#f0f1f3)!important;
+  color:#17191d!important;
+  border-bottom:1px solid #dadcdf!important;
+}
+.approw:hover{
+  background:#f8f8f8!important;
+}
+.approw.selected{
+  background:linear-gradient(145deg,#eceef1,#fff)!important;
+  box-shadow:inset 3px 3px 7px rgba(0,0,0,.08),inset -2px -2px 5px #fff!important;
+}
+.approw .name{
+  color:#15171b;
+}
+.pkg{
+  color:#777d86!important;
+}
+.appicon{
+  background:linear-gradient(145deg,#f5f6f7,#dfe1e5)!important;
+  border-color:#c6c9ce!important;
+  box-shadow:3px 3px 7px rgba(0,0,0,.13),-2px -2px 5px #fff!important;
+}
+.app-lock{
+  color:#17191d;
+}
+.state{
+  background:#e5e7ea!important;
+  color:#4c525a!important;
+  border:1px solid #d0d2d6;
+}
+.state.system{
+  background:#e3e5e8!important;
+  color:#444a51!important;
+}
+.state.user{
+  background:#dedfe2!important;
+  color:#25282d!important;
+}
+.manager-bottom{
+  background:rgba(246,247,248,.96)!important;
+  border:1px solid #d0d3d7!important;
+  box-shadow:0 -7px 20px rgba(0,0,0,.12),-4px -4px 10px rgba(255,255,255,.8)!important;
+  backdrop-filter:blur(10px);
+}
+.btn-recover,.btn-disable,.btn-uninstall,.btn-block,.btn-enable{
+  background:linear-gradient(145deg,#f7f7f8,#dfe1e5)!important;
+  color:#191b1f!important;
+  border:1px solid #c5c8cd!important;
+}
+.btn-uninstall{
+  background:linear-gradient(145deg,#3b3e44,#17191b)!important;
+  color:#fff!important;
+}
+.btn-block{
+  background:linear-gradient(145deg,#30343a,#14161a)!important;
+  color:#fff!important;
+}
+pre{
+  background:#ffffff!important;
+  color:#6b7078!important;
+  border:1px solid #d5d8dc!important;
+  box-shadow:inset 2px 2px 6px rgba(0,0,0,.06),inset -2px -2px 5px rgba(255,255,255,.95)!important;
+  font-family:"JetBrains Mono","Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+  font-weight:500!important;
+  border-radius:12px!important;
+}
+.smart-dialog,.storage-dialog{
+  background:linear-gradient(145deg,#fff,#f0f1f3)!important;
+  color:#15171b!important;
+  border:1px solid #c9ccd1!important;
+  box-shadow:16px 20px 50px rgba(0,0,0,.25),-5px -5px 15px #fff!important;
+}
+.smart-dialog::backdrop,.storage-dialog::backdrop{
+  background:rgba(20,22,25,.48)!important;
+  backdrop-filter:blur(5px);
+}
+.smart-spinner{
+  border-color:#d9dbdf!important;
+  border-top-color:#202328!important;
+}
+.smart-progress{
+  background:#e0e2e5!important;
+}
+.smart-progress span{
+  background:#202328!important;
+}
+.smart-score{
+  background:linear-gradient(145deg,#fff,#e9eaed)!important;
+  border-color:#c8cbd0!important;
+}
+.smart-score-ring{
+  border-color:#202328!important;
+  box-shadow:0 0 18px rgba(0,0,0,.12)!important;
+}
+.smart-score-info div{
+  color:#666d76!important;
+}
+.smart-report-tile{
+  background:linear-gradient(145deg,#fff,#eceef1)!important;
+  border-color:#d0d3d7!important;
+  box-shadow:3px 3px 8px rgba(0,0,0,.10),-2px -2px 5px #fff!important;
+}
+.smart-report-tile:hover{
+  border-color:#999ea5!important;
+  background:#fff!important;
+}
+.smart-report-tile .r-label,.smart-report-tile .r-note{
+  color:#686e76!important;
+}
+.smart-list{
+  background:#f1f2f4!important;
+  border-color:#d1d3d7!important;
+}
+.smart-list-item{
+  color:#5d636b!important;
+}
+.smart-list-item b{
+  color:#181a1e;
+}
+.storage-head,.storage-toolbar,.storage-foot{
+  border-color:#d4d6da!important;
+}
+.storage-note{
+  background:#eceef1!important;
+  color:#5d636b!important;
+  border:1px solid #d2d4d8;
+}
+.storage-list{
+  background:#fff!important;
+  border-color:#d2d5d9!important;
+}
+.storage-item{
+  border-color:#e0e1e4!important;
+}
+.storage-open{
+  color:#1a1c20!important;
+}
+.storage-open:hover{
+  background:#f0f1f3!important;
+}
+.storage-meta{
+  color:#777d85!important;
+}
+.storage-empty{
+  color:#777d85!important;
+}
+.badge{
+  background:#e4e6e9!important;
+  color:#4f555d!important;
+  border:1px solid #d0d2d6;
+}
+.ok{
+  color:#34383e!important;
+}
+.warn{
+  color:#44484e!important;
+}
+.bad{
+  color:#202328!important;
+}
+button,.pill,.selection-count,.select-link,.appicon,.category,input{
+  transition:all .16s cubic-bezier(.2,.8,.2,1);
+}
+button{
+  min-height:40px;
+}
+.toolbar-row input{
+  height:42px;
+}
+.category{
+  height:42px;
+}
+@media (max-width:680px){
+  .wrap{
+    padding:12px;
+  }
+  .card{
+    border-radius:18px!important;
+  }
+  .manager-bottom{
+    background:rgba(246,247,248,.98)!important;
+  }
+}
+.btn-permanent-remove{
+  padding:10px 14px;
+  border:1px solid #c9ccd1;
+  border-radius:12px;
+  background:#fff;
+  color:#8a1831;
+  font-weight:900;
+  box-shadow:5px 5px 10px #0002,-4px -4px 8px #fff;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.btn-permanent-remove:hover{
+  background:#fff5f6;
+  border-color:#b3263e;
+}
+.btn-permanent-remove:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  filter:grayscale(1);
+}
+.storage-list{
+  background:#fff!important;
+}
+.storage-item{
+  background:#fff!important;
+  color:#666!important;
+  border-color:#e0e1e4!important;
+}
+.storage-item:hover{
+  background:#fff!important;
+}
+.storage-open{
+  background:#fff!important;
+  color:#666!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+.storage-open:hover{
+  background:#f7f7f7!important;
+  color:#555!important;
+}
+.storage-name{
+  color:#666!important;
+  font-weight:650;
+}
+.storage-meta{
+  color:#888!important;
+}
+  </style>
+ 
+
+  <script>
+    // JHOELSOFT UI protection: disable common context-menu and copy shortcuts.
+    document.addEventListener('contextmenu', e => e.preventDefault(), {capture:true});
+    document.addEventListener('dragstart', e => e.preventDefault(), {capture:true});
+    document.addEventListener('selectstart', e => {
+      const t = e.target;
+      if (t && /^(INPUT|TEXTAREA)$/.test(t.tagName)) return;
+      e.preventDefault();
+    }, {capture:true});
+    document.addEventListener('keydown', e => {
+      const k = String(e.key || '').toLowerCase();
+      if (k === 'f12' ||
+          (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) ||
+          (e.ctrlKey && ['u','s'].includes(k))) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, {capture:true});
+  </script>
+
 </head>
 <body>
 <div class="wrap">
-  <div class="card">
+  <div class="card" style="position:relative">
+    <span id="licenseDot" class="header-license-dot" title="License: not checked" aria-label="License status"></span>
     <h1>🧹 JHOELSOFT v7</h1>
     <div class="sub">Android Pop-up Ads Cleaner • modern WebUSB ADB • OTG phone-to-phone</div>
   </div>
@@ -31,8 +1951,13 @@ pre{background:#070d16;border-radius:12px;padding:12px;overflow:auto;max-height:
   <div class="card">
     <div class="row">
       <button id="connect">🔌 CONNECT ADB / OTG</button>
-      <button id="diag" class="secondary">USB DIAGNOSTICS</button>
-      <button id="disconnect" class="secondary" disabled>DISCONNECT</button>
+      <button id="scan" class="secondary" disabled>🔎 SCAN APPS</button>
+      <button id="btnSmartScan" class="secondary" disabled>🩺 SMART SCAN</button>
+      <button id="btnStorage" class="secondary" disabled>📁 PHONE STORAGE</button>
+      <button id="diag" class="secondary" disabled>USB DIAGNOSTICS</button>
+      <button id="disconnect" class="disc" disabled>DISCONNECT</button>
+      <button id="installApk" class="secondary" disabled>📦 INSTALL APK VIA ADB</button>
+      <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" hidden>
     </div>
     <div id="status" class="status" style="margin-top:10px">Ready. Use Chrome on the HOST phone, connect the TARGET phone by OTG/data cable, unlock TARGET, and enable USB debugging.</div>
   </div>
@@ -42,14 +1967,93 @@ pre{background:#070d16;border-radius:12px;padding:12px;overflow:auto;max-height:
     <div id="deviceInfo" class="small" style="margin-top:8px">Not connected.</div>
   </div>
 
-  <div class="card">
-    <div class="row">
-      <button id="scan" disabled>🔍 SCAN APPS</button>
-      <button id="selectRisk" class="secondary" disabled>SELECT ADS / BLOAT</button>
-      <button id="uninstall" class="danger" disabled>🗑 UNINSTALL SELECTED</button>
+  <dialog id="smartDialog" class="smart-dialog">
+    <div id="smartLoading" class="smart-loading">
+      <div class="smart-spinner"></div>
+      <div class="smart-dialog-title">Smart Scan…</div>
+      <div id="smartStep" class="small">Preparing…</div>
+      <div class="smart-progress"><span id="smartProgressBar"></span></div>
     </div>
-    <div style="margin-top:10px"><input id="filter" placeholder="Filter package/app name…"></div>
-    <div id="apps" style="margin-top:8px"></div>
+    <div id="smartReport" class="hidden">
+      <div class="smart-report-head">
+        <div><b>Smart Scan Results</b><div id="smartDeviceName" class="small"></div></div>
+        <button id="smartClose" class="secondary">×</button>
+      </div>
+      <div id="smartReportBody"></div>
+      <div class="smart-report-actions">
+        <button id="smartClean" class="smart-good">✨ Clean recommended</button>
+        <button id="smartReportRescan" class="secondary">↻ Re-scan</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="storageDialog" class="storage-dialog">
+    <div class="storage-head">
+      <div><b>📁 Phone Storage</b><div id="storagePath" class="small">/storage/emulated/0</div></div>
+      <button id="storageClose" class="secondary">×</button>
+    </div>
+    <div class="storage-toolbar">
+      <button id="storageUp" class="secondary">⬆ Up</button>
+      <button id="storageRefresh" class="secondary">↻ Refresh</button>
+      <button id="storageHome" class="secondary">🏠 Phone Storage</button>
+      <span id="storageCount" class="small">0 items</span>
+    </div>
+    <div class="storage-note">Browse the phone’s internal shared storage. You can open folders, but deletion is limited to common download/transfer folders (for example Download, Bluetooth, SHAREit, Xender, Received and Transfer). App/system folders and protected locations cannot be deleted here.</div>
+    <div id="storageList" class="storage-list"><div class="storage-empty">Connect a device to browse its storage.</div></div>
+    <div class="storage-foot">
+      <span id="storageSelected" class="small">0 files selected</span>
+      <button id="storageDelete" class="danger" disabled>🗑 Delete selected files</button>
+    </div>
+  </dialog>
+
+  <div class="card app-manager">
+    <div class="app-toolbar">
+      <div class="pills" id="filterPills">
+        <button type="button" class="pill" data-filter="user">📥 Downloaded <b id="countDownloaded">0</b></button>
+        <button type="button" class="pill active" data-filter="all">All <b id="countAll">0</b></button>
+        <button type="button" class="pill" data-filter="bloat"><span class="dot green"></span>Bloat/Ads <b id="countBloat">0</b></button>
+        <button type="button" class="pill" data-filter="popup"><span class="dot orange"></span>Pop-up <b id="countPopup">0</b></button>
+        <button type="button" class="pill" data-filter="system"><span class="dot blue"></span>Pre-installed <b id="countPre">0</b></button>
+        <button type="button" class="pill" data-filter="disabled"><span class="dot gray"></span>Disabled <b id="countDisabled">0</b></button>
+        <button type="button" class="pill" data-filter="removed">Removed <b id="countRemoved">0</b></button>
+        <button type="button" class="pill" data-filter="protected"><span class="dot red"></span>Protected <b id="countProtected">0</b></button>
+        <button type="button" class="pill" data-filter="launcher"><span class="dot blue"></span>Launcher Apps <b id="countLauncher">0</b></button>
+      </div>
+      <div class="toolbar-row">
+        <input id="filter" placeholder="Search app…">
+        <select id="category" class="category">
+          <option value="all">All categories</option>
+          <option value="system">System Apps</option>
+          <option value="user">Apps You Can Uninstall</option>
+          <option value="disabled">Disabled</option>
+          <option value="removed">Removed / Recoverable</option>
+          <option value="bloat">Bloat / Ads Detected</option>
+          <option value="popup">Pop-up / Overlay Detected</option>
+          <option value="protected">Protected</option>
+          <option value="launcher">Launcher Apps</option>
+        </select>
+      </div>
+    </div>
+    <div class="selection-row">
+     <button id="selectRisk" class="select-link" disabled>
+        <span class="select-check">✓</span><span>Select all bloat/ads</span>
+      </button>
+       <label class="select-page-control">
+        <input id="selectPage" type="checkbox" disabled>
+        <span class="page-check" aria-hidden="true"></span>
+        <span>Select this page</span>
+      </label>
+      <button id="selectedCount" class="selection-count" type="button" title="Show only selected apps">0 selected</button>
+    </div>
+    <div id="apps" class="app-sections"></div>
+    <div class="manager-bottom">
+      <button id="recoverSelected" class="btn-recover" disabled>♻ Recover</button>
+      <button id="disableSelected" class="btn-disable" disabled>⏸ Disable</button>
+      <button id="uninstall" class="btn-uninstall" disabled>▣ Uninstall</button>
+      <button id="blockSelected" class="btn-block" disabled>⊘ Block pop-ups</button>
+      <button id="clearData" class="btn-enable" disabled>🗑 Clear Data</button>
+      <button id="enableSelected" class="btn-enable" disabled>▶ Enable</button>
+    </div>
   </div>
 
   <div class="card">
@@ -88,490 +2092,389 @@ const AdbDaemonTransport = Pi;
 const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
-(() => {
-  let adb = null;
-  let usbDevice = null;
-  let connected = false;
-  let packages = [];
-  let connectPromise = null;
-  let disconnectHandler = null;
-  let heartbeatTimer = null;
+const LICENSE_API = atob('aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL2Fkcy9saWNlbnNlLWFwaQ==');
+const APP_URL = `${LICENSE_API}/api/app`;
+const SESSION_KEY = 'jhoelsoft_license_session_v2';
 
-  const $ = id => document.getElementById(id);
+let selectedUsb = null;
+let currentSerial = '';
+let licenseToken = '';
+let busy = false;
+let appLoaded = false;
 
-  function status(s, cls='') {
-    $('status').className = 'status ' + cls;
-    $('status').textContent = s;
-  }
+const el = id => document.getElementById(id);
+function msg(t, kind=''){
+  const e=el('status');
+  if(e){ e.textContent=t; e.className='status '+kind; }
+}
+function normalize(v){ return String(v||'').replace(/\s+/g,'').trim(); }
+function setState(active, mode=''){
+  const e=el('licenseDot');
+  if(!e)return;
+  e.classList.remove('checking','active','error');
+  if(mode==='checking'){e.classList.add('checking');e.title='License: checking…';}
+  else if(mode==='error'){e.classList.add('error');e.title='License: error';}
+  else if(active){e.classList.add('active');e.title='License: active';}
+  else e.title='License: not activated';
+}
+async function request(path, body={}, token=''){
+  const url=LICENSE_API+path;
+  const payload={...(body||{})};
 
-  function log(s) {
-    const p = $('console');
-    p.textContent = (p.textContent === 'No ADB commands yet.' ? '' : p.textContent) + s + '\n';
-    p.scrollTop = p.scrollHeight;
-  }
+  // HTTPS/CORS FIX:
+  // - Keep the request CORS-simple (no Authorization header).
+  // - Send the JWT in the JSON body.
+  // - text/plain is a CORS-safelisted Content-Type, so no OPTIONS
+  //   preflight is required.
+  if(token) payload.token=token;
 
-  function errText(e) {
-    return e && (e.message || e.name || String(e)) || 'Unknown error';
-  }
+  console.info('[JHOELSOFT API] POST',url,{
+    path,
+    hasToken:!!payload.token,
+    serial:payload.serial||''
+  });
 
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),15000);
 
-  function isBusyError(e) {
-    return !!e && (
-      e.name === 'DeviceBusyError' ||
-      /busy|claim|access denied|unable to claim|in use|operation that changes the device state is in progress/i.test(errText(e))
-    );
-  }
+  let r;
+  let raw='';
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[c]));
-  }
-
-  function classify(pkg, raw='', overlay=false) {
-    const s = (pkg + ' ' + raw).toLowerCase();
-    let score = 0, tags = [];
-
-    if (s.includes('admob') || s.includes('adsdk') || s.includes('applovin') ||
-        s.includes('appodeal') || s.includes('unityads') || s.includes('facebook.ads')) {
-      score += 3; tags.push('ADS-SDK');
-    }
-    if (overlay || s.includes('overlay') || s.includes('draw_over') ||
-        s.includes('system_alert_window')) {
-      score += 3; tags.push('OVERLAY');
-    }
-    if (s.includes('cleaner') || s.includes('booster') || s.includes('launcher') ||
-        s.includes('wallpaper') || s.includes('lockscreen')) {
-      score += 1; tags.push('HEURISTIC');
-    }
-    if (s.includes('adware') || s.includes('popup') || s.includes('pop-up')) {
-      score += 4; tags.push('ADWARE-NAME');
-    }
-
-    return {score, tags};
-  }
-
-  function renderApps() {
-    const q = $('filter').value.toLowerCase().trim();
-    const list = packages.filter(x =>
-      !q || x.pkg.toLowerCase().includes(q) || x.label.toLowerCase().includes(q)
-    );
-
-    $('apps').innerHTML = list.map(x => {
-      const r = classify(x.pkg, x.raw, x.overlay);
-      return `<div class="app">
-        <input type="checkbox" data-pkg="${escapeHtml(x.pkg)}" style="width:auto" ${x.selected?'checked':''}>
-        <div style="flex:1">
-          <div class="name">${escapeHtml(x.label || x.pkg)}</div>
-          <div class="pkg">${escapeHtml(x.pkg)}</div>
-          ${r.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
-        </div>
-        <div class="risk ${r.score>=3?'warn':''}">risk ${r.score}</div>
-      </div>`;
-    }).join('') || '<div class="small">No apps found.</div>';
-
-    $('apps').querySelectorAll('input[type=checkbox]').forEach(cb => {
-      cb.addEventListener('change', () => {
-        const x = packages.find(p => p.pkg === cb.dataset.pkg);
-        if (x) x.selected = cb.checked;
-        updateButtons();
-      });
+  try{
+    r=await fetch(url,{
+      method:'POST',
+      headers:{
+        'Content-Type':'text/plain;charset=UTF-8'
+      },
+      body:JSON.stringify(payload),
+      cache:'no-store',
+      credentials:'omit',
+      mode:'cors',
+      signal:controller.signal
     });
 
-    updateButtons();
-  }
+    raw=await r.text();
+  }catch(e){
+    clearTimeout(timer);
+    console.error('[JHOELSOFT API NETWORK ERROR]',e);
 
-  function updateButtons() {
-    const any = packages.some(x => x.selected);
-    $('uninstall').disabled = !connected || !any;
-    $('selectRisk').disabled = !connected || !packages.length;
-  }
-
-  async function shell(command) {
-    if (!adb) throw new Error('ADB is not connected');
-    log('$ ' + command);
-    return await adb.subprocess.noneProtocol.spawnWaitText(command);
-  }
-
-  async function closeConnection() {
-    if (heartbeatTimer) {
-      clearInterval(heartbeatTimer);
-      heartbeatTimer = null;
-    }
-
-    if (disconnectHandler && navigator.usb) {
-      navigator.usb.removeEventListener('disconnect', disconnectHandler);
-      disconnectHandler = null;
-    }
-
-    const old = adb;
-    adb = null;
-    usbDevice = null;
-    connected = false;
-
-    if (old) {
-      try { await old.close(); } catch (_) {}
-    }
-  }
-
-  async function connect() {
-    if (connectPromise) return connectPromise;
-
-    connectPromise = (async () => {
-      if (!window.isSecureContext) {
-        status('WebUSB needs HTTPS or localhost.', 'bad');
-        return;
-      }
-      if (!navigator.usb) {
-        status('WebUSB is unavailable. Use Chromium/Chrome.', 'bad');
-        return;
-      }
-      if (!AdbDaemonWebUsbDeviceManager.BROWSER) {
-        status('This browser does not expose the required WebUSB ADB manager.', 'bad');
-        return;
-      }
-
-      $('connect').disabled = true;
-
-      try {
-        // Make sure an old session is completely closed before requesting a new one.
-        await closeConnection();
-
-        status('Opening USB chooser… Select the TARGET Android phone.');
-        const device = await AdbDaemonWebUsbDeviceManager.BROWSER.requestDevice();
-        if (!device) {
-          status('No phone selected.');
-          return;
-        }
-
-        usbDevice = device;
-
-        let connection;
-        try {
-          connection = await device.connect();
-        } catch (e) {
-          if (!isBusyError(e)) throw e;
-
-          log('USB busy detected. Closing raw handle and retrying in 600 ms…');
-          try { await device.raw.close(); } catch (_) {}
-          await sleep(600);
-          connection = await device.connect();
-        }
-
-        status('Phone answered. Starting ADB authentication…\nUnlock TARGET and tap “Allow USB debugging?”.');
-
-        const store = new AdbWebCredentialStore('JHOELSOFT APK Cleaner');
-        let showedAuth = false;
-
-        const credentialStore = {
-          generateKey: () => store.generateKey(),
-          iterateKeys: () => {
-            if (!showedAuth) {
-              showedAuth = true;
-              status('⏳ ADB AUTHORIZATION WAITING\n\nUnlock TARGET and accept “Allow USB debugging?”.\nTick “Always allow from this computer” if shown.');
-            }
-            return store.iterateKeys();
-          }
-        };
-
-        const authTimeout = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error(
-            'ADB authorization timed out. Unlock TARGET and accept the USB debugging prompt.'
-          )), 45000)
-        );
-
-        let authenticated;
-        try {
-          authenticated = await Promise.race([
-            AdbDaemonTransport.authenticate({
-              serial: device.serial,
-              connection,
-              credentialStore
-            }),
-            authTimeout
-          ]);
-        } catch (e) {
-          try { await device.raw.close(); } catch (_) {}
-          throw e;
-        }
-
-        adb = new Adb(authenticated);
-        connected = true;
-
-        disconnectHandler = ev => {
-          if (ev.device === device.raw) {
-            log('USB device disconnected.');
-            closeConnection().catch(() => {});
-            $('disconnect').disabled = true;
-            $('scan').disabled = true;
-            $('deviceInfo').textContent = 'Not connected.';
-            updateButtons();
-            status('USB disconnected.', 'bad');
-          }
-        };
-
-        navigator.usb.addEventListener('disconnect', disconnectHandler);
-
-        // Same heartbeat strategy as the working implementation.
-        const heartbeatAdb = adb;
-        heartbeatTimer = setInterval(async () => {
-          if (adb !== heartbeatAdb) return;
-          try {
-            await Promise.race([
-              heartbeatAdb.getProp('ro.serialno'),
-              new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('heartbeat timeout')), 15000)
-              )
-            ]);
-          } catch (_) {
-            log('ADB heartbeat failed; closing stale connection.');
-            await closeConnection();
-            $('disconnect').disabled = true;
-            $('scan').disabled = true;
-            updateButtons();
-            status('ADB connection lost. Reconnect the TARGET phone.', 'bad');
-          }
-        }, 10000);
-
-        status('✅ ADB CONNECTED', 'ok');
-        $('disconnect').disabled = false;
-        $('scan').disabled = false;
-
-        let model='', android='', serial='', brand='';
-        try { brand = (await adb.getProp('ro.product.manufacturer')).trim(); } catch (_) {}
-        try { model = (await adb.getProp('ro.product.model')).trim(); } catch (_) {}
-        try { android = (await adb.getProp('ro.build.version.release')).trim(); } catch (_) {}
-        try { serial = (await adb.getProp('ro.serialno')).trim(); } catch (_) {}
-
-        $('deviceInfo').innerHTML =
-          '<b>Brand:</b> '+escapeHtml(brand||'—')+
-          '<br><b>Model:</b> '+escapeHtml(model||'—')+
-          '<br><b>Android:</b> '+escapeHtml(android||'—')+
-          '<br><b>Serial:</b> '+escapeHtml(serial || device.serial || '—');
-
-      } catch (e) {
-        connected = false;
-        const m = errText(e);
-
-        if (isBusyError(e)) {
-          status(
-            '❌ USB IS BUSY\n\n' + m +
-            '\n\nClose adb.exe / Android Studio / other WebADB tabs, then unplug/replug OTG and try again.',
-            'bad'
-          );
-        } else if (/authorization|allow|timed out|AUTH|authentication/i.test(m)) {
-          status(
-            '❌ ADB AUTHORIZATION FAILED\n\n' + m +
-            '\n\nTARGET: unlock → USB debugging ON → accept “Allow USB debugging?” → reconnect.',
-            'bad'
-          );
-        } else {
-          status('❌ ADB CONNECTION FAILED\n\n' + m, 'bad');
-        }
-
-        try {
-          if (usbDevice?.raw) await usbDevice.raw.close();
-        } catch (_) {}
-
-        adb = null;
-        usbDevice = null;
-      } finally {
-        $('connect').disabled = false;
-        updateButtons();
-      }
-    })();
-
-    try {
-      return await connectPromise;
-    } finally {
-      connectPromise = null;
-    }
-  }
-
-  async function disconnect() {
-    await closeConnection();
-    $('disconnect').disabled = true;
-    $('scan').disabled = true;
-    packages = [];
-    $('apps').innerHTML = '';
-    $('deviceInfo').textContent = 'Not connected.';
-    updateButtons();
-    status('Disconnected.');
-  }
-
-  function parsePackages(raw) {
-    return new Set(
-      raw.split(/\r?\n/)
-        .map(x => x.trim())
-        .filter(x => x.startsWith('package:'))
-        .map(x => x.slice(8).trim())
-        .filter(Boolean)
-    );
-  }
-
-  async function scan() {
-    if (!adb || !connected) return;
-
-    $('scan').disabled = true;
-    $('selectRisk').disabled = true;
-
-    try {
-      status('Scanning Android packages…');
-
-      // IMPORTANT: bulk package queries, not one USB/ADB operation per package.
-      // IMPORTANT: do NOT use `pm list packages -u` for the main app list.
-      // `-u` includes packages that are uninstalled for the current user,
-      // so an app removed with `pm uninstall --user 0` can still appear.
-      // Query user 0's currently installed packages instead.
-      const systemRaw   = await shell('pm list packages -s --user 0');
-      const userRaw     = await shell('pm list packages -3 --user 0');
-      const disabledRaw = await shell('pm list packages -d --user 0');
-      const installedRaw = await shell('pm list packages --user 0');
-
-      const system = parsePackages(systemRaw);
-      const user = parsePackages(userRaw);
-      const disabled = parsePackages(disabledRaw);
-      const all = parsePackages(installedRaw);
-
-      let overlays = new Set();
-
-      try {
-        const raw = await shell(
-          'cmd appops query-op --user 0 SYSTEM_ALERT_WINDOW allow'
-        );
-
-        overlays = new Set(
-          raw.split(/\r?\n/)
-            .map(x => x.trim())
-            .filter(x => /^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)+$/.test(x))
-        );
-      } catch (_) {
-        log('Overlay permission query unavailable; continuing scan.');
-      }
-
-      packages = [...all].map(pkg => {
-        const isSystem = system.has(pkg);
-        const state = disabled.has(pkg) ? 'disabled' : 'enabled';
-
-        return {
-          pkg,
-          label: pkg,
-          raw: '',
-          overlay: overlays.has(pkg),
-          system: isSystem,
-          state,
-          selected: false
-        };
-      }).sort((a,b) => a.pkg.localeCompare(b.pkg));
-
-      renderApps();
-
-      const overlayCount = packages.filter(x => x.overlay).length;
-      const disabledCount = packages.filter(x => x.state === 'disabled').length;
-
-      status(
-        `✅ Scan complete: ${packages.length} packages.\n` +
-        `Installed: ${packages.length} • Third-party: ${user.size} • System: ${system.size} • Disabled: ${disabledCount} • Overlay: ${overlayCount}\n` +
-        `Uninstalled-for-user packages are excluded from this list. No per-package USB scan was used.`
+    if(e?.name==='AbortError'){
+      throw new Error(
+        'License API timed out after 15 seconds. Check the HTTPS API server.'
       );
-    } catch (e) {
-      status('❌ Scan failed: ' + errText(e), 'bad');
-      log('[SCAN ERROR] ' + errText(e));
-    } finally {
-      $('scan').disabled = !connected;
-      updateButtons();
     }
+
+    throw new Error(
+      'HTTPS License API could not be read by this page. '+
+      'Check the API HTTPS response CORS header and SSL certificate.'
+    );
   }
 
-  async function uninstallSelected() {
-    const chosen = packages.filter(x => x.selected);
-    if (!chosen.length) return;
+  clearTimeout(timer);
 
-    const protectedGuess = chosen.filter(x =>
-      /^(com\.android\.|com\.google\.android\.|com\.samsung\.android\.|com\.xiaomi\.|com\.miui\.|com\.oppo\.|com\.vivo\.|com\.oneplus\.)/i.test(x.pkg)
+  console.info('[JHOELSOFT API] response',r.status,raw.slice(0,500));
+
+  let d={};
+  try{
+    d=JSON.parse(raw||'{}');
+  }catch(_){
+    throw new Error(
+      `License API returned non-JSON data (HTTP ${r.status}).`
+    );
+  }
+
+  if(!r.ok || !d.ok){
+    throw new Error(d.error||`Server error (${r.status})`);
+  }
+
+  return d;
+}
+function saveSession(d){
+  licenseToken=d.token||d.sessionToken||d.session_id||d.access_token||d.session||'';
+  localStorage.setItem(SESSION_KEY,JSON.stringify({
+    token:licenseToken,serial:d.serial||currentSerial,expiresAt:d.expiresAt||null,license:d.license||''
+  }));
+}
+function clearSession(){
+  licenseToken='';
+  localStorage.removeItem(SESSION_KEY);
+  setState(false);
+}
+async function validateStored(){
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');}catch(_){}
+  if(!s?.token || !s?.serial || normalize(s.serial)!==normalize(currentSerial)) return false;
+  try{
+    await request('/api/validate',{serial:currentSerial},s.token);
+    licenseToken=s.token;
+    return true;
+  }catch(_){
+    clearSession();
+    return false;
+  }
+}
+function openLicense(){
+  const serial=el('licenseSerial');
+  const input=el('licenseInput');
+  const err=el('licenseError');
+  if(serial)serial.textContent=currentSerial||'Not connected';
+  if(input)input.value='';
+  if(err)err.textContent='';
+  el('licenseOverlay')?.classList.add('show');
+  setTimeout(()=>input?.focus(),30);
+}
+function closeLicense(){ el('licenseOverlay')?.classList.remove('show'); }
+
+async function activateLicense(){
+  if(busy)return;
+  const key=normalize(el('licenseInput')?.value);
+  if(!/^\d{11}$/.test(key)){
+    el('licenseError').textContent='License key must contain exactly 11 digits.';
+    return;
+  }
+  busy=true;
+  el('licenseError').textContent='Checking license…';
+  try{
+    const d=await request('/api/activate',{license:key,serial:currentSerial});
+    saveSession(d);
+    closeLicense();
+    await startAfterLicense();
+  }catch(e){
+    clearSession();
+    el('licenseError').textContent=e.message||String(e);
+  }finally{
+    busy=false;
+  }
+}
+
+async function loadApp(){
+  if(appLoaded)return;
+
+  msg('License verified. Downloading application…','ok');
+
+  let d;
+  try{
+    if(!licenseToken){
+      throw new Error('No active license session is available. Activate the license again.');
+    }
+
+    d=await request('/api/app',{serial:currentSerial},licenseToken);
+  }catch(e){
+    console.error('[JHOELSOFT /api/app ERROR]',e);
+    throw new Error('Application download failed: '+(e.message||String(e)));
+  }
+
+  if(!d || typeof d.code!=='string' || !d.code.trim()){
+    throw new Error('Application code was not returned by the HTTPS license server. Check /api/app response JSON and server CORS.');
+  }
+
+  msg(`License verified. Application received (${d.code.length.toLocaleString()} bytes). Starting…`,'ok');
+
+  const blob=new Blob([d.code+'\n//# sourceURL=JHOELSOFT-ADS-APP.js'],{type:'text/javascript'});
+  const url=URL.createObjectURL(blob);
+  try{
+    try{
+      await import(url);
+    }catch(e){
+      console.error('[JHOELSOFT APP IMPORT ERROR]',e);
+      throw new Error('Downloaded application contains a JavaScript runtime/import error: '+(e.message||String(e)));
+    }
+
+    const deadline=Date.now()+5000;
+    while(typeof window.__JHOELSOFT_SET_LICENSE__!=='function' && Date.now()<deadline){
+      await new Promise(r=>setTimeout(r,50));
+    }
+    if(typeof window.__JHOELSOFT_SET_LICENSE__!=='function'){
+      throw new Error('Application downloaded, but its command bridge did not initialize. Check the JS application for a runtime error.');
+    }
+  }finally{
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  appLoaded=true;
+}
+
+async function authenticateDevice(device){
+  let connection;
+  try{
+    connection=await device.connect();
+  }catch(e){
+    if(!/busy|claim|access denied|unable to claim|in use|operation that changes the device state is in progress/i.test(String(e?.message||e))){
+      throw e;
+    }
+    try{await device.raw.close();}catch(_){}
+    await new Promise(r=>setTimeout(r,600));
+    connection=await device.connect();
+  }
+
+  msg('License verified. Starting ADB authentication…\nUnlock TARGET and tap “Allow USB debugging?”.','ok');
+
+  const store=new AdbWebCredentialStore('JHOELSOFT APK Cleaner');
+  let showedAuth=false;
+  const credentialStore={
+    generateKey:()=>store.generateKey(),
+    iterateKeys:()=>{
+      if(!showedAuth){
+        showedAuth=true;
+        msg('⏳ ADB AUTHORIZATION WAITING\n\nUnlock TARGET and accept “Allow USB debugging?”.\nTick “Always allow from this computer” if shown.','');
+      }
+      return store.iterateKeys();
+    }
+  };
+  const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error(
+    'ADB authorization timed out. Unlock TARGET and accept the USB debugging prompt.'
+  )),45000));
+
+  let authenticated;
+  try{
+    authenticated=await Promise.race([
+      AdbDaemonTransport.authenticate({serial:device.serial,connection,credentialStore}),
+      timeout
+    ]);
+  }catch(e){
+    try{await device.raw.close();}catch(_){}
+    throw e;
+  }
+
+  const adb=new Adb(authenticated);
+  return {adb,usbDevice:device,serial:currentSerial};
+}
+
+async function startAfterLicense(){
+  setState(true);
+  msg('License verified. Downloading application…','ok');
+  window.__JHOELSOFT_BOOTSTRAP__={serial:currentSerial,token:licenseToken,licenseActive:true};
+
+  window.addEventListener('error', e=>{
+    if(e?.message) console.error('[JHOELSOFT APP ERROR]',e.message,e.error||'');
+  }, {once:false});
+
+  window.addEventListener('unhandledrejection', e=>{
+    console.error('[JHOELSOFT APP PROMISE ERROR]',e.reason||'');
+  }, {once:false});
+
+  try{
+    await loadApp();
+  }catch(e){
+    setState(false,'error');
+    msg('❌ '+(e.message||String(e)),'bad');
+    console.error('[JHOELSOFT LOAD ERROR]',e);
+    throw e;
+  }
+
+  // The protected app is now in memory. Unlock its command buttons first.
+  if(typeof window.__JHOELSOFT_SET_LICENSE__==='function'){
+    window.__JHOELSOFT_SET_LICENSE__(true,currentSerial);
+  }else{
+    throw new Error('Application command module did not expose the license bridge.');
+  }
+
+  // Explicitly unlock the license-gated toolbar now.
+  // Scan/action buttons that depend on a selection remain disabled by the app itself.
+  ['scan','btnSmartScan','btnStorage','diag','installApk'].forEach(id=>{
+    const b=el(id);
+    if(b) b.disabled=false;
+  });
+
+  msg('✅ License active • Application loaded. Waiting for ADB authorization…','ok');
+
+  // Now, and only now, perform Android RSA/ADB authentication.
+  const session=await authenticateDevice(selectedUsb);
+
+  // Give the authenticated ADB session to the protected command app.
+  if(typeof window.__JHOELSOFT_SET_ADB__!=='function'){
+    throw new Error('Application command module did not initialize correctly.');
+  }
+  window.__JHOELSOFT_SET_ADB__(session);
+
+  el('disconnect').disabled=false;
+  el('connect').disabled=false;
+  msg('✅ ADB CONNECTED • LICENSE ACTIVE','ok');
+}
+
+async function connectAndVerify(){
+  if(busy)return;
+  busy=true;
+  el('connect').disabled=true;
+  setState(false,'checking');
+
+  try{
+    if(!window.isSecureContext)throw new Error('WebUSB needs HTTPS or localhost.');
+    if(!navigator.usb)throw new Error('WebUSB is unavailable. Use Chrome/Chromium.');
+    if(!AdbDaemonWebUsbDeviceManager.BROWSER)throw new Error('This browser does not expose WebUSB ADB.');
+
+    msg('Opening USB chooser… Select the TARGET Android phone.');
+    selectedUsb=await AdbDaemonWebUsbDeviceManager.BROWSER.requestDevice();
+    if(!selectedUsb)throw new Error('No phone selected.');
+
+    // selectedUsb is the ADB WebUSB wrapper (not the raw USBDevice).
+    // Its serial is exposed by the wrapper as .serial.
+    currentSerial=normalize(selectedUsb.serial || selectedUsb.raw?.serialNumber || '');
+    if(!currentSerial){
+      throw new Error(
+        'TARGET USB device has no readable serial number. ' +
+        'Reconnect the phone and select the ADB interface, then try again.'
+      );
+    }
+
+    msg(
+      `USB TARGET detected\\n` +
+      `Serial: ${currentSerial}\\n` +
+      `USB: ${Number(selectedUsb.raw?.vendorId ?? selectedUsb.vendorId).toString(16).padStart(4,'0')}:` +
+      `${Number(selectedUsb.raw?.productId ?? selectedUsb.productId).toString(16).padStart(4,'0')}`,
+      'ok'
     );
 
-    if (protectedGuess.length) {
-      alert('May system/vendor packages ang napili. Alisin muna ang mga iyon sa selection. JHOELSOFT will not bulk-remove protected-looking packages.');
+    const savedOk=await validateStored();
+    if(!savedOk){
+      setState(false);
+      openLicense();
       return;
     }
 
-    if (!confirm(
-      `Uninstall ${chosen.length} selected app(s) for the current Android user?\n\n` +
-      chosen.map(x => x.pkg).join('\n')
-    )) return;
-
-    $('uninstall').disabled = true;
-
-    for (const x of chosen) {
-      try {
-        status('Uninstalling ' + x.pkg + '…');
-        const r = await shell(`pm uninstall -k --user 0 ${x.pkg}`);
-        log(r || '(no output)');
-        x.selected = false;
-      } catch (e) {
-        log('ERROR ' + x.pkg + ': ' + errText(e));
-      }
-    }
-
-    await scan();
+    await startAfterLicense();
+  }catch(e){
+    setState(false,'error');
+    msg(e.message||String(e),'bad');
+  }finally{
+    busy=false;
+    el('connect').disabled=false;
   }
+}
 
-  async function diagnostics() {
-    try {
-      if (!navigator.usb) {
-        status('WebUSB unavailable in this browser.', 'bad');
-        return;
-      }
-
-      const devs = await navigator.usb.getDevices();
-
-      if (!devs.length) {
-        status('No previously-authorized WebUSB devices.\nPress CONNECT to open the chooser.');
-        return;
-      }
-
-      status(
-        'Authorized WebUSB devices:\n' +
-        devs.map(d =>
-          `${d.productName || 'Unknown'} • VID ${d.vendorId.toString(16)} • PID ${d.productId.toString(16)} • opened=${d.opened}`
-        ).join('\n')
-      );
-    } catch (e) {
-      status(
-        'USB diagnostics blocked: ' + errText(e) +
-        '\n\nOpen the HTTPS page directly in Chrome instead of an embedded preview.',
-        'bad'
-      );
-    }
-  }
-
-  $('connect').onclick = connect;
-  $('disconnect').onclick = disconnect;
-  $('scan').onclick = scan;
-  $('uninstall').onclick = uninstallSelected;
-  $('diag').onclick = diagnostics;
-  $('filter').oninput = renderApps;
-
-  $('selectRisk').onclick = () => {
-    packages.forEach(x => {
-      const r = classify(x.pkg, x.raw, x.overlay);
-      x.selected = !x.system && r.score >= 3;
-    });
-    renderApps();
-  };
-
-  window.addEventListener('error', e => {
-    if (e.message) log('[JS] ' + e.message);
-  });
-
-  window.addEventListener('unhandledrejection', e => {
-    log('[PROMISE] ' + errText(e.reason));
-  });
-})();
+el('connect')?.addEventListener('click',connectAndVerify);
+el('licenseActivate')?.addEventListener('click',activateLicense);
+el('licenseClose')?.addEventListener('click',closeLicense);
+el('licenseInput')?.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();activateLicense();}
+});
+el('licenseInput')?.addEventListener('input',e=>{
+  e.target.value=e.target.value.replace(/\D/g,'').slice(0,11);
+});
+el('diag')?.addEventListener('click',async()=>{
+  try{
+    const devs=await navigator.usb.getDevices();
+    msg(devs.length
+      ? 'Authorized WebUSB devices:\n'+devs.map(d=>`${d.productName||'Unknown'} • VID ${d.vendorId.toString(16)} • PID ${d.productId.toString(16)} • opened=${d.opened}`).join('\n')
+      : 'No previously-authorized WebUSB devices.\nPress CONNECT to open the chooser.');
+  }catch(e){msg('USB diagnostics blocked: '+(e.message||String(e)),'bad');}
+});
+setState(false);
 </script>
+
+<div id="licenseOverlay" class="license-overlay" aria-modal="true" role="dialog">
+  <div class="license-card">
+    <h2>🔑 Activate JHOELSOFT License</h2>
+    <p>This device must be connected through ADB before the app can be activated.</p>
+    <div class="license-device"><span>Device Serial</span><br><b id="licenseSerial">Not connected</b></div>
+    <input id="licenseInput" class="license-input" autocomplete="off" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" placeholder="Enter 11-digit license key">
+    <div id="licenseError" class="license-error"></div>
+    <div class="license-actions">
+      <button id="licenseClose" type="button">Close</button>
+      <button id="licenseActivate" type="button" class="primary">Activate</button>
+    </div>
+    
+  </div>
+</div>
+
 </body>
 </html>
