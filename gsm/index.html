@@ -1916,6 +1916,70 @@ button{
 .storage-meta{
   color:#888!important;
 }
+  
+
+/* FENIX-inspired dark premium theme: obsidian, amber and fiery orange */
+:root{
+  --bg:#070709; --surface:#101014; --surface2:#17171c; --line:#3b2a0a; --line2:#754600;
+  --text:#f7f7fa; --muted:#a3a3b2; --soft:#24242a; --black:#08080a; --gray:#888894;
+  --shadow-dark:rgba(0,0,0,.55); --shadow-light:rgba(255,255,255,.025);
+  --accent:#ffb800; --accent2:#ff5a00; --glow:rgba(255,112,0,.22);
+}
+html,body{
+  background:radial-gradient(ellipse at 8% 12%,rgba(104,35,0,.18),transparent 33%),radial-gradient(ellipse at 92% 78%,rgba(126,75,0,.10),transparent 30%),#070709!important;
+  color:var(--text)!important;
+}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; letter-spacing:.005em;}
+.wrap{max-width:1120px;padding:24px;width:100%;}
+.card{
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg,rgba(18,18,23,.98),rgba(10,10,13,.98))!important;
+  color:#f5f5f7!important; border:1px solid #5b4100!important; border-radius:22px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.42),0 0 24px rgba(255,104,0,.075)!important;
+  transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffb800,#ff6a00,#ff3d00);opacity:.95;pointer-events:none;}
+.card:hover{border-color:#a16a00!important;box-shadow:0 16px 38px rgba(0,0,0,.5),0 0 28px rgba(255,104,0,.11)!important;}
+h1,h2,h3,h4,.title,.section-title{color:#fff!important;letter-spacing:-.025em;}
+h1{font-weight:900;text-shadow:0 0 22px rgba(255,94,0,.13);}
+.sub,.small,.muted,.hint,.description{color:#a2a2b1!important;}
+button,.btn-permanent-remove{
+  color:#0a0907!important; background:linear-gradient(110deg,#ffbd00 0%,#ff8500 54%,#ff5100 100%)!important;
+  border:1px solid rgba(255,183,0,.72)!important; border-radius:12px!important; font-weight:850!important;
+  letter-spacing:.025em; box-shadow:0 7px 20px rgba(255,91,0,.2),inset 0 1px 0 rgba(255,255,255,.3)!important;
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease!important;
+}
+button:hover:not(:disabled),.btn-permanent-remove:hover{filter:brightness(1.08)!important;transform:translateY(-2px);box-shadow:0 10px 25px rgba(255,91,0,.3)!important;}
+button:active:not(:disabled){transform:translateY(0);}
+button.secondary,button.disc{
+  color:#f2f2f6!important;background:linear-gradient(145deg,#202026,#141418)!important;
+  border:1px solid #393940!important;box-shadow:0 5px 14px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+button.secondary:hover:not(:disabled),button.disc:hover:not(:disabled){border-color:#9a6500!important;color:#ffc229!important;}
+button.danger,.btn-uninstall{color:#fff!important;background:linear-gradient(110deg,#b52d18,#771b18)!important;border-color:#a63a25!important;}
+button:disabled{opacity:.36!important;filter:saturate(.5)!important;box-shadow:none!important;}
+input,select,textarea,.category{
+  color:#f4f4f7!important;background:#111116!important;border:1px solid #3b3b45!important;
+  border-radius:10px!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.28)!important;
+}
+input::placeholder,textarea::placeholder{color:#777784!important;}
+input:focus,select:focus,textarea:focus,.category:focus{outline:none!important;border-color:#e58b00!important;box-shadow:0 0 0 3px rgba(255,154,0,.13)!important;}
+.status,.badge,.pill,.selection-count{
+  color:#ffc229!important;background:rgba(255,174,0,.075)!important;border:1px solid rgba(255,174,0,.3)!important;border-radius:999px!important;
+}
+.ok{color:#7ee0a0!important}.warn{color:#ffc44d!important}.bad{color:#ff7a68!important}
+hr,.divider{border-color:#30230c!important;}
+.appicon{border-radius:12px!important;border:1px solid #4c3500!important;background:#15151a!important;}
+.storage-list,.storage-item,.storage-open{background:#111116!important;color:#e6e6ed!important;border-color:#303039!important;}
+.storage-item:hover,.storage-open:hover{background:#1b1b22!important;color:#ffbd20!important;}
+.storage-name{color:#e8e8ef!important}.storage-meta{color:#9292a1!important}
+.storage-empty{color:#9292a1!important}
+.manager-bottom{background:rgba(9,9,12,.96)!important;border-color:#3b2a0a!important;backdrop-filter:blur(12px);}
+.smart-report-head,.storage-toolbar,.storage-foot{background:transparent!important;color:#f3f3f7!important;}
+::selection{background:#ff8a00;color:#080808;}
+@media(max-width:680px){.wrap{padding:12px!important}.card{border-radius:17px!important}.manager-bottom{background:rgba(9,9,12,.97)!important}.card::before{height:2px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
   </style>
  
 
@@ -2092,7 +2156,7 @@ const AdbDaemonTransport = Pi;
 const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
-const LICENSE_API = atob('aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL2dzbWNvZGVwaC9saWNlbnNlLWFwaQ==');
+const LICENSE_API = atob('aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL2Fkcy9saWNlbnNlLWFwaQ==');
 const APP_URL = `${LICENSE_API}/api/app`;
 const SESSION_KEY = 'jhoelsoft_license_session_v2';
 
