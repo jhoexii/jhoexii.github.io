@@ -2141,6 +2141,34 @@ input:focus,select:focus,textarea:focus,.license-input:focus{outline:none!import
 @media(max-width:700px){.license-card{padding:22px!important}.card{border-radius:17px!important}}
 </style>
 
+
+<style id="fixed-bottom-action-dock">
+/* Keep the six ADB action buttons docked to the viewport bottom while the page scrolls. */
+:root{--action-dock-height:104px}
+body{padding-bottom:calc(var(--action-dock-height) + 24px)!important}
+.manager-bottom{
+  position:fixed!important;left:12px!important;right:12px!important;bottom:10px!important;z-index:9999!important;
+  width:auto!important;max-width:none!important;box-sizing:border-box!important;
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:6px!important;padding:8px!important;margin:0!important;
+  background:rgba(8,8,12,.97)!important;color:#ffb000!important;
+  border:1px solid rgba(255,196,0,.52)!important;border-radius:16px!important;
+  box-shadow:0 -8px 30px rgba(0,0,0,.55),0 0 18px rgba(255,76,0,.10)!important;
+  backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;
+}
+.manager-bottom button{min-width:0!important;min-height:40px!important;margin:0!important;padding:8px 6px!important;
+  white-space:normal!important;line-height:1.2!important;font-size:clamp(10px,1.1vw,12px)!important;
+  border-radius:11px!important;color:#ffb000!important}
+.manager-bottom button:not(:disabled){background:linear-gradient(105deg,#ffc400,#ff6500)!important;color:#100900!important;border:1px solid rgba(255,196,0,.7)!important}
+.manager-bottom button:disabled{background:#17171b!important;color:rgba(255,176,0,.34)!important;border-color:rgba(255,196,0,.12)!important;opacity:1!important}
+@media(max-width:600px){
+ :root{--action-dock-height:146px}
+ .manager-bottom{left:7px!important;right:7px!important;bottom:7px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;padding:6px!important}
+ .manager-bottom button{min-height:38px!important;font-size:11px!important}
+ body{padding-bottom:calc(var(--action-dock-height) + 18px)!important}
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
