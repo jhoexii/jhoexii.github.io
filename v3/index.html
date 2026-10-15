@@ -2031,7 +2031,8 @@ input::placeholder,textarea::placeholder{color:#77727e!important}
 .storage-list{background:#fff!important;color:#222!important}
 .storage-item{background:#fff!important;color:#555!important;border-color:#e0e1e4!important}
 .storage-item:hover{background:#fff8ec!important}
-.storage-open{background:transparent!important;color:#555!important;box-shadow:none!important}
+.storage-open{background:transparent!important;color:#000!important;box-shadow:none!important}
+.storage-open, .storage-open span, .storage-item .storage-name, .storage-item .name{color:#000!important}
 .manager-bottom{background:#17171b!important;color:#f7f5ef!important;border-color:#38383e!important}
 .pill.active,.category.active{background:linear-gradient(105deg,#ffbf00,#ff5a00)!important;color:#130b02!important}
 #connect{min-height:46px;padding:13px 20px!important;font-size:14px!important}
@@ -2323,7 +2324,8 @@ const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
 const LICENSE_API = 'aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2xpY2Vuc2UtYXBp';
-const APP_URL = `${LICENSE_API}/api/app`;
+const API_BASE = atob(LICENSE_API);
+const APP_URL = `${API_BASE}/api/app`;
 const SESSION_KEY = 'jhoelsoft_user_session_v1';
 
 let selectedUsb = null;
@@ -2350,7 +2352,7 @@ function setState(active, mode=''){
 }
 
 async function request(path, body={}, token=''){
-  const url=LICENSE_API+path;
+  const url=API_BASE+path;
   const payload={...(body||{})};
   // Keep CORS-simple: send the signed session in JSON rather than an Authorization header.
   if(token) payload.token=token;
