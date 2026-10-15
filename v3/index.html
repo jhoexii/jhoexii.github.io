@@ -1440,12 +1440,12 @@ body.authenticated .wrap{display:block}
 }
 .license-card{
   width:min(440px,94vw);
-  background:linear-gradient(145deg,#fdfdfd,#e6e7e9);
-  color:#17191d;
-  border:1px solid #c7c9cd;
-  border-radius:24px;
+  background:linear-gradient(145deg,#15110b,#090909);
+  color:#fff7e8;
+  border:1px solid #b87900;
+  border-radius:16px;
   padding:22px;
-  box-shadow:18px 18px 42px #0003,-10px -10px 28px #fff;
+  box-shadow:0 18px 50px #0009,0 0 24px #ff9d0018;
 }
 .license-card h2{
   margin:0 0 6px;
@@ -1453,17 +1453,18 @@ body.authenticated .wrap{display:block}
 }
 .license-card p{
   margin:7px 0;
-  color:#555b64;
+  color:#b9ad98;
   font-size:12px;
   line-height:1.5;
 }
 .license-device{
   margin:14px 0;
-  padding:12px 14px;
-  border-radius:15px;
-  background:#eef0f2;
-  border:1px solid #d1d4d8;
-  box-shadow:inset 2px 2px 5px #0001,inset -2px -2px 5px #fff;
+  padding:10px 0;
+  border-radius:0;
+  background:transparent;
+  border:0;
+  border-bottom:1px solid #b87900;
+  box-shadow:none;
 }
 .license-device b{
   font-family:ui-monospace,monospace;
@@ -1473,41 +1474,53 @@ body.authenticated .wrap{display:block}
 .license-input{
   width:100%;
   box-sizing:border-box;
-  padding:13px 14px;
-  border-radius:14px;
-  border:1px solid #c3c6cb;
-  background:#f8f8f9;
-  color:#17191d;
+  padding:12px 2px 10px;
+  margin:7px 0;
+  border-radius:0;
+  border:0;
+  border-bottom:1px solid #a66b00;
+  background:transparent;
+  color:#fff7e8;
   outline:none;
-  box-shadow:inset 3px 3px 7px #0001,inset -3px -3px 7px #fff;
+  box-shadow:none;
   font-family:ui-monospace,monospace;
-  font-size:12px;
+  font-size:13px;
+  transition:border-color .18s ease, box-shadow .18s ease;
 }
 .license-input:focus{
-  border-color:#777;
+  border-bottom-color:#ffb000;
+  box-shadow:0 1px 0 #ff6a00;
+}
+.license-input::placeholder{color:#8e8069;opacity:1;}
+.license-input:-webkit-autofill,.license-input:-webkit-autofill:hover,.license-input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#fff7e8;
+  transition:background-color 9999s ease-in-out 0s;
+  box-shadow:none;
 }
 .license-actions{
   display:flex;
   gap:9px;
-  margin-top:13px;
+  margin-top:16px;
 }
 .license-actions button{
   flex:1;
   padding:11px 13px;
-  border-radius:13px;
-  border:1px solid #bfc2c7;
-  background:linear-gradient(145deg,#fff,#d9dbe0);
-  color:#181a1e;
+  border-radius:8px;
+  border:1px solid #ffad00;
+  background:linear-gradient(100deg,#ffc400,#ff6a00);
+  color:#160d00;
   font-weight:900;
-  box-shadow:6px 6px 12px #0002,-5px -5px 10px #fff;
+  box-shadow:0 7px 20px #ff820033;
   cursor:pointer;
 }
 .license-actions button:active{
-  box-shadow:inset 4px 4px 8px #0002,inset -3px -3px 7px #fff;
+  box-shadow:0 3px 10px #ff820022;
   transform:translateY(1px);
 }
 .license-actions .primary{
-  background:linear-gradient(145deg,#34373d,#111317);
+  background:linear-gradient(100deg,#ffc400,#ff6a00);
+  color:#160d00;
+  border-color:#ffad00;
   color:#fff;
   border-color:#111;
 }
@@ -1918,6 +1931,79 @@ button{
 .storage-meta{
   color:#888!important;
 }
+
+/* FENIX-inspired premium charcoal / amber / orange theme */
+:root{
+  color-scheme:dark;
+  --fx-bg:#070709;
+  --fx-panel:#101014;
+  --fx-panel2:#15151b;
+  --fx-line:rgba(255,174,0,.32);
+  --fx-yellow:#ffbf00;
+  --fx-orange:#ff5a00;
+  --fx-text:#f7f5ef;
+  --fx-muted:#a5a2ad;
+}
+html,body{background:radial-gradient(ellipse at 50% -15%,#241308 0%,#0a0909 45%,#050506 100%)!important;color:var(--fx-text)!important}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px}
+.card,.app-manager,.storage-dialog,.smart-report,.license-card{
+  background:linear-gradient(145deg,rgba(20,19,23,.98),rgba(9,9,12,.98))!important;
+  color:var(--fx-text)!important;border:1px solid var(--fx-line)!important;
+  border-radius:18px!important;box-shadow:0 12px 34px #0008,0 0 24px #ff720012!important
+}
+h1,h2,h3,b,strong,.app-name,.storage-name{color:#fff!important}
+.sub,.small,.meta,.storage-meta{color:var(--fx-muted)!important}
+.status{background:#0a0a0d!important;color:#e8e4dc!important;border:1px solid #30251a!important;border-radius:13px!important}
+button{
+  border:1px solid rgba(255,191,0,.35)!important;border-radius:12px!important;
+  background:linear-gradient(105deg,var(--fx-yellow),var(--fx-orange))!important;
+  color:#100b04!important;font-weight:850!important;letter-spacing:.025em;
+  box-shadow:0 5px 18px #ff650026!important;transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+button:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 7px 22px #ff650044!important}
+button:active:not(:disabled){transform:translateY(0)}
+button.secondary,button.disc,.pill,.select-link,.selection-count{
+  background:linear-gradient(145deg,#222127,#151419)!important;color:#f3f0e9!important;
+  border:1px solid #40352a!important;box-shadow:none!important
+}
+button.danger,.btn-uninstall{background:linear-gradient(105deg,#a92b25,#661b20)!important;color:#fff!important;border-color:#c54a36!important}
+button:disabled,button[disabled]{
+  opacity:.36!important;filter:grayscale(.82)!important;cursor:not-allowed!important;
+  transform:none!important;box-shadow:none!important
+}
+input,select,textarea,.toolbar-row input,.category{
+  background:#0c0c10!important;color:#f7f5ef!important;border:1px solid #393039!important;border-radius:10px!important
+}
+/* Keep the login fields strictly black with a single gold/orange underline. */
+.license-card input.license-input{
+  background:transparent!important;
+  color:#fff8e8!important;
+  border:0!important;
+  border-bottom:1px solid #ffad00!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:none!important;
+  padding:12px 2px 10px!important;
+}
+.license-card input.license-input:focus{
+  border:0!important;
+  border-bottom:2px solid #ff6a00!important;
+  box-shadow:0 1px 0 #ffc400!important;
+}
+.license-card input.license-input::placeholder{color:#ffbd66!important;opacity:.9!important}
+input::placeholder,textarea::placeholder{color:#77727e!important}
+.app-toolbar,.selection-row,.app-sections,.manager-bottom,.storage-list,.storage-item{
+  background:#0c0c10!important;color:#f7f5ef!important;border-color:#33271d!important
+}
+.approw,.app-row,.storage-item{border-color:#30271f!important}
+.pill.active,.category.active{background:linear-gradient(105deg,#ffbf00,#ff5a00)!important;color:#130b02!important}
+#connect{min-height:46px;padding:13px 20px!important;font-size:14px!important}
+#disconnect:disabled{opacity:.3!important}
+.header-license-dot{box-shadow:0 0 12px #ff9d00!important}
+a{color:#ffc247}
+@media(max-width:680px){.wrap{padding:10px!important}.card{padding:14px!important}button{max-width:100%;white-space:normal}}
+
   </style>
  
 
@@ -2094,7 +2180,7 @@ const AdbDaemonTransport = Pi;
 const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
-const LICENSE_API = 'https://api.gsmcodeph-ads.site/v2/license-api';
+const LICENSE_API = atob('aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2xpY2Vuc2UtYXBp');
 const APP_URL = `${LICENSE_API}/api/app`;
 const SESSION_KEY = 'jhoelsoft_user_session_v1';
 
@@ -2297,6 +2383,20 @@ async function authenticateDevice(device){
   return {adb,usbDevice:device,serial:currentSerial};
 }
 
+const ADB_GATED_IDS=['scan','btnSmartScan','btnStorage','diag','disconnect','installApk'];
+let adbSessionReady=false;
+function setAdbActionAvailability(ready){
+  adbSessionReady=!!ready;
+  ADB_GATED_IDS.forEach(id=>{
+    const b=el(id);
+    if(b) b.disabled=!adbSessionReady;
+  });
+  ['selectRisk','recoverSelected','disableSelected','uninstall','blockSelected','clearData','enableSelected'].forEach(id=>{
+    const b=el(id);
+    if(b && !adbSessionReady) b.disabled=true;
+  });
+  document.body.classList.toggle('adb-connected',adbSessionReady);
+}
 async function startAfterLicense(){
   setState(true);
   msg('Account verified. Downloading protected application…','ok');
@@ -2315,10 +2415,7 @@ async function startAfterLicense(){
       throw new Error('Application command module did not expose the account bridge.');
     }
     window.__JHOELSOFT_SET_LICENSE__(true,'');
-    ['scan','btnSmartScan','btnStorage','diag','installApk'].forEach(id=>{
-      const b=el(id);
-      if(b) b.disabled=false;
-    });
+    setAdbActionAvailability(false);
     document.body.classList.add('authenticated');
     closeLicense();
     msg('Account active • Protected application loaded. Connect an Android device to continue.','ok');
@@ -2354,12 +2451,14 @@ async function connectAndVerify(){
       throw new Error('Application command module did not initialize correctly.');
     }
     window.__JHOELSOFT_SET_ADB__(session);
+    setAdbActionAvailability(true);
     if(typeof window.__JHOELSOFT_SET_LICENSE__==='function'){
       window.__JHOELSOFT_SET_LICENSE__(true,currentSerial);
     }
     el('disconnect').disabled=false;
     msg('ADB connected • Account active','ok');
   }catch(e){
+    setAdbActionAvailability(false);
     msg(e.message||String(e),'bad');
     console.error('[GSMCODEPH ADB ERROR]',e);
   }finally{
@@ -2383,6 +2482,7 @@ el('diag')?.addEventListener('click',async()=>{
   }catch(e){msg('USB diagnostics blocked: '+(e.message||String(e)),'bad');}
 });
 setState(false);
+setAdbActionAvailability(false);
 </script>
 
 <div id="licenseOverlay" class="license-overlay show" aria-modal="true" role="dialog">
