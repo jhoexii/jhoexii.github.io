@@ -1975,28 +1975,64 @@ button:disabled,button[disabled]{
 input,select,textarea,.toolbar-row input,.category{
   background:#0c0c10!important;color:#f7f5ef!important;border:1px solid #393039!important;border-radius:10px!important
 }
-/* Keep the login fields strictly black with a single gold/orange underline. */
+/* Login fields: clean charcoal outlined style matching the supplied reference. */
 .license-card input.license-input{
-  background:transparent!important;
-  color:#fff8e8!important;
-  border:0!important;
-  border-bottom:1px solid #ffad00!important;
-  border-radius:0!important;
+  display:block!important;
+  width:100%!important;
+  min-height:46px!important;
+  box-sizing:border-box!important;
+  padding:12px 13px!important;
+  margin:8px 0 12px!important;
+  background:#08080b!important;
+  color:#f7f5ef!important;
+  border:1px solid #393039!important;
+  border-radius:10px!important;
   box-shadow:none!important;
   outline:none!important;
-  padding:12px 2px 10px!important;
+  font-family:inherit!important;
+  font-size:15px!important;
 }
 .license-card input.license-input:focus{
-  border:0!important;
-  border-bottom:2px solid #ff6a00!important;
-  box-shadow:0 1px 0 #ffc400!important;
+  background:#09090c!important;
+  border:1px solid #ffad00!important;
+  box-shadow:0 0 0 1px #ff6a0040!important;
 }
-.license-card input.license-input::placeholder{color:#ffbd66!important;opacity:.9!important}
+.license-card input.license-input::placeholder{color:#666b79!important;opacity:1!important}
+.license-card input.license-input:-webkit-autofill,
+.license-card input.license-input:-webkit-autofill:hover,
+.license-card input.license-input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#f7f5ef!important;
+  transition:background-color 9999s ease-in-out 0s;
+  box-shadow:0 0 0 1000px #08080b inset!important;
+}
 input::placeholder,textarea::placeholder{color:#77727e!important}
-.app-toolbar,.selection-row,.app-sections,.manager-bottom,.storage-list,.storage-item{
-  background:#0c0c10!important;color:#f7f5ef!important;border-color:#33271d!important
+.app-toolbar,.selection-row,.app-sections,.manager-bottom{
+  background:#f5f6f8!important;color:#18191d!important;border-color:#d4d6db!important
 }
-.approw,.app-row,.storage-item{border-color:#30271f!important}
+.app-manager{
+  background:#f5f6f8!important;color:#18191d!important;
+  border:1px solid #ffad00!important;
+  box-shadow:0 8px 28px #0005!important;
+}
+.app-manager h2,.app-manager h3,.app-manager b,.app-manager strong,
+.app-manager .app-name,.app-manager .meta,.app-manager label{color:#202127!important}
+.app-manager .pill,.app-manager .select-link,.app-manager .selection-count{
+  background:#fff8e9!important;color:#d58a00!important;
+  border:1px solid #ffd98b!important;box-shadow:0 3px 8px #00000012!important
+}
+.app-manager .pill.active,.app-manager .category.active{
+  background:#17181c!important;color:#fff!important;border-color:#303138!important
+}
+.app-manager input,.app-manager select,.app-manager textarea,
+.app-manager .toolbar-row input,.app-manager .category{
+  background:#111116!important;color:#f7f5ef!important;border:1px solid #cfd1d7!important;border-radius:10px!important
+}
+.app-manager .approw,.app-manager .app-row{background:#fff!important;color:#202127!important;border-color:#e0e1e5!important}
+.storage-list{background:#fff!important;color:#222!important}
+.storage-item{background:#fff!important;color:#555!important;border-color:#e0e1e4!important}
+.storage-item:hover{background:#fff8ec!important}
+.storage-open{background:transparent!important;color:#555!important;box-shadow:none!important}
+.manager-bottom{background:#17171b!important;color:#f7f5ef!important;border-color:#38383e!important}
 .pill.active,.category.active{background:linear-gradient(105deg,#ffbf00,#ff5a00)!important;color:#130b02!important}
 #connect{min-height:46px;padding:13px 20px!important;font-size:14px!important}
 #disconnect:disabled{opacity:.3!important}
@@ -2180,7 +2216,7 @@ const AdbDaemonTransport = Pi;
 const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
-const LICENSE_API = atob('aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2xpY2Vuc2UtYXBp');
+const LICENSE_API = 'https://api.gsmcodeph-ads.site/v2/license-api';
 const APP_URL = `${LICENSE_API}/api/app`;
 const SESSION_KEY = 'jhoelsoft_user_session_v1';
 
