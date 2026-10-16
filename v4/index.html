@@ -2192,6 +2192,10 @@ body{padding-bottom:calc(var(--action-dock-height) + 24px)!important}
       <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" hidden>
     </div>
     <div id="status" class="status" style="margin-top:10px">Ready. Use Chrome, connect the target Android phone by USB/OTG, unlock it, and enable USB debugging.</div>
+	 <div class="card">
+    <b>ADB console</b>
+    <pre id="console">No ADB commands yet.</pre>
+  </div>
   </div>
 
   <div class="card">
@@ -2278,20 +2282,10 @@ body{padding-bottom:calc(var(--action-dock-height) + 24px)!important}
       <button id="selectedCount" class="selection-count" type="button" title="Show only selected apps">0 selected</button>
     </div>
     <div id="apps" class="app-sections"></div>
-    <div class="manager-bottom">
-      <button id="recoverSelected" class="btn-recover" disabled>♻ Recover</button>
-      <button id="disableSelected" class="btn-disable" disabled>⏸ Disable</button>
-      <button id="uninstall" class="btn-uninstall" disabled>▣ Uninstall</button>
-      <button id="blockSelected" class="btn-block" disabled>⊘ Block pop-ups</button>
-      <button id="clearData" class="btn-enable" disabled>🗑 Clear Data</button>
-      <button id="enableSelected" class="btn-enable" disabled>▶ Enable</button>
-    </div>
+   
   </div>
 
-  <div class="card">
-    <b>ADB console</b>
-    <pre id="console">No ADB commands yet.</pre>
-  </div>
+ 
 
   <div class="card small">
     <b>Kung walang “Allow USB debugging?”</b><br>
@@ -2303,6 +2297,14 @@ body{padding-bottom:calc(var(--action-dock-height) + 24px)!important}
     6) If Android asks USB mode, choose <b>File transfer</b>.<br><br>
     The browser USB chooser and Android RSA authorization are separate permissions.
   </div>
+   <div class="manager-bottom">
+      <button id="recoverSelected" class="btn-recover" disabled>♻ Recover</button>
+      <button id="disableSelected" class="btn-disable" disabled>⏸ Disable</button>
+      <button id="uninstall" class="btn-uninstall" disabled>▣ Uninstall</button>
+      <button id="blockSelected" class="btn-block" disabled>⊘ Block pop-ups</button>
+      <button id="clearData" class="btn-enable" disabled>🗑 Clear Data</button>
+      <button id="enableSelected" class="btn-enable" disabled>▶ Enable</button>
+    </div>
 </div>
 
 <script type="module">
