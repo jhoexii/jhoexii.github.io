@@ -2084,25 +2084,7 @@ body.adb-connected .app-manager{pointer-events:auto;filter:none}
   </style>
  
 
-  <script>
-    // JHOELSOFT UI protection: disable common context-menu and copy shortcuts.
-    document.addEventListener('contextmenu', e => e.preventDefault(), {capture:true});
-    document.addEventListener('dragstart', e => e.preventDefault(), {capture:true});
-    document.addEventListener('selectstart', e => {
-      const t = e.target;
-      if (t && /^(INPUT|TEXTAREA)$/.test(t.tagName)) return;
-      e.preventDefault();
-    }, {capture:true});
-    document.addEventListener('keydown', e => {
-      const k = String(e.key || '').toLowerCase();
-      if (k === 'f12' ||
-          (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) ||
-          (e.ctrlKey && ['u','s'].includes(k))) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, {capture:true});
-  </script>
+  <!-- Debug build: browser developer tools, context menu, selection and shortcuts are enabled. -->
 
 
 <!-- FENIX TOOL PRO palette adaptation: black glass, neon gold/orange, white content surface -->
