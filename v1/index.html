@@ -35,7 +35,7 @@ body{
   width:100%;
   min-width:0;
 }
-.app-toolbar,.selection-row,.app-sections{
+.selection-row,.app-sections{
   min-width:0;
 }
 .pills{
@@ -74,9 +74,6 @@ body{
   }
   .card:first-child{
     margin-top:0;
-  }
-  .app-toolbar{
-    padding:18px 18px 14px;
   }
   .selection-row{
     padding:11px 18px;
@@ -143,10 +140,7 @@ body{
   .card:nth-of-type(3){
     padding:11px 13px;
   }
-  .app-toolbar{
-    padding:11px 10px 10px;
-  }
-  .pills{
+.pills{
     display:flex;
     flex-wrap:nowrap;
     overflow-x:auto;
@@ -621,11 +615,6 @@ pre{
   padding:0!important;
   overflow:hidden;
   background:#0b1424;
-}
-.app-toolbar{
-  padding:16px 16px 12px;
-  border-bottom:1px solid #20334d;
-  background:#111d31;
 }
 .pills{
   display:flex;
@@ -1631,10 +1620,6 @@ input,.category{
   background:#f6f7f8!important;
   border:1px solid #d0d3d7!important;
 }
-.app-toolbar{
-  background:linear-gradient(145deg,#fff,#eceef1)!important;
-  border-bottom:1px solid #d2d4d8!important;
-}
 .pills{
   gap:9px;
 }
@@ -2008,7 +1993,7 @@ input,select,textarea,.toolbar-row input,.category{
   box-shadow:0 0 0 1000px #08080b inset!important;
 }
 input::placeholder,textarea::placeholder{color:#77727e!important}
-.app-toolbar,.selection-row,.app-sections,.manager-bottom{
+.selection-row,.app-sections,.manager-bottom{
   background:#f5f6f8!important;color:#18191d!important;border-color:#d4d6db!important
 }
 .app-manager{
@@ -2072,10 +2057,10 @@ body:not(.adb-connected) .app-manager::after{
   text-shadow:0 0 16px rgba(255,115,0,.3)
 }
 body.adb-connected .app-manager{pointer-events:auto;filter:none}
-.app-manager .app-toolbar,.app-manager .selection-row,.app-manager .app-sections{
+.app-manager .selection-row,.app-manager .app-sections{
   transition:opacity .2s ease,filter .2s ease
 }
-.app-manager .app-toolbar,.app-manager .selection-row,.app-manager .app-sections{color:#ffad00}
+.app-manager .selection-row,.app-manager .app-sections{color:#ffad00}
 .app-manager .pill,.app-manager .select-link,.app-manager .selection-count{
   color:#ffad00!important
 }
@@ -2084,14 +2069,123 @@ body.adb-connected .app-manager{pointer-events:auto;filter:none}
 .manager-bottom button:disabled{color:#ffad00!important}
 
   
-/* Simplified single-file build: only connection, scan, uninstall and clear-data actions */
-#btnSmartScan,#btnStorage,#diag,#disconnect,#installApk,
-#smartClean,#smartReportRescan,#storageUp,#storageRefresh,#storageHome,#storageDelete,
-#selectRisk,#recoverSelected,#disableSelected,#blockSelected,#enableSelected,
-#smartDialog,#storageDialog { display:none !important; }
+/* Simplified single-file build */
+#disconnect,#selectRisk,#recoverSelected,#disableSelected,#blockSelected,#enableSelected { display:none !important; }
 #appManager,#appsPanel,.app-manager { display:block !important; }
 .app-list { max-height: min(62vh, 560px); overflow-y:auto; }
-.app-toolbar { display:flex; flex-wrap:wrap; gap:8px; }
+
+
+/* Refined ADB FRP diagnostics dialog */
+.frp-dialog{
+  width:min(590px,calc(100vw - 32px))!important;
+  max-width:590px!important;
+  max-height:min(82vh,680px);
+  box-sizing:border-box;
+  padding:22px!important;
+  border:1px solid #d8dde6!important;
+  border-radius:22px!important;
+  background:linear-gradient(155deg,#ffffff 0%,#f5f7fb 100%)!important;
+  color:#182235!important;
+  box-shadow:0 28px 90px rgba(15,23,42,.28),0 4px 14px rgba(15,23,42,.08)!important;
+}
+.frp-dialog-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:22px;
+}
+.frp-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.frp-shield{
+  display:grid;place-items:center;
+  width:44px;height:44px;flex:0 0 44px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#fff0d8,#ffe0b3);
+  box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(234,125,18,.12);
+  font-size:22px;
+}
+.frp-brand div,.frp-log-heading div{display:flex;flex-direction:column;gap:3px}
+.frp-brand b{font-size:19px;letter-spacing:.01em;color:#172238}
+.frp-brand span:not(.frp-shield){font-size:12px;color:#7b8799}
+.frp-close{
+  width:38px;height:38px;flex:0 0 38px;
+  display:grid;place-items:center;
+  padding:0!important;border:1px solid #e0e5ed!important;
+  border-radius:12px!important;background:#fff!important;
+  color:#475569!important;font-size:17px;font-weight:800;
+  box-shadow:0 2px 7px rgba(15,23,42,.06);
+}
+.frp-close:hover{background:#fff4e8!important;border-color:#ffc47a!important;color:#c65b08!important}
+.frp-log-section{
+  padding:14px;
+  border:1px solid #e0e6ef;
+  border-radius:16px;
+  background:#f9fbfe;
+}
+.frp-log-heading{display:flex;align-items:center;gap:10px;margin:0 0 11px}
+.frp-log-icon{
+  display:grid;place-items:center;
+  width:34px;height:34px;flex:0 0 34px;
+  border-radius:11px;background:#e9eff8;color:#31547f;
+  font-size:25px;font-weight:800;line-height:1;
+}
+.frp-log-heading b{font-size:11px;letter-spacing:.1em;color:#34445d}
+.frp-log-heading span:not(.frp-log-icon){font-size:11px;color:#8995a6}
+#frpRecoveryLog{
+  display:block;
+  box-sizing:border-box;
+  width:100%;
+  max-height:260px;
+  min-height:150px;
+  margin:0!important;
+  padding:13px 14px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  white-space:pre-wrap!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  tab-size:2;
+  border:1px solid #26364d!important;
+  border-radius:11px!important;
+  background:#111c2d!important;
+  color:#dce7f6!important;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.2)!important;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;
+  font-size:11px!important;
+  line-height:1.65!important;
+}
+.frp-actions{display:flex;justify-content:center;margin-top:17px}
+.frp-check-btn{
+  width:auto!important;
+  min-width:0!important;
+  max-width:100%;
+  padding:12px 20px!important;
+  border:0!important;
+  border-radius:12px!important;
+  background:linear-gradient(100deg,#ffb900,#ff6a00)!important;
+  color:#fff!important;
+  font-size:13px!important;
+  font-weight:850!important;
+  letter-spacing:.015em;
+  box-shadow:0 7px 16px rgba(245,128,15,.2);
+  cursor:pointer;
+}
+.frp-check-btn:hover:not(:disabled){filter:brightness(1.04);transform:translateY(-1px)}
+.frp-check-btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.frp-safety-note{
+  display:flex;align-items:flex-start;gap:7px;
+  margin:14px 2px 0!important;
+  color:#78869a!important;
+  font-size:11px!important;
+  line-height:1.55!important;
+}
+.frp-safety-note span{color:#d97706;font-weight:900}
+@media(max-width:480px){
+  .frp-dialog{padding:16px!important;border-radius:18px!important}
+  .frp-log-section{padding:10px}
+  #frpRecoveryLog{min-height:135px;max-height:220px;font-size:10px!important}
+  .frp-check-btn{padding:11px 14px!important;font-size:12px!important}
+}
 
 </style>
  
@@ -2211,12 +2305,7 @@ body.auth-locked .wrap{display:none!important}
       <button id="scan" class="secondary" disabled>🔎 SCAN APPS</button>
       <button id="detectNow" class="secondary" disabled>⚡ DETECT NOW</button>
       <button id="deviceInfoBtn" class="secondary" disabled>📱 DEVICE INFO</button>
-      <button id="btnSmartScan" class="secondary" disabled>🩺 SMART SCAN</button>
-      <button id="btnStorage" class="secondary" disabled>📁 PHONE STORAGE</button>
-      <button id="diag" class="secondary" disabled>USB DIAGNOSTICS</button>
       <button id="disconnect" class="disc" disabled>DISCONNECT</button>
-      <button id="installApk" class="secondary" disabled>📦 INSTALL APK VIA ADB</button>
-      <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" hidden>
     </div>
     <div id="status" class="status" style="margin-top:10px">Ready. Use Chrome, connect the target Android phone by USB/OTG, unlock it, and enable USB debugging.</div>
 	 <div class="card">
@@ -2230,16 +2319,34 @@ body.auth-locked .wrap{display:none!important}
     <div id="deviceInfo" class="small" style="margin-top:8px">Not connected</div>
   </div>
 
-  <dialog id="bg6ServiceDialog" class="smart-dialog" style="max-width:600px;width:calc(100% - 28px);padding:20px">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
-      <b style="font-size:18px">🛡️ ADB FRP</b>
-      <button id="bg6ServiceClose" class="secondary" aria-label="Close">✕</button>
+  <dialog id="bg6ServiceDialog" class="smart-dialog frp-dialog" aria-labelledby="frpDialogTitle">
+    <div class="frp-dialog-head">
+      <div class="frp-brand">
+        <span class="frp-shield" aria-hidden="true">🛡️</span>
+        <div>
+          <b id="frpDialogTitle">ADB FRP</b>
+          <span>Device connection diagnostics</span>
+        </div>
+      </div>
+      <button id="bg6ServiceClose" class="frp-close" aria-label="Close dialog" title="Close">✕</button>
     </div>
-    <b>Console logs</b>
-    <pre id="frpRecoveryLog" style="max-height:230px;overflow:auto;margin-top:8px">[READY] ADB diagnostics initialized.
+
+    <section class="frp-log-section" aria-label="Console logs">
+      <div class="frp-log-heading">
+        <span class="frp-log-icon" aria-hidden="true">⌁</span>
+        <div>
+          <b>CONSOLE LOGS</b>
+          <span>Live diagnostic output</span>
+        </div>
+      </div>
+      <pre id="frpRecoveryLog">[READY] ADB diagnostics initialized.
 [INFO] Connect an authorized device, then press the button below.</pre>
-    <button id="bg6TryConnect" style="width:100%;margin-top:12px" disabled>🔎 CHECK ADB STATUS / LOGS</button>
-    <div class="small" style="margin-top:10px">For safety, this action only checks the ADB connection and records diagnostic results. It does not execute setup-flag changes or reboot to circumvent account protection.</div>
+    </section>
+
+    <div class="frp-actions">
+      <button id="bg6TryConnect" class="frp-check-btn" disabled>🔎 CHECK ADB STATUS / LOGS</button>
+    </div>
+    <p class="frp-safety-note"><span aria-hidden="true">ⓘ</span> This action checks the ADB connection and records diagnostic results only. It does not change device setup flags or bypass account protection.</p>
   </dialog>
 
   <dialog id="adbRebootDialog" class="smart-dialog" style="max-width:420px;width:calc(100% - 28px);padding:20px">
@@ -2251,49 +2358,8 @@ body.auth-locked .wrap{display:none!important}
     </div>
   </dialog>
 
-  <dialog id="smartDialog" class="smart-dialog">
-    <div id="smartLoading" class="smart-loading">
-      <div class="smart-spinner"></div>
-      <div class="smart-dialog-title">Smart Scan…</div>
-      <div id="smartStep" class="small">Preparing…</div>
-      <div class="smart-progress"><span id="smartProgressBar"></span></div>
-    </div>
-    <div id="smartReport" class="hidden">
-      <div class="smart-report-head">
-        <div><b>Smart Scan Results</b><div id="smartDeviceName" class="small"></div></div>
-        <button id="smartClose" class="secondary">×</button>
-      </div>
-      <div id="smartReportBody"></div>
-      <div class="smart-report-actions">
-        <button id="smartClean" class="smart-good">✨ Clean recommended</button>
-        <button id="smartReportRescan" class="secondary">↻ Re-scan</button>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="storageDialog" class="storage-dialog">
-    <div class="storage-head">
-      <div><b>📁 Phone Storage</b><div id="storagePath" class="small">/storage/emulated/0</div></div>
-      <button id="storageClose" class="secondary">×</button>
-    </div>
-    <div class="storage-toolbar">
-      <button id="storageUp" class="secondary">⬆ Up</button>
-      <button id="storageRefresh" class="secondary">↻ Refresh</button>
-      <button id="storageHome" class="secondary">🏠 Phone Storage</button>
-      <span id="storageCount" class="small">0 items</span>
-    </div>
-    <div class="storage-note">Browse the phone’s internal shared storage. You can open folders, but deletion is limited to common download/transfer folders (for example Download, Bluetooth, SHAREit, Xender, Received and Transfer). App/system folders and protected locations cannot be deleted here.</div>
-    <div id="storageList" class="storage-list"><div class="storage-empty">Connect a device to browse its storage.</div></div>
-    <div class="storage-foot">
-      <span id="storageSelected" class="small">0 files selected</span>
-      <button id="storageDelete" class="danger" disabled>🗑 Delete selected files</button>
-    </div>
-  </dialog>
-
   <div class="card app-manager">
-    <div class="app-toolbar">
-
-      <div class="toolbar-row">
+    <div class="toolbar-row">
         <input id="filter" placeholder="Search app…">
         <select id="category" class="category" hidden aria-hidden="true" tabindex="-1">
           <option value="all">All categories</option>
@@ -2306,7 +2372,6 @@ body.auth-locked .wrap{display:none!important}
           <option value="protected">Protected</option>
           <option value="launcher">Launcher Apps</option>
         </select>
-      </div>
     </div>
     <div class="selection-row">
      <button id="selectRisk" class="select-link" disabled>
@@ -2461,7 +2526,7 @@ function msg(t, kind=''){ const e=el('status'); if(e){e.textContent=t;e.classNam
 function setState(active, mode=''){ const e=el('licenseDot'); if(e){e.classList.remove('checking','active','error');if(active)e.classList.add('active');e.title=active?'ADB ready':'Not connected';} }
 function setAdbActionAvailability(ready){
   // Keep the Connect button available; lock other main-panel actions until ADB is authorized.
-  ['bg6ServiceBtn','scan','detectNow','deviceInfoBtn','btnSmartScan','btnStorage','diag','disconnect','installApk'].forEach(id=>{
+  ['bg6ServiceBtn','scan','detectNow','deviceInfoBtn','disconnect'].forEach(id=>{
     const b=el(id); if(b) b.disabled=!ready;
   });
   ['selectRisk','recoverSelected','disableSelected','uninstall','blockSelected','clearData','enableSelected'].forEach(id=>{
@@ -3033,119 +3098,11 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     $('scan').disabled=!connected;
     $('detectNow').disabled=!connected;
     if(el('deviceInfoBtn')) el('deviceInfoBtn').disabled=!connected;
-    $('btnSmartScan').disabled=!connected||!licenseActive;
-    $('btnStorage').disabled=!connected||!licenseActive;
-    $('storageDelete').disabled=true;
-    $('installApk').disabled=!connected||!licenseActive;
   }
 
   async function shell(command) {
     if (!adb) throw new Error('ADB is not connected');
     return await adb.subprocess.noneProtocol.spawnWaitText(command);
-  }
-
-  let storagePath = '/storage/emulated/0';
-  let storageItems = [];
-  let selectedOnly = false;
-
-  function quoteShellArg(v){
-    return "'" + String(v).replace(/'/g, "'\\''") + "'";
-  }
-
-  function normalizeStoragePath(p){
-    let x=String(p||'/storage/emulated/0').replace(/\\/g,'/');
-    const root='/storage/emulated/0';
-    if(x==='/sdcard') x=root;
-    if(!x.startsWith(root)) x=root;
-    x=x.replace(/\/+/g,'/').replace(/\/\.$/,'');
-    if(x.length>root.length && x.endsWith('/')) x=x.slice(0,-1);
-    return x || root;
-  }
-
-  function storageParent(p){
-    const root='/storage/emulated/0';
-    p=normalizeStoragePath(p);
-    if(p===root) return root;
-    const i=p.lastIndexOf('/');
-    return i<=root.length?root:p.slice(0,i);
-  }
-
-  // Only files in common user download/transfer folders may be deleted.
-  // This deliberately excludes DCIM/Pictures and all Android/app/system folders.
-  function isUserTransferFile(path){
-    const root='/storage/emulated/0/';
-    const rel=String(path||'').replace(/\\/g,'/');
-    if(!rel.startsWith(root)) return false;
-    const parts=rel.slice(root.length).split('/').filter(Boolean);
-    if(parts.length<2) return false;
-    const top=parts[0].toLowerCase();
-    return new Set([
-      'download','downloads','bluetooth','documents','received','transfer','transfers',
-      'shareit','shareit files','xender','nearby share','nearbyshare','zapya','sendanywhere'
-    ]).has(top);
-  }
-
-  async function listStorage(dir=storagePath){
-    if(!adb||!connected) throw new Error('ADB is not connected');
-    storagePath=normalizeStoragePath(dir);
-    $('storagePath').textContent=storagePath;
-    $('storageList').innerHTML='<div class="storage-empty">Loading…</div>';
-    $('storageDelete').disabled=true;
-    $('storageSelected').textContent='0 files selected';
-    const q=quoteShellArg(storagePath);
-    const [dirsRaw,filesRaw]=await Promise.all([
-      shell(`find ${q} -maxdepth 1 -mindepth 1 -type d -print 2>/dev/null`),
-      shell(`find ${q} -maxdepth 1 -mindepth 1 -type f -print 2>/dev/null`)
-    ]);
-    const dirs=dirsRaw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(path=>({path,type:'dir',name:path.slice(path.lastIndexOf('/')+1)}));
-    const files=filesRaw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(path=>({path,type:'file',name:path.slice(path.lastIndexOf('/')+1),deletable:isUserTransferFile(path)}));
-    storageItems=[...dirs.sort((a,b)=>a.name.localeCompare(b.name)),...files.sort((a,b)=>a.name.localeCompare(b.name))];
-    $('storageCount').textContent=storageItems.length+' item'+(storageItems.length===1?'':'s');
-    renderStorageItems();
-  }
-
-  function renderStorageItems(){
-    const list=$('storageList');
-    if(!storageItems.length){list.innerHTML='<div class="storage-empty">This folder is empty or cannot be read.</div>';return;}
-    list.innerHTML=storageItems.map((item,i)=>{
-      const icon=item.type==='dir'?'📁':'📄';
-      const meta=item.type==='dir'?'Folder':(item.deletable?'Downloaded / transferred file':'Protected from deletion');
-      const checkbox=item.type==='file'&&item.deletable?`<input type="checkbox" class="storage-check" data-index="${i}" aria-label="Select file for deletion">`:'<span style="width:17px;flex:0 0 auto"></span>';
-      return `<div class="storage-item">${checkbox}<span class="storage-icon">${icon}</span><button class="storage-open" data-open="${i}"><div class="storage-name">${escapeHtml(item.name)}</div><div class="storage-meta">${meta}</div></button></div>`;
-    }).join('');
-    list.querySelectorAll('.storage-open').forEach(btn=>btn.onclick=()=>{ const item=storageItems[Number(btn.dataset.open)]; if(item?.type==='dir') listStorage(item.path); });
-    list.querySelectorAll('.storage-check').forEach(ch=>ch.onchange=updateStorageSelection);
-  }
-
-  function updateStorageSelection(){
-    const selected=[...document.querySelectorAll('.storage-check:checked')];
-    $('storageSelected').textContent=selected.length+' file'+(selected.length===1?'':'s')+' selected';
-    $('storageDelete').disabled=!connected||!selected.length;
-  }
-
-  async function deleteSelectedStorageFiles(){
-    const selected=[...document.querySelectorAll('.storage-check:checked')].map(x=>storageItems[Number(x.dataset.index)]).filter(x=>x&&x.type==='file'&&x.deletable&&isUserTransferFile(x.path));
-    if(!selected.length)return;
-    const names=selected.slice(0,5).map(x=>x.name).join('\n');
-    const more=selected.length>5?`\n…and ${selected.length-5} more`:'';
-    if(!confirm(`Delete ${selected.length} selected downloaded/transferred file(s)?\n\n${names}${more}\n\nOnly user transfer/download files are allowed. This cannot be undone.`)) return;
-    $('storageDelete').disabled=true;
-    try{
-      for(const item of selected){
-        const path=normalizeStoragePath(item.path);
-        if(!isUserTransferFile(path)) throw new Error('Blocked: only downloaded/transferred user files can be deleted.');
-        await shell(`rm -f -- ${quoteShellArg(path)}`);
-      }
-      status(`Deleted ${selected.length} downloaded/transferred file(s) from phone storage.`,'ok');
-      await listStorage(storagePath);
-    }catch(e){ status('❌ Delete failed: '+errText(e),'bad'); }
-    finally{ updateStorageSelection(); }
-  }
-
-  async function openStorage(){
-    if(!connected){status('Connect ADB first to access phone storage.','warn');return;}
-    $('storageDialog').showModal();
-    try{await listStorage(storagePath);}catch(e){$('storageList').innerHTML='<div class="storage-empty">Unable to read phone storage: '+escapeHtml(errText(e))+'</div>';}
   }
 
   async function closeConnection() {
@@ -3325,7 +3282,7 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
       // Resolve real Play Store icons after the list appears, so scanning stays responsive.
       hydratePlayIcons().catch(e=>log('[ICON LOOKUP] '+errText(e)));
     }catch(e){status('❌ Scan failed: '+errText(e),'bad');log('[SCAN ERROR] '+errText(e))}
-    finally{$('scan').disabled=!connected;$('btnSmartScan').disabled=!connected;updateButtons()}
+    finally{$('scan').disabled=!connected;updateButtons()}
   }
   async function disableSystemApp(x){
     if(!x||!x.system||x.removed||x.state==='disabled')return;
@@ -3405,89 +3362,6 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
   }
 
 
-  async function installApkViaAdb(file){
-    if(!adb) throw new Error('ADB is not connected');
-    if(!file) return;
-    if(!/\.apk$/i.test(file.name)) throw new Error('Please select a valid APK file.');
-
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
-    const remote = `/data/local/tmp/jhoelsoft_${Date.now()}_${safeName}`;
-    let uploaded = false;
-
-    try {
-      status(`Preparing ${file.name} for ADB installation…`);
-      log(`APK: ${file.name} (${file.size} bytes)`);
-      log(`Remote path: ${remote}`);
-
-      // Preferred path: use the WebADB sync service when this build exposes it.
-      if(adb.sync && typeof adb.sync.write === 'function') {
-        status(`Uploading ${file.name} to the target device…`);
-        await adb.sync.write({filename:remote,file:file.stream()});
-        uploaded = true;
-        log('ADB sync upload completed.');
-      } else {
-        // Fallback for WebADB builds without the Sync/file-transfer API.
-        // Transfer the APK through the normal ADB shell using base64 chunks.
-        // This is slower, but does not require adb.sync.
-        status(`Uploading ${file.name} through ADB shell…\nThis fallback is slower for large APK files.`);
-        log('ADB sync API unavailable; using base64 shell-transfer fallback.');
-
-        let decoder = 'base64 -d';
-        try {
-          const probe = await shell('command -v base64');
-          if(!String(probe||'').trim()) decoder = 'toybox base64 -d';
-        } catch(_) {
-          decoder = 'toybox base64 -d';
-        }
-
-        // Create/truncate the destination first.
-        await shell(`: > ${remote}`);
-
-        const bytes = new Uint8Array(await file.arrayBuffer());
-        const CHUNK = 48 * 1024;
-        for(let offset=0; offset<bytes.length; offset+=CHUNK){
-          const part = bytes.subarray(offset, Math.min(offset+CHUNK, bytes.length));
-          let binary='';
-          const STEP=0x8000;
-          for(let i=0;i<part.length;i+=STEP){
-            binary += String.fromCharCode(...part.subarray(i, Math.min(i+STEP, part.length)));
-          }
-          const b64 = btoa(binary);
-          await shell(`printf '%s' '${b64}' | ${decoder} >> ${remote}`);
-          const done=Math.min(offset+part.length,bytes.length);
-          const pct=Math.round(done/bytes.length*100);
-          status(`Uploading ${file.name} through ADB shell… ${pct}%`);
-        }
-        uploaded = true;
-        log('ADB shell upload completed.');
-      }
-
-      if(!uploaded) throw new Error('APK upload did not complete.');
-
-      // Verify that the remote file exists and has a non-zero size before installing.
-      const sizeOut = await shell(`wc -c < ${remote}`);
-      const remoteSize = Number.parseInt(String(sizeOut).trim(),10);
-      if(!Number.isFinite(remoteSize) || remoteSize !== file.size){
-        throw new Error(`APK upload verification failed: expected ${file.size} bytes but the device has ${Number.isFinite(remoteSize)?remoteSize:'unknown'} bytes.`);
-      }
-
-      status(`Installing ${file.name} via ADB…`);
-      const result = await shell(`pm install -r ${remote}`);
-      log(result||'(install returned no output)');
-
-      if(!/Success/i.test(result||'')){
-        throw new Error((result||'Android did not report a successful APK installation.').trim());
-      }
-
-      status(`✅ APK installed successfully: ${file.name}`,'ok');
-      await scan();
-    } finally {
-      // Always remove the temporary APK after the install attempt.
-      try { await shell(`rm -f ${remote}`); } catch(_) {}
-    }
-  }
-
-  
   async function blockPopups(x){
     if(!x||x.removed)return;
     try{status('Blocking pop-ups for '+x.label+'…');const r=await shell(`appops set --user 0 ${x.pkg} SYSTEM_ALERT_WINDOW deny`);log(r||'(no output)');x.overlay=false;renderApps();status(`🚫 Pop-ups blocked: ${x.label}`)}catch(e){status('❌ Block pop-ups failed: '+errText(e),'bad')}
@@ -3545,144 +3419,6 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     renderApps();status(`✅ ${kind} completed for ${eligible.length} app(s).`)
   }
 
-
-  // SMART SCAN: intentionally uses read-only ADB queries. It does not
-  // uninstall/disable apps or delete files by itself.
-  function parseDf(out){
-    const lines=String(out||'').trim().split(/\r?\n/).filter(Boolean);
-    for(let i=lines.length-1;i>=0;i--){
-      const parts=lines[i].trim().split(/\s+/);
-      if(parts.length>=4 && /^\d+$/.test(parts[1]) && /^\d+$/.test(parts[2])){
-        const total=Number(parts[1]),used=Number(parts[2]);
-        if(total>0)return {totalKB:total,usedKB:used,pct:Math.round(used/total*100)};
-      }
-    }
-    return {totalKB:0,usedKB:0,pct:0};
-  }
-  function kbText(kb){
-    const n=Number(kb)||0;
-    if(n<1024)return `${Math.round(n)} KB`;
-    if(n<1024*1024)return `${(n/1024).toFixed(1)} MB`;
-    if(n<1024*1024*1024)return `${(n/1024/1024).toFixed(2)} GB`;
-    return `${(n/1024/1024/1024).toFixed(2)} TB`;
-  }
-  function firstNumber(text, re){const m=String(text||'').match(re);return m?Number(m[1]):null}
-  function setSmartProgress(p,step){
-    const bar=$('smartProgressBar'); if(bar)bar.style.width=Math.max(0,Math.min(100,p))+'%';
-    if($('smartStep'))$('smartStep').textContent=step;
-  }
-  function smartHealth(r){
-    let score=100;
-    score-=Math.min(25,r.bloat*6);
-    score-=Math.min(20,r.popup*8);
-    if(r.storage.pct>=90)score-=20; else if(r.storage.pct>=80)score-=12; else if(r.storage.pct>=70)score-=6;
-    if(r.battery.level!==null && r.battery.level<20)score-=8;
-    if(r.battery.temp!==null && r.battery.temp>=42)score-=12; else if(r.battery.temp!==null && r.battery.temp>=38)score-=5;
-    return Math.max(0,Math.min(100,Math.round(score)));
-  }
-  function smartTile(title,value,note,kind='good',action=''){return `<div class="smart-report-tile ${kind}" data-smart-action="${escapeHtml(action)}" role="button" tabindex="0" title="Click to open"><div class="r-label">${escapeHtml(title)}</div><div class="r-value">${escapeHtml(value)}</div><div class="r-note">${escapeHtml(note||'')}</div></div>`}
-  function smartDashboardTile(title,value,note,kind='good'){return `<div class="smart-tile ${kind}"><div class="k">${escapeHtml(title)}</div><div class="v">${escapeHtml(value)}</div><div class="d">${escapeHtml(note||'')}</div></div>`}
-
-  async function runSmartScan(){
-    if(!adb||!connected)throw new Error('ADB is not connected. Connect the target phone first.');
-    if(!packages.length){await scan();}
-    setSmartProgress(8,'reading Android packages…');
-    const bloatApps=packages.filter(isBloatCandidate);
-    const popupApps=packages.filter(isPopupCandidate);
-
-    setSmartProgress(24,'reading storage…');
-    let storage=parseDf(await shell('df -k /data 2>/dev/null'));
-    if(!storage.totalKB)storage=parseDf(await shell('df -k /sdcard 2>/dev/null'));
-
-    setSmartProgress(42,'counting files…');
-    let fileCount=0;
-    try{fileCount=firstNumber(await shell('find /sdcard -type f 2>/dev/null | wc -l'),/(\d+)/)||0}catch(_){fileCount=0}
-
-    setSmartProgress(58,'checking photos and videos…');
-    let mediaKB=0,mediaFiles=0;
-    try{
-      const dirs='/sdcard/DCIM /sdcard/Pictures /sdcard/Movies /sdcard/Download';
-      mediaKB=firstNumber(await shell(`du -sk ${dirs} 2>/dev/null | awk '{s+=$1} END{print s+0}'`),/(\d+)/)||0;
-      mediaFiles=firstNumber(await shell(`find ${dirs} -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.mp4' -o -iname '*.mkv' -o -iname '*.mov' \) 2>/dev/null | wc -l`),/(\d+)/)||0;
-    }catch(_){mediaKB=0;mediaFiles=0}
-
-    setSmartProgress(72,'checking temporary files…');
-    let cacheKB=0;
-    try{cacheKB=firstNumber(await shell("du -sk /sdcard/.thumbnails /sdcard/Download 2>/dev/null | awk '{s+=$1} END{print s+0}'"),/(\d+)/)||0}catch(_){cacheKB=0}
-
-    setSmartProgress(84,'checking battery…');
-    let batteryRaw='';try{batteryRaw=await shell('dumpsys battery')}catch(_){batteryRaw=''}
-    const level=firstNumber(batteryRaw,/level:\s*(\d+)/i);
-    const tempRaw=firstNumber(batteryRaw,/temperature:\s*(\d+)/i);
-    const temp=tempRaw===null?null:tempRaw/10;
-    const health=smartHealth({bloat:bloatApps.length,popup:popupApps.length,storage,battery:{level,temp}});
-
-    setSmartProgress(100,'Smart Scan complete.');
-    return {bloat:bloatApps.length,popup:popupApps.length,bloatApps,popupApps,storage,fileCount,mediaKB,mediaFiles,cacheKB,battery:{level,temp},health,device:$('deviceInfo')?.textContent||'Connected device'};
-  }
-
-  function renderSmartReport(r){
-    const scoreKind=r.health>=80?'good':r.health>=60?'warn':'bad';
-    $('smartDeviceName').textContent=r.device;
-    $('smartReportBody').innerHTML=`
-      <div class="smart-score">
-        <div class="smart-score-ring"><div><b>${r.health}</b><span>HEALTH</span></div></div>
-        <div class="smart-score-info"><b>${r.health>=80?'Looks good':r.health>=60?'Needs attention':'Needs cleanup'}</b><div>Heuristic score based on storage, battery and detected app risks. It is not an Android diagnostic.</div></div>
-      </div>
-      <div class="smart-report-grid">
-        ${smartTile('Bloatware & ad apps',`${r.bloat} found`,r.bloat?'Preloaded/junk apps — review before removing':'No likely bloat/ads detected',r.bloat?'bad':'good','bloat')}
-        ${smartTile('Pop-up ad sources',`${r.popup} apps`,r.popup?'Apps allowed to draw over other apps':'No current overlay candidates',r.popup?'warn':'good','popup')}
-        ${smartTile('Storage',`${r.storage.pct}% full`,`${kbText(r.storage.usedKB)} of ${kbText(r.storage.totalKB)} used`,r.storage.pct>=90?'bad':r.storage.pct>=80?'warn':'good','storage')}
-        ${smartTile('Photos & videos',`${r.mediaFiles} files`,r.mediaKB?kbText(r.mediaKB)+' in common media folders':'No media size reported','good','media')}
-        ${smartTile('Cached / temporary',kbText(r.cacheKB),'Thumbnail + Download folders; review before clearing','warn','storage')}
-        ${smartTile('Battery',r.battery.level===null?'Unavailable':`${r.battery.level}%`,r.battery.temp===null?'Temperature unavailable':`${r.battery.temp.toFixed(1)}°C`,(r.battery.level!==null&&r.battery.level<20)||(r.battery.temp!==null&&r.battery.temp>=42)?'bad':'good','battery')}
-      </div>
-      <div class="smart-list"><div class="smart-list-title">📄 Storage files</div><div class="smart-list-item"><b>${r.fileCount.toLocaleString()}</b> files visible under shared storage</div></div>
-      ${r.bloatApps.length?`<div class="smart-list"><div class="smart-list-title">🧹 Review bloat/ad candidates</div>${r.bloatApps.slice(0,8).map(x=>`<div class="smart-list-item">• <b>${escapeHtml(x.label)}</b> <span>(${escapeHtml(x.pkg)})</span></div>`).join('')}</div>`:''}
-      ${r.popupApps.length?`<div class="smart-list"><div class="smart-list-title">🚫 Pop-up candidates</div>${r.popupApps.slice(0,8).map(x=>`<div class="smart-list-item">• <b>${escapeHtml(x.label)}</b> <span>(${escapeHtml(x.pkg)})</span></div>`).join('')}</div>`:''}
-    `;
-  }
-
-  async function smartScan(){
-    if(!adb||!connected){status('Connect ADB first to run Smart Scan.','warn');return}
-    $('smartReport').classList.add('hidden');$('smartLoading').classList.remove('hidden');$('smartDialog').showModal();
-    try{
-      const r=await runSmartScan();
-      window.__lastSmartReport=r;
-      renderSmartReport(r);
-      $('smartLoading').classList.add('hidden');$('smartReport').classList.remove('hidden');
-      status('Smart Scan complete. Review the report before taking any action.','ok');
-    }catch(e){$('smartDialog').close();status('❌ Smart Scan failed: '+errText(e),'bad');log('[SMART SCAN ERROR] '+errText(e));}
-  }
-
-  async function diagnostics() {
-    try {
-      if (!navigator.usb) {
-        status('WebUSB unavailable in this browser.', 'bad');
-        return;
-      }
-
-      const devs = await navigator.usb.getDevices();
-
-      if (!devs.length) {
-        status('No previously-authorized WebUSB devices.\nPress CONNECT to open the chooser.');
-        return;
-      }
-
-      status(
-        'Authorized WebUSB devices:\n' +
-        devs.map(d =>
-          `${d.productName || 'Unknown'} • VID ${d.vendorId.toString(16)} • PID ${d.productId.toString(16)} • opened=${d.opened}`
-        ).join('\n')
-      );
-    } catch (e) {
-      status(
-        'USB diagnostics blocked: ' + errText(e) +
-        '\n\nOpen the HTTPS page directly in Chrome instead of an embedded preview.',
-        'bad'
-      );
-    }
-  }
 
   $('disconnect').onclick = disconnect;
   $('scan').onclick = scan;
@@ -3778,8 +3514,6 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
   $('enableSelected').onclick = () => bulkAction('enable');
   $('recoverSelected').onclick = () => bulkAction('recover');
   $('blockSelected').onclick = async () => { for(const x of packages.filter(p=>p.selected)) await blockPopups(x); };
-  $('installApk').onclick = () => $('apkFile').click();
-  $('apkFile').onchange = async () => { const file=$('apkFile').files?.[0]; $('apkFile').value=''; if(!file)return; try{ await installApkViaAdb(file); }catch(e){ status('❌ APK install failed: '+errText(e),'bad'); log('ERROR APK INSTALL: '+errText(e)); } };
   $('clearData').onclick = async () => {
     if(!connected)return;
     const chosen=packages.filter(x=>x.selected&&!x.removed);
@@ -3806,66 +3540,6 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     status(`✅ Clear Data finished for ${eligible.length} selected app(s). Apps were not uninstalled.`,'ok');
   };
 
-  $('btnStorage').onclick = openStorage;
-  $('storageClose').onclick = () => $('storageDialog').close();
-  $('storageUp').onclick = async () => { if(storagePath==='/storage/emulated/0') return; try{await listStorage(storageParent(storagePath));}catch(e){status('❌ Storage browse failed: '+errText(e),'bad');} };
-  $('storageHome').onclick = async () => { try{await listStorage('/storage/emulated/0');}catch(e){status('❌ Storage browse failed: '+errText(e),'bad');} };
-  $('storageRefresh').onclick = async () => { try{await listStorage(storagePath);}catch(e){status('❌ Storage refresh failed: '+errText(e),'bad');} };
-  $('storageDelete').onclick = deleteSelectedStorageFiles;
-  $('storageDialog').addEventListener('click', e => { if(e.target === $('storageDialog')) $('storageDialog').close(); });
-
-  $('btnSmartScan').onclick = smartScan;
-  $('smartReportRescan').onclick = smartScan;
-  $('smartClose').onclick = () => $('smartDialog').close();
-  $('smartDialog').addEventListener('click', e => { if(e.target === $('smartDialog')) $('smartDialog').close(); });
-  $('smartReportBody').addEventListener('click', async e => {
-    const tile=e.target.closest('[data-smart-action]');
-    if(!tile)return;
-    const action=tile.dataset.smartAction;
-    if(action==='storage'||action==='media'){
-      $('smartDialog').close();
-      try{await openStorage();}catch(err){status('❌ Storage open failed: '+errText(err),'bad');}
-      return;
-    }
-    if(action==='bloat'){
-      $('smartDialog').close();
-      $('category').value='bloat';
-      resetSelection();
-      renderApps();
-      status('Showing Bloat/Ads candidates. Check apps manually before taking action.','warn');
-      return;
-    }
-    if(action==='popup'){
-      $('smartDialog').close();
-      $('category').value='popup';
-      resetSelection();
-      renderApps();
-      status('Showing Pop-up candidates. Check apps manually before taking action.','warn');
-      return;
-    }
-    if(action==='battery'){
-      status('Battery information is shown in Smart Scan. No destructive battery action is performed.','ok');
-    }
-  });
-  $('smartReportBody').addEventListener('keydown', e => {
-    if(e.key==='Enter'||e.key===' '){const tile=e.target.closest('[data-smart-action]');if(tile){e.preventDefault();tile.click();}}
-  });
-  $('smartClean').onclick = () => {
-    const r=window.__lastSmartReport;
-    if(!r){return}
-    $('smartDialog').close();
-    if(r.bloatApps?.length){
-      $('category').value='bloat';
-      r.bloatApps.forEach(x=>x.selected=false);
-      renderApps();
-      status(`Showing ${r.bloatApps.length} detected bloat/ad candidate(s). These are heuristic candidates, not confirmed malware. Review each app before uninstalling.` ,'warn');
-    } else if(r.popupApps?.length){
-      $('category').value='popup';renderApps();status('No bloat candidates. Showing pop-up candidates for review.','warn');
-    } else {
-      status('No recommended app cleanup found.','ok');
-    }
-  };
-  $('diag').onclick = diagnostics;
   $('filter').oninput = renderApps;
   $('category').onchange = () => { setFilter($('category').value); };
   $('selectRisk').onclick = () => {
@@ -3915,7 +3589,6 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
   setLicenseState(licenseActive);
   updateButtons();
 
-  $('btnSmartScan').disabled=!licenseActive;
 
   window.addEventListener('error', e => {
     if (e.message) log('[JS] ' + e.message);
