@@ -2166,23 +2166,20 @@ body{padding-bottom:calc(var(--action-dock-height) + 24px)!important}
 
 
 <style id="jhoelsoft-auth-style">
-.auth-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(3,7,18,.88);backdrop-filter:blur(9px)}
-.auth-overlay.hidden{display:none}
-.auth-card{width:min(420px,100%);padding:26px;border:1px solid #344256;border-radius:22px;background:linear-gradient(155deg,#172235,#0c1422);box-shadow:0 24px 80px #0009;color:#f8fafc}
-.auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.auth-logo{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:#1d4ed8;font-size:23px}
-.auth-card h2{margin:0;font-size:21px}.auth-sub{margin:5px 0 20px;color:#9caec5;font-size:13px;line-height:1.5}
-.auth-field{display:block;width:100%;box-sizing:border-box;margin:10px 0;padding:13px 14px;border:1px solid #3b4b61;border-radius:11px;background:#0b1220;color:#fff;font-size:15px;outline:none}
-.auth-field:focus{border-color:#60a5fa;box-shadow:0 0 0 3px #2563eb33}
-.auth-actions{display:flex;gap:9px;margin-top:13px}.auth-actions button{flex:1;min-height:43px}
-.auth-status{min-height:22px;margin-top:12px;font-size:12px;color:#a8b8ce;white-space:pre-wrap;overflow-wrap:anywhere}
-.auth-status.ok{color:#86efac}.auth-status.bad{color:#fca5a5}.auth-status.checking{color:#93c5fd}
-.auth-api{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:15px;padding-top:13px;border-top:1px solid #344256;color:#9caec5;font-size:12px}
-.auth-api button{padding:7px 10px;font-size:12px}
-.auth-user{margin-top:10px;color:#9caec5;font-size:12px;text-align:center}
-body.jhoelsoft-locked .wrap{pointer-events:none;user-select:none}
-@media(max-width:480px){.auth-card{padding:21px}.auth-actions{flex-direction:column}}
+.jhoelsoft-auth-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(3,5,10,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.jhoelsoft-auth-card{width:min(440px,94vw);padding:26px;border-radius:20px;color:#fff;background:linear-gradient(145deg,rgba(17,17,25,.98),rgba(7,7,12,.99));border:1px solid rgba(255,196,0,.48);box-shadow:0 20px 70px #000b,0 0 28px rgba(255,115,0,.12)}
+.jhoelsoft-auth-card h2{margin:0 0 6px;font-size:21px;color:#fff}
+.jhoelsoft-auth-card p{margin:8px 0 16px;color:#a9adba;font-size:12px;line-height:1.5}
+.jhoelsoft-auth-card input{display:block;width:100%;min-height:46px;margin:10px 0;padding:12px 14px;border-radius:10px;background:#08090e!important;color:#fff!important;border:1px solid rgba(255,196,0,.24)!important}
+.jhoelsoft-auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.jhoelsoft-auth-actions button{min-height:44px}
+.jhoelsoft-auth-status{min-height:38px;margin-top:13px;padding:10px;border-radius:10px;background:rgba(255,255,255,.05);color:#d7d9df;font-size:11px;line-height:1.45;white-space:pre-wrap}
+.jhoelsoft-auth-status.error{color:#ff9292;border:1px solid rgba(255,80,80,.25)}
+.jhoelsoft-auth-status.success{color:#9be6ad;border:1px solid rgba(80,220,120,.22)}
+.jhoelsoft-auth-meta{margin-top:12px;color:#777d8c;font-size:10px;text-align:center}
+@media(max-width:480px){.jhoelsoft-auth-card{padding:21px}.jhoelsoft-auth-actions{grid-template-columns:1fr}}
 </style>
+
 </head>
 <body>
 <div class="wrap">
@@ -2194,7 +2191,7 @@ body.jhoelsoft-locked .wrap{pointer-events:none;user-select:none}
 
   <div class="card">
     <div class="row">
-      <button id="connect">🔌 CONNECT ADB / OTG</button>
+      <button id="connect" disabled>🔌 CONNECT ADB / OTG</button>
       <button id="bg6ServiceBtn" class="secondary">🛡️ ADB FRP</button>
       <button id="scan" class="secondary" disabled>🔎 SCAN APPS</button>
       <button id="detectNow" class="secondary" disabled>⚡ DETECT NOW</button>
@@ -2232,7 +2229,7 @@ body.jhoelsoft-locked .wrap{pointer-events:none;user-select:none}
 
   <dialog id="adbRebootDialog" class="smart-dialog" style="max-width:420px;width:calc(100% - 28px);padding:20px">
     <b style="font-size:18px">🔄 Reboot device?</b>
-    <p class="small" style="margin:12px 0 18px">ADB operation completed. Do you want to reboot the connected Android device now?</p>
+    <p class="small" style="margin:12px 0 18px">ADB status check completed. Do you want to reboot the connected Android device now?</p>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button id="adbRebootCancel" class="secondary">Not now</button>
       <button id="adbRebootConfirm">Yes, reboot</button>
@@ -2334,7 +2331,6 @@ body.jhoelsoft-locked .wrap{pointer-events:none;user-select:none}
 </div>
 
 <script type="module">
-
 /* ============================================================
    GSMCODEPH Loader — INLINE WebUSB ADB TRANSPORT
    FCXI5MAF.js is embedded below so this is a ONE-FILE build.
@@ -2353,33 +2349,20 @@ const AdbDaemonTransport = Pi;
 const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
-const LICENSE_API = 'aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2xpY2Vuc2UtYXBp';
-const API_BASE = atob(LICENSE_API);
+
+const API_BASE = '';
 let selectedUsb = null;
 let currentSerial = '';
 let busy = false;
 const el = id => document.getElementById(id);
 function msg(t, kind=''){ const e=el('status'); if(e){e.textContent=t;e.className='status '+kind;} }
-
-// Local ADB/FRP logger. The HTML owns the log panel so it works even when
-// the downloaded frp.js does not define a logger function.
-function frpRecoveryLog(message, level='INFO'){
-  const panel = el('frpRecoveryLog');
-  if(!panel) return;
-  const stamp = new Date().toLocaleTimeString();
-  const line = `[${stamp}] [${String(level || 'INFO').toUpperCase()}] ${String(message ?? '')}`;
-  panel.textContent = (panel.textContent ? panel.textContent + '\\n' : '') + line;
-  panel.scrollTop = panel.scrollHeight;
-}
-window.frpRecoveryLog = frpRecoveryLog;
-
 function setState(active, mode=''){ const e=el('licenseDot'); if(e){e.classList.remove('checking','active','error');if(active)e.classList.add('active');e.title=active?'ADB ready':'Not connected';} }
 function setAdbActionAvailability(ready){
   // Keep the Connect button available; lock other main-panel actions until ADB is authorized.
   ['bg6ServiceBtn','scan','detectNow','deviceInfoBtn','btnSmartScan','btnStorage','diag','disconnect','installApk'].forEach(id=>{
     const b=el(id); if(b) b.disabled=!ready;
   });
-  ['selectRisk','selectPage','recoverSelected','disableSelected','uninstall','blockSelected','clearData','enableSelected'].forEach(id=>{
+  ['selectRisk','recoverSelected','disableSelected','uninstall','blockSelected','clearData','enableSelected'].forEach(id=>{
     const b=el(id); if(b) b.disabled=!ready;
   });
   const frpCheck=el('bg6TryConnect'); if(frpCheck) frpCheck.disabled=!ready;
@@ -2432,12 +2415,96 @@ async function connectAndVerify(){
  }catch(e){setAdbActionAvailability(false);setState(false);frpRecoveryLog('ADB connection failed: '+(e.message||String(e)), 'ERROR');msg(e.message||String(e),'bad');console.error(e);}
  finally{busy=false;if(b) b.disabled=false;}
 }
+const bg6ServiceDialog=el('bg6ServiceDialog');
+function frpRecoveryLog(message, level='INFO') {
+  const box = el('frpRecoveryLog');
+  if (!box) return;
+  const stamp = new Date().toLocaleTimeString();
+  if (box.textContent.includes('No device checks have been run yet.')) box.textContent = '';
+  box.textContent += `[${stamp}] [${level}] ${message}\n`;
+  box.scrollTop = box.scrollHeight;
+}
+window.frpRecoveryLog = frpRecoveryLog;
+if(el('bg6ServiceBtn')) el('bg6ServiceBtn').addEventListener('click',()=>{
+  if(bg6ServiceDialog?.showModal) {
+    bg6ServiceDialog.showModal();
+    frpRecoveryLog('Recovery diagnostics panel opened.');
+  } else {
+    alert('Open this page in Chrome on HTTPS, connect the phone with a data-capable USB cable, then use ADB diagnostics.');
+  }
+});
+if(el('bg6ServiceClose')) el('bg6ServiceClose').addEventListener('click',()=>bg6ServiceDialog?.close());
+if(el('adbRebootCancel')) el('adbRebootCancel').addEventListener('click',()=>el('adbRebootDialog')?.close());
+if(el('adbRebootConfirm')) el('adbRebootConfirm').addEventListener('click',async()=>{
+  const btn = el('adbRebootConfirm');
+  if (!window.__JHOELSOFT_ADB_CONNECTED__) {
+    frpRecoveryLog('Cannot reboot: ADB device is not connected.', 'ERROR');
+    el('adbRebootDialog')?.close();
+    return;
+  }
+  if (btn) btn.disabled = true;
+  try {
+    if (typeof window.__JHOELSOFT_REBOOT_DEVICE__ !== 'function') throw new Error('ADB reboot module is not ready.');
+    await window.__JHOELSOFT_REBOOT_DEVICE__();
+    frpRecoveryLog('Reboot command sent to device.', 'OK');
+    el('adbRebootDialog')?.close();
+  } catch (e) {
+    frpRecoveryLog('Reboot failed: ' + (e?.message || String(e)), 'ERROR');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+if (el('bg6TryConnect')) {
+  el('bg6TryConnect').addEventListener('click', async () => {
+    const btn = el('bg6TryConnect');
+    const usb = el('frpUsbState');
+    const auth = el('frpAuthState');
+    if (!window.__JHOELSOFT_ADB_CONNECTED__) {
+      if (usb) usb.textContent = 'Not connected';
+      if (auth) auth.textContent = 'Not authorized';
+      frpRecoveryLog('Connect and authorize the phone first.', 'WARN');
+      return;
+    }
+    if (btn) btn.disabled = true;
+    frpRecoveryLog('$ ADB status check', 'INFO');
+    try {
+      if (typeof window.__JHOELSOFT_FRP_CHECK__ !== 'function') {
+        throw new Error('ADB diagnostic module is not ready.');
+      }
+      const result = await window.__JHOELSOFT_FRP_CHECK__();
+      if (usb) usb.textContent = result.connected ? 'Connected' : 'Not connected';
+      if (auth) auth.textContent = result.authorized ? 'Authorized' : 'Not authorized';
+      frpRecoveryLog('========== ADB DEVICE ==========', 'INFO');
+      frpRecoveryLog(result.deviceLine || 'Device status unavailable', result.connected ? 'OK' : 'WARN');
+      frpRecoveryLog('Model: ' + (result.model || 'Unknown'), 'INFO');
+      frpRecoveryLog('Android version: ' + (result.androidVersion || 'Unknown'), 'INFO');
+      frpRecoveryLog('Shell identity: ' + (result.identity || 'Unavailable'), 'INFO');
+      frpRecoveryLog('Read-only ADB diagnostics completed.', 'OK');
+      // This panel performs read-only diagnostics only; no Android setup/security flags are changed.
+      frpRecoveryLog('Read-only ADB diagnostics completed.', 'OK');
+      const rebootDialog = el('adbRebootDialog');
+      if (rebootDialog && rebootDialog.showModal) rebootDialog.showModal();
+} catch (e) {
+      if (usb) usb.textContent = 'Check failed';
+      if (auth) auth.textContent = 'Unknown';
+      frpRecoveryLog(e?.message || String(e), 'ERROR');
+    } finally {
+      if (btn) btn.disabled = !window.__JHOELSOFT_ADB_CONNECTED__;
+    }
+  });
+}
+
+
 el('connect')?.addEventListener('click',connectAndVerify);
 el('disconnect')?.addEventListener('click',()=>location.reload());
 setState(false);setAdbActionAvailability(false);
 window.__JHOELSOFT_BOOTSTRAP__={serial:'',token:'',licenseActive:false};
 window.__JHOELSOFT_ADB_CONNECTED__ = false;
+
 </script>
+
+
 <dialog id="deviceInfoDialog" class="smart-dialog" style="max-width:620px;width:calc(100% - 28px);max-height:82vh;overflow:auto;border:1px solid #3b4252;border-radius:18px;background:#111827;color:#f8fafc;padding:18px">
  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px"><div><b style="font-size:18px">📱 Device Info</b><div class="small">Information from the connected Android phone</div></div><button id="deviceInfoClose" class="secondary">Close</button></div>
  <div id="deviceInfoBody" class="device-info-grid"><div class="small">Connect a phone to view its information.</div></div>
@@ -2460,22 +2527,19 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
 </dialog>
 
 
-<div id="jhoelsoftAuthOverlay" class="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="jhoelsoftAuthTitle">
-  <div class="auth-card">
-    <div class="auth-brand">
-      <div class="auth-logo">🔐</div>
-      <div><h2 id="jhoelsoftAuthTitle">GSMCODEPH Login</h2><div style="font-size:11px;color:#8fa4bf">SECURE ACCOUNT AUTHENTICATION</div></div>
-    </div>
-    <p class="auth-sub">Mag-login gamit ang username at password na ibinigay ng administrator. Kapag verified, awtomatikong ida-download ang protected application.</p>
-    <input id="jhoelsoftUsername" class="auth-field" autocomplete="username" maxlength="64" placeholder="Username" aria-label="Username">
-    <input id="jhoelsoftPassword" class="auth-field" type="password" autocomplete="current-password" maxlength="1024" placeholder="Password" aria-label="Password">
-    <div class="auth-actions">
+<div id="jhoelsoftAuthOverlay" class="jhoelsoft-auth-overlay" role="dialog" aria-modal="true" aria-labelledby="jhoelsoftAuthTitle">
+  <div class="jhoelsoft-auth-card">
+    <div style="font-size:28px;margin-bottom:8px">🔐</div>
+    <h2 id="jhoelsoftAuthTitle">GSMCODEPH Secure Login</h2>
+    <p>Mag-login gamit ang username at password na ibinigay ng administrator. Ida-download lamang ang protected application kapag verified ang account.</p>
+    <input id="jhoelsoftUsername" type="text" autocomplete="username" maxlength="64" placeholder="Username" aria-label="Username">
+    <input id="jhoelsoftPassword" type="password" autocomplete="current-password" maxlength="1024" placeholder="Password" aria-label="Password">
+    <div class="jhoelsoft-auth-actions">
       <button id="jhoelsoftLogin" type="button">LOG IN & LOAD APP</button>
       <button id="jhoelsoftApiCheck" type="button" class="secondary">CHECK API</button>
     </div>
-    <div id="jhoelsoftAuthStatus" class="auth-status" role="status">Checking license server…</div>
-    <div class="auth-api"><span>API: api.gsmcodeph-ads.site</span><span id="jhoelsoftApiState">Not checked</span></div>
-    <div class="auth-user">Protected JavaScript is delivered only after successful account validation.</div>
+    <div id="jhoelsoftAuthStatus" class="jhoelsoft-auth-status" role="status">Please log in to unlock the application.</div>
+    <div class="jhoelsoft-auth-meta">Private GitHub JavaScript is delivered only through the authenticated license API.</div>
   </div>
 </div>
 
@@ -2483,186 +2547,140 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
 (() => {
   'use strict';
   const API_BASE = 'https://api.gsmcodeph-ads.site/v2/license-api';
-  const SESSION_KEY = 'jhoelsoft_user_session_v1';
   const $ = id => document.getElementById(id);
   const overlay = $('jhoelsoftAuthOverlay');
-  const statusEl = $('jhoelsoftAuthStatus');
-  const apiState = $('jhoelsoftApiState');
   const loginBtn = $('jhoelsoftLogin');
   const apiBtn = $('jhoelsoftApiCheck');
-  let token = '';
-  let username = '';
+  const statusBox = $('jhoelsoftAuthStatus');
   let busy = false;
-  let protectedAppLoaded = false;
+  let appLoaded = false;
 
   function showStatus(message, kind='') {
-    statusEl.textContent = message;
-    statusEl.className = 'auth-status' + (kind ? ' ' + kind : '');
+    statusBox.textContent = message;
+    statusBox.className = 'jhoelsoft-auth-status' + (kind ? ' ' + kind : '');
   }
-  function setApiState(message, good=false) {
-    apiState.textContent = message;
-    apiState.style.color = good ? '#86efac' : '#fca5a5';
-  }
-  function lockApp(locked) {
-    document.body.classList.toggle('jhoelsoft-locked', locked);
-    const ids = ['connect','bg6ServiceBtn','scan','detectNow','deviceInfoBtn','btnSmartScan','btnStorage','diag','disconnect','installApk'];
-    ids.forEach(id => {
-      const b = $(id);
-      if (!b) return;
-      if (locked) {
-        if (b.dataset.authPreviousDisabled === undefined) b.dataset.authPreviousDisabled = b.disabled ? '1' : '0';
-        b.disabled = true;
-      } else {
-        b.disabled = b.dataset.authPreviousDisabled === '1';
-        delete b.dataset.authPreviousDisabled;
-      }
-    });
-    if (!locked) {
-      const connectButton = $('connect');
-      if (connectButton) connectButton.disabled = false;
-    }
-  }
-  async function apiRequest(path, body={}, sessionToken='') {
-    const payload = {...body};
-    if (sessionToken) payload.token = sessionToken;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
+
+  async function postApi(path, body={}, token='') {
+    const headers = {'Content-Type':'application/json'};
+    if (token) headers.Authorization = 'Bearer ' + token;
+
     let response, raw;
     try {
       response = await fetch(API_BASE + path, {
-        method:'POST',
-        headers:{'Content-Type':'text/plain;charset=UTF-8'},
-        body:JSON.stringify(payload),
-        mode:'cors',
-        credentials:'omit',
-        cache:'no-store',
-        signal:controller.signal
+        method:'POST', headers, body:JSON.stringify(body || {}),
+        cache:'no-store', credentials:'omit', mode:'cors'
       });
       raw = await response.text();
     } catch (error) {
-      if (error?.name === 'AbortError') throw new Error('API timeout. Subukan ulit.');
-      throw new Error('Hindi maabot ang HTTPS API. I-check ang SSL, CORS, at server.');
-    } finally { clearTimeout(timer); }
+      throw new Error('Hindi makakonekta sa HTTPS API. Check internet, SSL certificate, at CORS settings.');
+    }
+
     let data;
     try { data = JSON.parse(raw || '{}'); }
-    catch { throw new Error(`API returned non-JSON response (HTTP ${response.status}).`); }
-    if (!response.ok || !data.ok) throw new Error(data.error || `API error ${response.status}`);
+    catch (_) { throw new Error('API returned a non-JSON response (HTTP ' + response.status + ').'); }
+
+    if (!response.ok || !data || data.ok !== true) {
+      throw new Error(data?.error || ('API request failed (HTTP ' + response.status + ').'));
+    }
     return data;
   }
-  async function checkApi() {
-    apiBtn.disabled = true;
-    showStatus('Connecting to license API…','checking');
-    setApiState('Checking…');
-    try {
-      const response = await fetch(API_BASE + '/health', {method:'GET',mode:'cors',cache:'no-store',credentials:'omit'});
-      const data = await response.json();
-      if (!response.ok || !data.ok) throw new Error(data.error || `HTTP ${response.status}`);
-      setApiState('ONLINE',true);
-      showStatus('API connection successful. Database: ' + (data.database || 'connected'), 'ok');
-      return true;
-    } catch (error) {
-      setApiState('OFFLINE');
-      showStatus('API check failed: ' + (error.message || String(error)), 'bad');
-      return false;
-    } finally { apiBtn.disabled = false; }
+
+  function showMainStatus(message, kind='') {
+    const node = $('status');
+    if (node) { node.textContent = message; node.className = 'status ' + kind; }
   }
-  async function downloadProtectedApp() {
-    if (!token) throw new Error('Walang active login session.');
-    showStatus('Account verified. Downloading frp.js through the license API…','checking');
-    const data = await apiRequest('/api/app',{},token);
-    if (typeof data.code !== 'string' || !data.code.trim()) {
-      throw new Error('Walang JavaScript code na ibinalik ang backend. I-check ang GitHub filename at API config.');
+
+  async function loadProtectedApp(token, username) {
+    showStatus('Account verified. Downloading frp.js from private GitHub through the API…');
+    const result = await postApi('/api/app', {}, token);
+    if (typeof result.code !== 'string' || !result.code.trim()) {
+      throw new Error('The API did not return frp.js. Check the backend GitHub file configuration.');
     }
-    showStatus(`frp.js received from API (${data.code.length.toLocaleString()} bytes). Loading…`,'checking');
-    window.__JHOELSOFT_BOOTSTRAP__ = {serial:'',token,licenseActive:true};
-    const blob = new Blob([data.code + '\n//# sourceURL=frp.js'],{type:'text/javascript'});
-    const url = URL.createObjectURL(blob);
-    try {
-      await import(url);
-    } catch (error) {
-      console.error('[GSMCODEPH protected app import]',error);
-      throw new Error('Na-download ang JS pero may import/runtime error: ' + (error.message || String(error)));
-    } finally {
-      setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+    showStatus('frp.js received (' + result.code.length.toLocaleString() + ' bytes). Loading application…');
+    window.__JHOELSOFT_BOOTSTRAP__ = {
+      serial:'', token, username:result.username || username, licenseActive:true
+    };
+
+    const blob = new Blob([result.code], {type:'text/javascript'});
+    const moduleUrl = URL.createObjectURL(blob);
+    try { await import(moduleUrl); }
+    finally { URL.revokeObjectURL(moduleUrl); }
+
+    if (typeof window.__JHOELSOFT_SET_ADB__ !== 'function') {
+      throw new Error('frp.js loaded, but the ADB application module did not initialize correctly.');
     }
-    const deadline = Date.now() + 6000;
-    while (typeof window.__JHOELSOFT_SET_LICENSE__ !== 'function' && Date.now() < deadline) {
-      await new Promise(resolve => setTimeout(resolve,50));
-    }
-    if (typeof window.__JHOELSOFT_SET_LICENSE__ !== 'function') {
-      throw new Error('Walang __JHOELSOFT_SET_LICENSE__ bridge ang downloaded frp.js. Idagdag ang bridge sa GitHub JS.');
-    }
-    window.__JHOELSOFT_SET_LICENSE__(true,'');
-    const licenseDot = $('licenseDot');
-    if (licenseDot) { licenseDot.classList.add('active'); licenseDot.title = 'Account: logged in'; }
-    protectedAppLoaded = true;
+
+    appLoaded = true;
+    $('connect').disabled = false;
+    $('licenseDot')?.classList.remove('checking','error');
+    $('licenseDot')?.classList.add('active');
+    $('licenseDot')?.setAttribute('title', 'Account: logged in');
+    overlay.style.display = 'none';
+    showMainStatus('Account verified. frp.js loaded. Connect your Android phone via USB/OTG.', 'ok');
   }
+
   async function login() {
-    if (busy) return;
-    const user = String($('jhoelsoftUsername').value || '').trim();
-    const pass = String($('jhoelsoftPassword').value || '');
-    if (!/^[A-Za-z0-9_.-]{3,64}$/.test(user)) {
-      showStatus('Username must be 3–64 characters (letters, numbers, dot, underscore, hyphen).','bad');
-      return;
-    }
-    if (!pass) { showStatus('Ilagay ang password.','bad'); return; }
+    if (busy || appLoaded) return;
+    const username = $('jhoelsoftUsername').value.trim();
+    const password = $('jhoelsoftPassword').value;
+    if (!username || !password) { showStatus('Enter your username and password.', 'error'); return; }
+
     busy = true;
     loginBtn.disabled = true;
-    showStatus('Verifying username and password…','checking');
+    apiBtn.disabled = true;
+    $('licenseDot')?.classList.remove('active','error');
+    $('licenseDot')?.classList.add('checking');
+    showStatus('Verifying account with the license server…');
+
     try {
-      const data = await apiRequest('/api/login',{username:user,password:pass});
-      token = data.token;
-      username = data.username || user;
-      localStorage.setItem(SESSION_KEY,JSON.stringify({token,username,expiresAt:data.expiresAt || null}));
-      await downloadProtectedApp();
-      overlay.classList.add('hidden');
-      lockApp(false);
-      showStatus('Login successful. Protected application is ready.','ok');
-      const status = $('status');
-      if (status) { status.textContent = `Account active: ${username}. Connect your Android device to continue.`; status.className = 'status ok'; }
+      const auth = await postApi('/api/login', {username, password});
+      if (typeof auth.token !== 'string' || !auth.token) {
+        throw new Error('Login succeeded but the API did not return a session token.');
+      }
+      await loadProtectedApp(auth.token, auth.username || username);
+      $('jhoelsoftPassword').value = '';
     } catch (error) {
-      token = '';
-      localStorage.removeItem(SESSION_KEY);
-      showStatus(error.message || String(error),'bad');
-      lockApp(true);
+      showStatus(error?.message || String(error), 'error');
+      $('licenseDot')?.classList.remove('active','checking');
+      $('licenseDot')?.classList.add('error');
+      $('licenseDot')?.setAttribute('title', 'Account: login failed');
     } finally {
       busy = false;
-      loginBtn.disabled = false;
+      if (!appLoaded) { loginBtn.disabled = false; apiBtn.disabled = false; }
     }
   }
-  async function restoreSession() {
-    let saved;
-    try { saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch {}
-    if (!saved?.token) { showStatus('Please log in to continue.'); return; }
-    token = saved.token;
-    username = saved.username || '';
-    showStatus('Checking saved account session…','checking');
+
+  async function checkApi() {
+    if (busy) return;
+    busy = true;
+    apiBtn.disabled = true;
+    showStatus('Checking API connection…');
     try {
-      const data = await apiRequest('/api/validate',{},token);
-      username = data.username || username;
-      await downloadProtectedApp();
-      overlay.classList.add('hidden');
-      lockApp(false);
-      const status = $('status');
-      if (status) { status.textContent = `Account active: ${username}. Connect your Android device to continue.`; status.className = 'status ok'; }
+      const response = await fetch(API_BASE + '/health', {
+        method:'GET', cache:'no-store', credentials:'omit', mode:'cors'
+      });
+      const raw = await response.text();
+      let data = {};
+      try { data = JSON.parse(raw || '{}'); } catch (_) {}
+      if (!response.ok || data.ok !== true) throw new Error(data.error || ('API offline (HTTP ' + response.status + ').'));
+      showStatus('API ONLINE • ' + (data.service || 'License API'), 'success');
     } catch (error) {
-      token = '';
-      localStorage.removeItem(SESSION_KEY);
-      showStatus('Session expired or invalid. Please log in again. ' + (error.message || ''),'bad');
+      showStatus(error?.message || String(error), 'error');
+    } finally {
+      busy = false;
+      apiBtn.disabled = false;
     }
   }
-  // Capture the connect click before the existing ADB handler while locked.
-  const connect = $('connect');
-  if (connect) connect.addEventListener('click', event => {
-    if (!protectedAppLoaded) { event.preventDefault(); event.stopImmediatePropagation(); showStatus('Mag-login muna bago kumonekta sa ADB.','bad'); }
-  }, true);
-  loginBtn.addEventListener('click',login);
-  apiBtn.addEventListener('click',checkApi);
-  ['jhoelsoftUsername','jhoelsoftPassword'].forEach(id => $(id).addEventListener('keydown',event => {
-    if (event.key === 'Enter') { event.preventDefault(); login(); }
-  }));
-  lockApp(true);
-  checkApi().then(() => restoreSession());
+
+  loginBtn.addEventListener('click', login);
+  apiBtn.addEventListener('click', checkApi);
+  $('jhoelsoftPassword').addEventListener('keydown', event => { if (event.key === 'Enter') login(); });
+  $('jhoelsoftUsername').addEventListener('keydown', event => { if (event.key === 'Enter') $('jhoelsoftPassword').focus(); });
+
+  $('connect').disabled = true;
+  $('licenseDot')?.classList.remove('active');
+  $('licenseDot')?.setAttribute('title', 'Account: not logged in');
 })();
 </script>
 
