@@ -2086,7 +2086,7 @@ body.adb-connected .app-manager{pointer-events:auto;filter:none}
   
 /* Simplified single-file build: only connection, scan, uninstall and clear-data actions */
 #selectRisk,#recoverSelected,#disableSelected,#blockSelected,#enableSelected,
-#licenseOverlay { display:none !important; }
+
 #appManager,#appsPanel,.app-manager { display:block !important; }
 .app-list { max-height: min(62vh, 560px); overflow-y:auto; }
 .app-toolbar { display:flex; flex-wrap:wrap; gap:8px; }
@@ -2162,8 +2162,36 @@ body{padding-bottom:calc(var(--action-dock-height) + 24px)!important}
 }
 </style>
 
+<style id="account-login-style">
+body.auth-locked .wrap{display:none!important}
+.license-overlay{display:none;position:fixed;inset:0;z-index:999999;align-items:center;justify-content:center;padding:18px;background:rgba(4,7,13,.78);backdrop-filter:blur(8px)}
+.license-overlay.show{display:flex!important}
+.license-card{width:min(440px,94vw);background:linear-gradient(145deg,#15110b,#090909);color:#fff7e8;border:1px solid #b87900;border-radius:16px;padding:22px;box-shadow:0 18px 50px #0009,0 0 24px #ff9d0018}
+.license-card h2{margin:0 0 6px;font-size:21px}
+.license-card p{margin:7px 0;color:#b9ad98;font-size:12px;line-height:1.5}
+.license-input{width:100%;padding:12px 2px 10px;margin:7px 0;border:0;border-bottom:1px solid #a66b00;border-radius:0;background:transparent!important;color:#fff7e8!important;outline:none;font-size:13px}
+.license-input::placeholder{color:#8e8069}
+.license-input:focus{border-bottom-color:#ffb000;box-shadow:0 1px 0 #ff6a00}
+.license-error{min-height:17px;margin-top:9px;color:#ff8796;font-size:11px;font-weight:800}
+.license-actions{display:flex;gap:9px;margin-top:16px}
+.license-actions button{flex:1;padding:11px 13px;border-radius:8px;background:linear-gradient(100deg,#ffc400,#ff6a00)!important;color:#fff!important;border:1px solid #111!important;font-weight:900;cursor:pointer}
+.license-actions button:disabled{opacity:.55;cursor:wait}
+</style>
 </head>
-<body>
+<body class="auth-locked">
+<div id="licenseOverlay" class="license-overlay show" aria-modal="true" role="dialog" aria-labelledby="loginTitle">
+  <div class="license-card">
+    <h2 id="loginTitle">🔐 GSMCODEPH Account Login</h2>
+    <p>Sign in with the username and password provided by your administrator.</p>
+    <form id="accountLoginForm" autocomplete="on">
+      <input id="usernameInput" class="license-input" autocomplete="username" maxlength="64" placeholder="Username" aria-label="Username" required>
+      <input id="passwordInput" class="license-input" type="password" autocomplete="current-password" maxlength="1024" placeholder="Password" aria-label="Password" required>
+      <div id="licenseError" class="license-error" role="alert" aria-live="polite"></div>
+      <div class="license-actions"><button id="licenseActivate" type="submit" class="primary">Log In</button></div>
+    </form>
+  </div>
+</div>
+
 <div class="wrap">
   <div class="card" style="position:relative">
     <span id="licenseDot" class="header-license-dot" title="Account: not checked" aria-label="Account status"></span>
@@ -2286,7 +2314,94 @@ const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
 
-const API_BASE = '';
+const API_BASE = 'https://api.gsmcodeph-ads.site/v2/frp'.replace(/\/+$/, '');
+  const LOGIN_ENDPOINT = API_BASE + '/api/login';
+
+  (function initAccountLogin(){
+    const form = document.getElementById('accountLoginForm');
+    const overlay = document.getElementById('licenseOverlay');
+    const userInput = document.getElementById('usernameInput');
+    const passInput = document.getElementById('passwordInput');
+    const loginButton = document.getElementById('licenseActivate');
+    const errorBox = document.getElementById('licenseError');
+    if (!form || !overlay || !userInput || !passInput || !loginButton || !errorBox) return;
+
+    document.body.classList.add('auth-locked');
+    overlay.classList.add('show');
+    window.__JHOELSOFT_BOOTSTRAP__ = {serial:'', token:'', licenseActive:false, username:''};
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (loginButton.disabled) return;
+      const username = userInput.value.trim();
+      const password = passInput.value;
+      errorBox.textContent = '';
+      if (!username || !password) {
+        errorBox.textContent = 'Enter your username and password.';
+        return;
+      }
+      loginButton.disabled = true;
+      loginButton.textContent = 'Signing in…';
+      try {
+        // Match the working loader: text/plain keeps this POST CORS-simple
+        // and avoids the browser's application/json OPTIONS preflight.
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        let response, raw = '';
+        try {
+          response = await fetch(LOGIN_ENDPOINT, {
+            method: 'POST',
+            headers: {'Content-Type':'text/plain;charset=UTF-8'},
+            body: JSON.stringify({username, password}),
+            cache: 'no-store',
+            credentials: 'omit',
+            mode: 'cors',
+            signal: controller.signal
+          });
+          raw = await response.text();
+        } catch (fetchError) {
+          if (fetchError && fetchError.name === 'AbortError') {
+            throw new Error('Authentication server timed out. Check the HTTPS API server.');
+          }
+          throw new Error('Authentication server could not be reached. Check API HTTPS, CORS, and SSL certificate.');
+        } finally {
+          clearTimeout(timeoutId);
+        }
+        let data;
+        try { data = raw ? JSON.parse(raw) : {}; }
+        catch (_) { throw new Error('Authentication API returned non-JSON data (HTTP ' + response.status + ').'); }
+        if (!response.ok || data.ok !== true) {
+          throw new Error(data.error || ('Server error (' + response.status + ')'));
+        }
+        const token = String(data.token || data.access_token || data.session_token || '');
+        window.__JHOELSOFT_BOOTSTRAP__ = {
+          serial: '', token, licenseActive: true,
+          username: String(data.username || data.user?.username || username)
+        };
+        if (typeof window.__JHOELSOFT_SET_LICENSE__ === 'function') {
+          window.__JHOELSOFT_SET_LICENSE__(true, '');
+        }
+        document.body.classList.remove('auth-locked');
+        overlay.classList.remove('show');
+        overlay.style.display = 'none';
+        const dot = document.getElementById('licenseDot');
+        if (dot) { dot.classList.add('active'); dot.title = 'Account: signed in'; }
+        const statusBox = document.getElementById('status');
+        if (statusBox) {
+          statusBox.textContent = 'Login successful. Connect your Android phone to continue.';
+          statusBox.className = 'status ok';
+        }
+        form.reset();
+      } catch (error) {
+        errorBox.textContent = error?.message || 'Unable to sign in. Please try again.';
+        passInput.value = '';
+        passInput.focus();
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = 'Log In';
+      }
+    });
+  })();
 let selectedUsb = null;
 let currentSerial = '';
 let busy = false;
