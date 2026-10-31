@@ -2394,19 +2394,35 @@ const API_BASE = 'https://api.gsmcodeph-ads.site/v2/frp'.replace(/\/+$/, '');
       loginButton.disabled = true;
       loginButton.textContent = 'Signing in…';
       try {
-        const response = await fetch(LOGIN_ENDPOINT, {
-          method: 'POST',
-          headers: {'Content-Type':'application/json', 'Accept':'application/json'},
-          body: JSON.stringify({username, password}),
-          cache: 'no-store',
-          credentials: 'omit'
-        });
-        const raw = await response.text();
+        // Match the working loader: text/plain keeps this POST CORS-simple
+        // and avoids the browser's application/json OPTIONS preflight.
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        let response, raw = '';
+        try {
+          response = await fetch(LOGIN_ENDPOINT, {
+            method: 'POST',
+            headers: {'Content-Type':'text/plain;charset=UTF-8'},
+            body: JSON.stringify({username, password}),
+            cache: 'no-store',
+            credentials: 'omit',
+            mode: 'cors',
+            signal: controller.signal
+          });
+          raw = await response.text();
+        } catch (fetchError) {
+          if (fetchError && fetchError.name === 'AbortError') {
+            throw new Error('Authentication server timed out. Check the HTTPS API server.');
+          }
+          throw new Error('Authentication server could not be reached. Check API HTTPS, CORS, and SSL certificate.');
+        } finally {
+          clearTimeout(timeoutId);
+        }
         let data;
         try { data = raw ? JSON.parse(raw) : {}; }
-        catch (_) { throw new Error('The login API returned an invalid response.'); }
-        if (!response.ok || !(data.ok === true || data.success === true)) {
-          throw new Error(data.message || data.error || ('Login failed (HTTP ' + response.status + ').'));
+        catch (_) { throw new Error('Authentication API returned non-JSON data (HTTP ' + response.status + ').'); }
+        if (!response.ok || data.ok !== true) {
+          throw new Error(data.error || ('Server error (' + response.status + ')'));
         }
         const token = String(data.token || data.access_token || data.session_token || '');
         window.__JHOELSOFT_BOOTSTRAP__ = {
