@@ -2537,6 +2537,43 @@ body.auth-locked .wrap{display:none!important}
     }
   });
 })();
+	(function () {
+    'use strict';
+
+    // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+    // Disable Ctrl+U (View Source)
+    document.addEventListener('keydown', function (e) {
+        const key = e.key.toUpperCase();
+
+        if (
+            key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(key)) ||
+            (e.ctrlKey && key === 'U')
+        ) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        }
+    }, true);
+
+    // Disable right-click
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    }, true);
+
+    // Disable text selection
+    document.addEventListener('selectstart', function (e) {
+        e.preventDefault();
+    }, true);
+
+    // Disable copy and cut
+    ['copy', 'cut'].forEach(function (event) {
+        document.addEventListener(event, function (e) {
+            e.preventDefault();
+        }, true);
+    });
+
+})();
 </script>
 
 
