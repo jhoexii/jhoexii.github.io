@@ -3237,49 +3237,16 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     );
   }
 
-  async function scan(){
+ async function scan(){
     if(!adb||!connected)return;
     $('scan').disabled=true;
     try{
       status('Scanning Android packages…');
-      const [disabledRaw,installedRaw]=await Promise.all([
-        shell('pm list packages -d --user 0'),
-        shell('pm list packages --user 0')
+      const [systemRaw,userRaw,disabledRaw,installedRaw,allRaw]=await Promise.all([
+        shell('pm list packages -s --user 0'),shell('pm list packages -3 --user 0'),shell('pm list packages -d --user 0'),shell('pm list packages --user 0'),shell('pm list packages -u --user 0')
       ]);
-      const disabled=parsePackages(disabledRaw);
-      const installed=parsePackages(installedRaw);
-
-      // Android's -3 filter is the authoritative package-manager filter for
-      // third-party (downloaded/user-installed) apps. Do not infer this by
-      // subtracting `-s`: some OEM builds return an unreliable -s list.
-      let user=new Set();
-      const downloadedCommands=[
-        'pm list packages -3 --user 0',
-        'cmd package list packages -3 --user 0',
-        'pm list packages -3'
-      ];
-      for(const command of downloadedCommands){
-        try{
-          const result=await shell(command);
-          const found=parsePackages(result);
-          if(found.size){
-            user=new Set([...found].filter(pkg=>installed.has(pkg)));
-            log(`Downloaded-app source: ${command}`);
-            break;
-          }
-        }catch(e){
-          log(`Downloaded-app query unavailable (${command}): ${errText(e)}`);
-        }
-      }
-      if(!user.size){
-        throw new Error('Android returned no third-party package list. Tried pm/cmd package list packages -3. Check ADB authorization and Android package-manager support.');
-      }
-
-      // Define system packages as installed packages not classified by Android
-      // as third-party. This also avoids trusting OEM-broken `-s` output.
-      const system=new Set([...installed].filter(pkg=>!user.has(pkg)));
+      const system=parsePackages(systemRaw),user=parsePackages(userRaw),disabled=parsePackages(disabledRaw),installed=parsePackages(installedRaw),all=parsePackages(allRaw);
       systemPackageNames = system;
-      log(`Package scan totals: ${installed.size} installed, ${system.size} system, ${user.size} downloaded.`);
 
       // Ask Android which packages expose a normal launcher entry point.
       // System packages without a launcher entry are protected.
@@ -3317,7 +3284,8 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
       // SCAN APPS shows only installed third-party/downloaded apps. System apps are
       // intentionally excluded from the list and remain protected in Detect Now.
       packages=[...user].filter(pkg=>installed.has(pkg)).map(pkg=>{
-        const systemApp=false;
+        const systemApp=system.has(pkg);
+        const hiddenSystem=systemApp && launcherPackages.size>0 && !launcherPackages.has(pkg);
         return {
           pkg,
           label:knownLabels[pkg]||friendlyName(pkg),
@@ -3327,7 +3295,7 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
           system:systemApp,
           state:disabled.has(pkg)?'disabled':'enabled',
           removed:!installed.has(pkg),
-          protected:protectedPackage(pkg),
+          protected:protectedPackage(pkg)||hiddenSystem,
           launcherVisible:launcherPackages.has(pkg),
           selected:false
         };
@@ -3340,7 +3308,6 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     }catch(e){status('❌ Scan failed: '+errText(e),'bad');log('[SCAN ERROR] '+errText(e))}
     finally{$('scan').disabled=!connected;$('btnSmartScan').disabled=!connected;updateButtons()}
   }
-
   async function disableSystemApp(x){
     if(!x||!x.system||x.removed||x.state==='disabled')return;
     if(isProtected(x) && !isOptionalPreinstalled(x)){alert('Protected system app: '+x.pkg+'\n\nHindi ito idi-disable ng bulk action.');return}
