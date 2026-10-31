@@ -3242,20 +3242,42 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     $('scan').disabled=true;
     try{
       status('Scanning Android packages…');
-      const [systemRaw,disabledRaw,installedRaw]=await Promise.all([
-        shell('pm list packages -s --user 0'),
+      const [disabledRaw,installedRaw]=await Promise.all([
         shell('pm list packages -d --user 0'),
         shell('pm list packages --user 0')
       ]);
-      const system=parsePackages(systemRaw);
       const disabled=parsePackages(disabledRaw);
       const installed=parsePackages(installedRaw);
 
-      // Build the downloaded-app list from all packages installed for user 0,
-      // then exclude packages Android identifies as system apps. This is more
-      // reliable than depending only on `pm list packages -3`, which can return
-      // an empty result on some OEM / Android builds.
-      const user=new Set([...installed].filter(pkg=>!system.has(pkg)));
+      // Android's -3 filter is the authoritative package-manager filter for
+      // third-party (downloaded/user-installed) apps. Do not infer this by
+      // subtracting `-s`: some OEM builds return an unreliable -s list.
+      let user=new Set();
+      const downloadedCommands=[
+        'pm list packages -3 --user 0',
+        'cmd package list packages -3 --user 0',
+        'pm list packages -3'
+      ];
+      for(const command of downloadedCommands){
+        try{
+          const result=await shell(command);
+          const found=parsePackages(result);
+          if(found.size){
+            user=new Set([...found].filter(pkg=>installed.has(pkg)));
+            log(`Downloaded-app source: ${command}`);
+            break;
+          }
+        }catch(e){
+          log(`Downloaded-app query unavailable (${command}): ${errText(e)}`);
+        }
+      }
+      if(!user.size){
+        throw new Error('Android returned no third-party package list. Tried pm/cmd package list packages -3. Check ADB authorization and Android package-manager support.');
+      }
+
+      // Define system packages as installed packages not classified by Android
+      // as third-party. This also avoids trusting OEM-broken `-s` output.
+      const system=new Set([...installed].filter(pkg=>!user.has(pkg)));
       systemPackageNames = system;
       log(`Package scan totals: ${installed.size} installed, ${system.size} system, ${user.size} downloaded.`);
 
@@ -3295,8 +3317,7 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
       // SCAN APPS shows only installed third-party/downloaded apps. System apps are
       // intentionally excluded from the list and remain protected in Detect Now.
       packages=[...user].filter(pkg=>installed.has(pkg)).map(pkg=>{
-        const systemApp=system.has(pkg);
-        const hiddenSystem=systemApp && launcherPackages.size>0 && !launcherPackages.has(pkg);
+        const systemApp=false;
         return {
           pkg,
           label:knownLabels[pkg]||friendlyName(pkg),
@@ -3306,7 +3327,7 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
           system:systemApp,
           state:disabled.has(pkg)?'disabled':'enabled',
           removed:!installed.has(pkg),
-          protected:protectedPackage(pkg)||hiddenSystem,
+          protected:protectedPackage(pkg),
           launcherVisible:launcherPackages.has(pkg),
           selected:false
         };
