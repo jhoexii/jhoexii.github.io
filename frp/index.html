@@ -2353,20 +2353,33 @@ const AdbDaemonTransport = Pi;
 const AdbDaemonWebUsbDeviceManager = Li;
 const AdbWebCredentialStore = Ri;
 
-const LICENSE_API = 'aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2ZycA==';
+const LICENSE_API = 'aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2xpY2Vuc2UtYXBp';
 const API_BASE = atob(LICENSE_API);
 let selectedUsb = null;
 let currentSerial = '';
 let busy = false;
 const el = id => document.getElementById(id);
 function msg(t, kind=''){ const e=el('status'); if(e){e.textContent=t;e.className='status '+kind;} }
+
+// Local ADB/FRP logger. The HTML owns the log panel so it works even when
+// the downloaded frp.js does not define a logger function.
+function frpRecoveryLog(message, level='INFO'){
+  const panel = el('frpRecoveryLog');
+  if(!panel) return;
+  const stamp = new Date().toLocaleTimeString();
+  const line = `[${stamp}] [${String(level || 'INFO').toUpperCase()}] ${String(message ?? '')}`;
+  panel.textContent = (panel.textContent ? panel.textContent + '\\n' : '') + line;
+  panel.scrollTop = panel.scrollHeight;
+}
+window.frpRecoveryLog = frpRecoveryLog;
+
 function setState(active, mode=''){ const e=el('licenseDot'); if(e){e.classList.remove('checking','active','error');if(active)e.classList.add('active');e.title=active?'ADB ready':'Not connected';} }
 function setAdbActionAvailability(ready){
   // Keep the Connect button available; lock other main-panel actions until ADB is authorized.
   ['bg6ServiceBtn','scan','detectNow','deviceInfoBtn','btnSmartScan','btnStorage','diag','disconnect','installApk'].forEach(id=>{
     const b=el(id); if(b) b.disabled=!ready;
   });
-  ['selectRisk','recoverSelected','disableSelected','uninstall','blockSelected','clearData','enableSelected'].forEach(id=>{
+  ['selectRisk','selectPage','recoverSelected','disableSelected','uninstall','blockSelected','clearData','enableSelected'].forEach(id=>{
     const b=el(id); if(b) b.disabled=!ready;
   });
   const frpCheck=el('bg6TryConnect'); if(frpCheck) frpCheck.disabled=!ready;
@@ -2555,14 +2568,14 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
   }
   async function downloadProtectedApp() {
     if (!token) throw new Error('Walang active login session.');
-    showStatus('Account verified. Downloading protected JavaScript…','checking');
+    showStatus('Account verified. Downloading frp.js through the license API…','checking');
     const data = await apiRequest('/api/app',{},token);
     if (typeof data.code !== 'string' || !data.code.trim()) {
       throw new Error('Walang JavaScript code na ibinalik ang backend. I-check ang GitHub filename at API config.');
     }
-    showStatus(`Protected JavaScript received (${data.code.length.toLocaleString()} bytes). Loading…`,'checking');
+    showStatus(`frp.js received from API (${data.code.length.toLocaleString()} bytes). Loading…`,'checking');
     window.__JHOELSOFT_BOOTSTRAP__ = {serial:'',token,licenseActive:true};
-    const blob = new Blob([data.code + '\n//# sourceURL=GSMCODEPH-PROTECTED-APP.js'],{type:'text/javascript'});
+    const blob = new Blob([data.code + '\n//# sourceURL=frp.js'],{type:'text/javascript'});
     const url = URL.createObjectURL(blob);
     try {
       await import(url);
@@ -2577,7 +2590,7 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
       await new Promise(resolve => setTimeout(resolve,50));
     }
     if (typeof window.__JHOELSOFT_SET_LICENSE__ !== 'function') {
-      throw new Error('Walang __JHOELSOFT_SET_LICENSE__ bridge ang downloaded app.js. Idagdag ang bridge sa GitHub JS.');
+      throw new Error('Walang __JHOELSOFT_SET_LICENSE__ bridge ang downloaded frp.js. Idagdag ang bridge sa GitHub JS.');
     }
     window.__JHOELSOFT_SET_LICENSE__(true,'');
     const licenseDot = $('licenseDot');
