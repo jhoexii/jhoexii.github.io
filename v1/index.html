@@ -2640,16 +2640,7 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     return e && (e.message || e.name || String(e)) || 'Unknown error';
   }
 
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
-  function isBusyError(e) {
-    return !!e && (
-      e.name === 'DeviceBusyError' ||
-      /busy|claim|access denied|unable to claim|in use|operation that changes the device state is in progress/i.test(errText(e))
-    );
-  }
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({
@@ -3251,11 +3242,22 @@ window.__JHOELSOFT_ADB_CONNECTED__ = false;
     $('scan').disabled=true;
     try{
       status('Scanning Android packages…');
-      const [systemRaw,userRaw,disabledRaw,installedRaw,allRaw]=await Promise.all([
-        shell('pm list packages -s --user 0'),shell('pm list packages -3 --user 0'),shell('pm list packages -d --user 0'),shell('pm list packages --user 0'),shell('pm list packages -u --user 0')
+      const [systemRaw,disabledRaw,installedRaw]=await Promise.all([
+        shell('pm list packages -s --user 0'),
+        shell('pm list packages -d --user 0'),
+        shell('pm list packages --user 0')
       ]);
-      const system=parsePackages(systemRaw),user=parsePackages(userRaw),disabled=parsePackages(disabledRaw),installed=parsePackages(installedRaw),all=parsePackages(allRaw);
+      const system=parsePackages(systemRaw);
+      const disabled=parsePackages(disabledRaw);
+      const installed=parsePackages(installedRaw);
+
+      // Build the downloaded-app list from all packages installed for user 0,
+      // then exclude packages Android identifies as system apps. This is more
+      // reliable than depending only on `pm list packages -3`, which can return
+      // an empty result on some OEM / Android builds.
+      const user=new Set([...installed].filter(pkg=>!system.has(pkg)));
       systemPackageNames = system;
+      log(`Package scan totals: ${installed.size} installed, ${system.size} system, ${user.size} downloaded.`);
 
       // Ask Android which packages expose a normal launcher entry point.
       // System packages without a launcher entry are protected.
