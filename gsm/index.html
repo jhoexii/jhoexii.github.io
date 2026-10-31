@@ -2414,8 +2414,8 @@ body.auth-locked .wrap{display:none!important}
 <script type="module">
 (() => {
   'use strict';
-  const API_BASE = 'https://api.gsmcodeph-ads.site/v2/gsm'.replace(/\/+$/, '');
-  const form = document.getElementById('accountLoginForm');
+ const API_BASE = atob('aHR0cHM6Ly9hcGkuZ3NtY29kZXBoLWFkcy5zaXRlL3YyL2dzbQ==').replace(/\/+$/, '');
+const form = document.getElementById('accountLoginForm');
   const overlay = document.getElementById('licenseOverlay');
   const usernameInput = document.getElementById('usernameInput');
   const passwordInput = document.getElementById('passwordInput');
