@@ -2422,6 +2422,19 @@ body.auth-locked .wrap{display:none!important}
   const loginButton = document.getElementById('licenseActivate');
   const errorBox = document.getElementById('licenseError');
   const statusBox = document.getElementById('status');
+// JHOELSOFT UNIVERSAL DEVICE ID
+async function getJhoelsoftDeviceId() {
+    const STORAGE_KEY = 'jhoelsoft_device_id';
+
+    let deviceId = localStorage.getItem(STORAGE_KEY);
+
+    if (!deviceId) {
+        deviceId = crypto.randomUUID();
+        localStorage.setItem(STORAGE_KEY, deviceId);
+    }
+
+    return deviceId;
+}
 
   window.__JHOELSOFT_BOOTSTRAP__ = {
     serial: '', token: '', licenseActive: false, username: ''
@@ -2456,7 +2469,26 @@ body.auth-locked .wrap{display:none!important}
       try { result = raw ? JSON.parse(raw) : {}; }
       catch (_) { throw new Error('API returned an invalid response (HTTP ' + response.status + ').'); }
       if (!response.ok || result.ok !== true) {
-        throw new Error(result.error || ('Request failed (HTTP ' + response.status + ').'));
+        if (result.error === 'ACCOUNT_DEVICE_LOCKED') {
+    const seconds = Number(result.remainingSeconds || 0);
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    throw new Error(
+        'ACCOUNT LOCKED TO ANOTHER DEVICE\n' +
+        'You can login again after: ' +
+        String(hours).padStart(2, '0') + ':' +
+        String(minutes).padStart(2, '0') + ':' +
+        String(secs).padStart(2, '0')
+    );
+}
+
+throw new Error(
+    result.message || result.error ||
+    ('Request failed (HTTP ' + response.status + ').')
+);
       }
       return result;
     } catch (error) {
@@ -2521,7 +2553,8 @@ body.auth-locked .wrap{display:none!important}
     loginButton.disabled = true;
     loginButton.textContent = 'Signing in…';
     try {
-      const auth = await postJson('/api/login', { username, password });
+	  const deviceId = await getJhoelsoftDeviceId();
+      const auth = await postJson('/api/login', { username, password, deviceId });
       const token = String(auth.token || '');
       if (!token) throw new Error('Login API did not return a session token.');
       const displayUsername = String(auth.username || username);
